@@ -1,0 +1,15 @@
+form nb-card-body input {
+	margin-bottom: 1.25rem;
+}
+form nb-card-body button {
+	margin-top: 1.25rem;
+}
+
+select option {
+	padding-top: 0.5625rem;
+	font-size: 1.125rem;
+}
+
+select:last-child {
+	padding-top: 0.5625rem;
+}

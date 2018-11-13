@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "LPCE - Webapps Frontend",
+            "script": "npm",
+            "args" : "run build"
+        }
+    ]
+}

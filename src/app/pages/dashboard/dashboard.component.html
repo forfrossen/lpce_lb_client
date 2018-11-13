@@ -1,0 +1,86 @@
+<div class="row">
+	<div class="col-sm">
+		<nb-card>
+			<nb-card-header>Hello from ngx-admin sandbox project.</nb-card-header>
+			<nb-card-body>{{LoopbackData | json}}</nb-card-body>
+			<nb-card-footer>
+				<button nbButton shape="semi-round" hero outline size="large" (click)="LoopAuthAD()">Clear</button>
+				<button nbButton shape="semi-round" hero outline size="large" (click)="LoopGimme()">Auth</button>
+			</nb-card-footer>
+		</nb-card>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm">
+		<nb-card>
+			<nb-card-header>Raw Kerb User Data</nb-card-header>
+			<nb-card-body>{{ ADUser | json }}</nb-card-body>
+		</nb-card>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm">
+		<nb-card>
+			<nb-card-header>{{ (ADUser)?.account.displayName }}</nb-card-header>
+			<nb-card-body>
+				<div class="row">
+					<div class="col-sm">
+						<p>
+							Vorname: {{ (ADUser)?.account.name.givenName }}<br />
+							Nachname: {{ (ADUser)?.account.name.familyName }}
+						</p>
+						<p>
+							Email: {{ (ADUser)?.account.emails[0].value }}<br />
+						</p>
+						<p>
+							Job Titel: {{ (ADUser)?.account._json.title }}<br />
+						</p>
+					</div>
+					<div class="col-sm">
+						<p>
+							Log-In Name: {{ (ADUser)?.account._json.sAMAccountName }}<br />
+						</p>
+						<p>
+							Description: {{ (ADUser)?.account._json.description }}<br />
+						</p>
+						<p>
+							userPrincipalName: {{ (ADUser)?.account._json.userPrincipalName }}<br />
+						</p>
+					</div>
+				</div>
+			</nb-card-body>
+		</nb-card>
+		<nb-card>
+				<nb-card-header>Session Information</nb-card-header>
+				<nb-card-body>
+					<div class="row">
+						<div class="col-sm">
+							<p>
+								originalMaxAge: {{ (ADUser)?.session.cookie.originalMaxAge }}<br />
+								expires: {{ (ADUser)?.session.cookie.expires }}<br />
+								httpOnly: {{ (ADUser)?.session.cookie.httpOnly }}<br />
+								path: {{ (ADUser)?.session.cookie.path }}<br />
+							</p>
+							<p>
+								__lastAccess: {{ (ADUser)?.session.__lastAccess }}<br />
+								authenticatedPrincipal: {{ (ADUser)?.session.authenticatedPrincipal }}<br />
+							</p>
+						</div>
+					</div>
+				</nb-card-body>
+			</nb-card>
+	</div>
+	<div class="col-sm">
+		<nb-card>
+			<nb-card-header>Group Membership for user: {{ (ADUser)?.account.displayName }}</nb-card-header>
+			<nb-card-body>
+				<ul>
+					<li *ngFor="let group of (ADUser)?.account.memberOfGroups">
+						{{group}}
+					</li>
+				</ul>
+			</nb-card-body>
+		</nb-card>
+	</div>
+</div>

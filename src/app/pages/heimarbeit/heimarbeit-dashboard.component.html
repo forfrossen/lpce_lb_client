@@ -1,0 +1,40 @@
+<div class="row">
+	<div class="col-sm">
+		<form>
+			<nb-card>
+				<nb-card-header>
+					Heimarbeiter < = > Workorder Zuordnung
+				</nb-card-header>
+				<nb-card-body>
+					<div class="row">
+						<div class="col-sm">
+							<input 
+								type="text" 
+								nbInput 
+								fullWidth 
+								fieldSize="large" 
+								placeholder="Workorder" 
+								#Workorder  name="Workorder"
+								[(ngModel)]="workorder" 
+								value="{{workorder}}"
+								(keyup.enter)="onEnter(Workorder.value)">
+
+							<select multiple class="form-control" disabled size="17">
+								<option *ngFor="let Workorder of Workorders" value="{{Workorder}}">{{Workorder}}</option>
+							</select>
+						</div>
+						<div class="col-sm">
+							<select multiple class="form-control" [disabled]="HeimarbeiterSelected" size="17">
+								<option *ngFor="let Heimarbeiter of Heimarbeiters" value="{{Heimarbeiter.kostenstelle}}">{{Heimarbeiter.name.trim()}}</option>
+							</select>
+							<button nbButton fullWidth shape="semi-round" hero outline size="large" (click)="selectHeimarbeiter()">Auswählen</button>
+						</div>
+					</div>
+				</nb-card-body>
+				<nb-card-footer>
+					<button nbButton fullWidth shape="semi-round" hero outline size="large" (click)="saveData()">Speichern</button>
+				</nb-card-footer>
+			</nb-card>
+		</form>
+	</div>
+</div>

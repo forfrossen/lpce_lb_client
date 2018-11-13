@@ -1,0 +1,131 @@
+import { AfterViewInit, Component, EventEmitter, OnDestroy, Input, Output } from "@angular/core"; 
+import { FormsModule } from '@angular/forms';
+
+import { HttpClientModule } from "@angular/common/http";
+//import { NgxEditorModule } from 'ngx-editor';
+//import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+//import { ICellEditorAngularComp } from "ag-grid-angular";
+
+@Component({
+    selector: 'text-cell',
+	template: `<app-ngx-editor [placeholder]="'Enter text here...'" [spellcheck]="false" [(ngModel)]="value"></app-ngx-editor>`
+})
+export class richTextEditorComponent implements AfterViewInit,
+	//ICellEditorAngularComp,
+	OnDestroy {
+	
+	private params: any;
+	public value: string;
+	public editor: any;
+
+	@Output() onEditorContentChange = new EventEmitter();
+	
+	ngAfterViewInit() {
+		console.log( 'Editor loaded' );	
+	}	
+
+	isPopup(): boolean {
+        return true;
+    }
+
+    agInit(params: any): void {
+        this.params = params;
+		this.value = this.params.value;
+		console.log( 'Value loaded: ' + this.value );
+	}
+	
+    refresh(): boolean {
+        return false;
+	}
+	
+	getValue(): any {
+        return this.value;
+	}
+	
+	ngOnDestroy() {
+		console.log( 'Editor removed' );		
+	}
+	
+}
+
+
+
+/*
+
+import { AfterViewInit, Component, EventEmitter, OnDestroy, Input, Output } from "@angular/core"; 
+import { FormsModule } from '@angular/forms';
+
+import 'tinymce';
+import 'tinymce/themes/modern/theme';
+
+declare var tinymce: any;
+
+//import { EditorModule } from '@tinymce/tinymce-angular';
+import { HttpClientModule } from "@angular/common/http";
+
+import { ICellEditorAngularComp } from "ag-grid-angular";
+
+@Component({
+    selector: 'text-cell',
+	template: `<textarea 
+					[(ngModel)]='value'
+					apiKey="3nm8km1pa3chmtt5k775uxe6ubkwqtpdkkkj2nb8lbqpxq9t">
+				</textarea>`
+})
+export class richTextEditorComponent implements AfterViewInit, ICellEditorAngularComp, OnDestroy {
+	
+	private params: any;
+	public value: string;
+	public editor: any;
+
+	@Output() onEditorContentChange = new EventEmitter();
+	ngAfterViewInit() {
+		
+		tinymce.init({
+			selector: 'textarea',
+			
+			skin_url: 'assets/skins/lightgray',
+			//skin_url: "/node_modules/tinymce/skins/lightgray",
+			content_css: false,
+			setup: editor => {
+				this.editor = editor;
+				editor.on('keyup change', () => {
+				  const content = editor.getContent();
+				  this.onEditorContentChange.emit(content);
+				});
+			}
+		});
+		
+		
+
+		console.log( 'Editor loaded' );
+		
+		
+	}
+
+
+	isPopup(): boolean {
+        return true;
+    }
+
+    agInit(params: any): void {
+        this.params = params;
+		this.value = this.params.value;
+		console.log( 'Value loaded: ' + this.value );
+	}
+	
+    refresh(): boolean {
+        return false;
+	}
+	
+	getValue(): any {
+        return this.value;
+	}
+	
+	ngOnDestroy() {
+		tinymce.remove( this.editor );
+		console.log( 'Editor removed' );		
+	}
+	
+}
+*/

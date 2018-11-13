@@ -1,0 +1,28 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+	"outDir": "./dist/out-tsc",
+	"baseUrl": "src",
+	"paths": {
+		// prefix with app- to prevent infinite recursion
+		"app-shared/*": ["app/shared/*"],
+		"app-lb-sdk/*": ["app/shared/sdk*"],
+  	},
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "plugins": [
+      { "name": "tslint-language-service"}
+    ]
+  }
+}
