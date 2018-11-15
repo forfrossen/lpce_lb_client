@@ -1,65 +1,76 @@
-
-	<div class="row">
-		<div class="col-sm">
-			<div class="heimarbeiters">
-				<nb-card size="xlarge">
-					<nb-card-header class="first">
-						Heimarbeiter
-					</nb-card-header>
-					<nb-list>
-						<nb-list-item 
-							*ngFor="let heimarbeiter of Heimarbeiters"											
-							(click)="selectHeimarbeiter(heimarbeiter.kostenstelle, $event)"
-							[class.HeimarbeiterSelected]="heimarbeiter.kostenstelle === Heimarbeiter.kostenstelle">
-								<nb-user [name]="heimarbeiter.name.trim()">
-								</nb-user>
-						</nb-list-item>
-					</nb-list>
-					<nb-card-footer>
-						<button nbButton fullWidth hero outline 
-							shape="semi-round" size="large" status="danger"
-							(click)="cancelProcess()">
-								Vorgang abbrechen
-						</button>				
-					</nb-card-footer>
-				</nb-card>
-			</div>
-		</div>
-		<div class="col-sm">
-			<nb-card size="xlarge" *ngIf="isHeimarbeiterSelected">
-				<nb-card-header [ngClass]="{'color bg-success': HeimarbeiterHighlighted}">
-					<nb-user [name]="Heimarbeiter.name.trim()"></nb-user>
+<div class="row">
+	
+	<div class="col-sm">
+		<div class="heimarbeiters">
+			
+			<nb-card size="xlarge">
+				<nb-card-header class="first">
+					Heimarbeiter
 				</nb-card-header>
-				<nb-card-header>
-					<input 
-						type="text" 
-						nbInput 
-						fullWidth 
-						fieldSize="large" 
-						placeholder="Workorder" 
-						#Workorder  name="Workorder"
-						[(ngModel)]="workorder" 
-						value="{{workorder}}"
-						(keyup.enter)="onEnter(Workorder.value)"
-						style="margin-bottom: 0px!important;">
-				</nb-card-header>
-					<nb-list class="HeimarbeitAuftraegeListe">
-						<nb-list-item *ngFor="let heimarbeit of Heimarbeits; index as i">
-							<div class="badgee">
-								{{i+1}}
-							</div>
-							<div class="heimarbeit-content">
-								{{ heimarbeit.auftrag }}
-							</div>
+				<nb-list>
+					<nb-list-item 
+						*ngFor="let heimarbeiter of Heimarbeiters"											
+						(click)="selectHeimarbeiter(heimarbeiter.kostenstelle, $event)"
+						[class.heimarbeiterSelected]="heimarbeiter.kostenstelle === Heimarbeiter.kostenstelle">
+							<nb-user [name]="heimarbeiter.name">
+							</nb-user>
 					</nb-list-item>
 				</nb-list>
-				<nb-card-footer>
-					<button nbButton fullWidth  hero outline 
-						shape="semi-round"size="large" status="success"
-						(click)="saveData()">
-							Speichern
+				<nb-card-footer *ngIf="isHeimarbeiterSelected">
+					<button nbButton fullWidth hero outline 
+						shape="semi-round" size="large" status="danger"
+						(click)="cancelProcess()">
+							Vorgang abbrechen
 					</button>				
 				</nb-card-footer>
 			</nb-card>
-		</div>				
+
+		</div>
 	</div>
+
+
+	<div class="col-sm">
+		
+		<nb-card size="xlarge" >
+		
+			<nb-card-header [ngClass]="{'color bg-info': HeimarbeiterHighlighted}" >
+				<nb-user [name]="Heimarbeiter.name"></nb-user>
+			</nb-card-header>
+		
+			<nb-card-header *ngIf="isHeimarbeiterSelected">
+				<input 
+					type="text" 
+					nbInput 
+					fullWidth 
+					fieldSize="large" 
+					placeholder="Workorder" 
+					#Workorder name="Workorder"
+					[(ngModel)]="workorder" 
+					value="{{workorder}}"
+					(keyup.enter)="onEnter(Workorder.value)"
+					[ngClass]="{ 'input-danger': isBadWorkorderScanned }"
+					style="margin-bottom: 0px!important;">
+			</nb-card-header>
+
+			<nb-list class="HeimarbeitAuftraegeListe">
+				<nb-list-item *ngFor="let heimarbeit of Heimarbeits; index as i">
+					<div class="badgee">
+						{{i+1}}
+					</div>
+					<div class="heimarbeit-content">
+						{{ heimarbeit.auftrag }}
+					</div>
+				</nb-list-item>
+			</nb-list>
+			
+			<nb-card-footer *ngIf="isHeimarbeiterSelected && isHeimarbeitScanned">
+				<button nbButton fullWidth  hero outline 
+					shape="semi-round"size="large" status="success"
+					(click)="saveData()">
+						Speichern
+				</button>				
+			</nb-card-footer>
+
+		</nb-card>
+	</div>				
+</div>

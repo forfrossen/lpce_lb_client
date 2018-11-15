@@ -24,7 +24,6 @@ select:last-child {
 }
 
 .heimarbeiters nb-list-item:hover{
-	font-weight: bolder;
 	padding-left: 3rem !important;
 	transition: all .2s ease-in-out;
 }

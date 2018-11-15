@@ -1,5 +1,27 @@
 <h2 mat-dialog-title>{{data.title}}</h2>
-<mat-dialog-content [innerHtml]="data.message"></mat-dialog-content>
+<mat-dialog-content>
+
+	<mat-accordion>
+
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				Details
+			</mat-expansion-panel-header>
+			{{data.message}}
+		</mat-expansion-panel>
+
+	</mat-accordion>
+<!--<nb-accordion>
+		<nb-accordion-item>
+			<nb-accordion-item-header>
+				Details
+			</nb-accordion-item-header>
+			<nb-accordion-item-body>
+				{{data.message}}
+			</nb-accordion-item-body>
+		</nb-accordion-item>
+	</nb-accordion>-->
+</mat-dialog-content>
 <mat-dialog-actions>
 	<div class="button-row">
 		<button mat-stroked-button color="primary" [mat-dialog-close]="true">Confirm</button>

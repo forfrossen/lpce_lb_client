@@ -1,11 +1,6 @@
-import { Component, OnInit, Input, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { NbAuthService, NbAuthResult, NbAuthJWTToken} from '@nebular/auth';
-import { NbAccessChecker } from '@nebular/security';
 import { NbSelectModule, NbButtonModule, NbButtonComponent } from '@nebular/theme';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
 
 import { NbToastrService } from '@nebular/theme';
 import { NbThemeService } from '@nebular/theme';
@@ -24,10 +19,11 @@ import { HeimarbeitApi, HeimarbeiterApi }					from 'app/shared/sdk/services';
 	styleUrls: [ './heimarbeit-dashboard.component.css' ]
 } )
 	
-export class HeimarbeitDashboardComponent implements OnInit {
+export class HeimarbeitDashboardComponent implements OnInit, OnDestroy {
 	
 	@Input() workorder: string;
 	title: string = "Heimarbeit";
+	private alive = false;
 
 	Heimarbeiter: HeimarbeiterInterface = {kostenstelle: '', name: ''};
 	Heimarbeiters: HeimarbeiterInterface[] = [];
@@ -35,7 +31,9 @@ export class HeimarbeitDashboardComponent implements OnInit {
 	Heimarbeit: HeimarbeitInterface;
 	Heimarbeits: HeimarbeitInterface[] = [];
 
+	isBadWorkorderScanned: boolean = false;
 	isHeimarbeiterSelected: boolean = false;
+	isHeimarbeitScanned: boolean = false;
 	HeimarbeiterHighlighted: boolean = false;
 
 	public Workorders: string[ ] = [ '' ];
@@ -47,8 +45,7 @@ export class HeimarbeitDashboardComponent implements OnInit {
 		private heimarbeiterApi: 	HeimarbeiterApi,
 		private toastrService: 		NbToastrService,
 		private themeService: 		NbThemeService,
-		private matUiService: MatUiService,
-		private renderer: Renderer2,
+		private matUiService:		MatUiService,
 	) {
 		LoopBackConfig.setBaseURL( BASE_URL );
 		LoopBackConfig.setApiVersion( API_VERSION );
@@ -57,21 +54,46 @@ export class HeimarbeitDashboardComponent implements OnInit {
 	ngOnInit() {
 		this.heimarbeiterApi.find( { order: 'name ASC' } )
 			.subscribe( heimarbeiters => this.Heimarbeiters = heimarbeiters );
+		
+		this.alive = true;
 	}	
 
+	ngOnDestroy() {
+		this.alive = false;
+	}
+
 	onEnter( value: string ): void {
+		// Scanned Workorder length must be 8 Digits long else do nothing
+		if ( value.length !== 8 ) {
+			this.emptyWorkorderScanField();
+
+			setTimeout( () => {
+				this.isBadWorkorderScanned = true;
+				setTimeout( () => {
+					this.isBadWorkorderScanned = false;
+				}, 500 )
+			}, 100 )
+
+			return;	
+		}
+
 		this.Heimarbeit = { auftrag: value, datum: null, kostenstelle: this.Heimarbeiter.kostenstelle }
-		console.log( 'Heimarbeits: %O', this.Heimarbeits );
 		this.Heimarbeits.push( this.Heimarbeit );
-		this.workorder = '';
+		this.emptyWorkorderScanField();
+		this.isHeimarbeitScanned = true;
+
 	}
 
 	selectHeimarbeiter( HeimarbeiterKostenstelle: string, event: MouseEvent ): void{
+		// Q: Is a Heimarbeiter already selected and were workorders already scanned?
 		if ( this.isHeimarbeiterSelected && this.Heimarbeits.length ) {
-			this.matUiService.dialog( '', 'Es kann kein neuer Heimarbeiter ausgewählt werden. Daten müssen erst abgeschickt, oder Vorgang muss erst abgebrochen werden.' )
+
+			// Show error message and stop funktion
+			this.matUiService.dialog( 'Error', 'Es kann kein neuer Heimarbeiter ausgewählt werden. Daten müssen erst abgeschickt, oder Vorgang muss erst abgebrochen werden.' )
 			return;
 		}
 
+		// Set internal Status and Currently selected Heimarbeiter for use when workorder is scanned (onEnter)
 		this.isHeimarbeiterSelected = true;
 		this.Heimarbeiter = this.Heimarbeiters.find( Heimarbeiters => Heimarbeiters.kostenstelle == HeimarbeiterKostenstelle )
 
@@ -81,12 +103,23 @@ export class HeimarbeitDashboardComponent implements OnInit {
 			setTimeout( () => {
 				console.log( 'Removing Class now' );
 				this.HeimarbeiterHighlighted = false;
-			}, 500 )
-		}, 100)
-				
-		console.log( "Clicked on: " + HeimarbeiterKostenstelle );
-		console.log( "Selected Heimarbeiter.kostenstelle is now: %O", this.Heimarbeiter.kostenstelle );
-		console.log( "Event: %O", event );
+			}, 200 )
+		}, 200 )
+		
+	}
+
+	saveData(): void{
+		this.heimarbeitApi.create( this.Heimarbeits )
+			.subscribe( response => {
+				//this.matUiService.dialog( '', JSON.stringify( response ) )
+				this.toastrService.success( 'Daten erfolgreich eingetragen', 'Gespeichert' );
+				this.unSelecetHeimarbeiter();
+				this.emptyHeimarbeits();
+			}, response => {
+				console.log( response );
+				let title = 'Error: ' + response.statusCode;
+				this.matUiService.error( title, response.details[ 0 ].message );
+			})
 	}
 
 	unSelecetHeimarbeiter(): void {
@@ -94,36 +127,19 @@ export class HeimarbeitDashboardComponent implements OnInit {
 		this.isHeimarbeiterSelected = false;
 	}
 
-	cancelProcess(): void{
-		this.unSelecetHeimarbeiter();
+	emptyHeimarbeits(): void {
 		this.Heimarbeits = [];
 	}
 
-	saveData(): void{
-		this.heimarbeitApi.create( this.Heimarbeits )
-			.subscribe( response => {
-				this.matUiService.dialog('', JSON.stringify(response))
-			}, response => {
-				console.log( response );
-				let title = 'Error: ' + response.statusCode;
-				let content = response.message
-					+ '<br /><br /><br />'
-					+ ` <nb-accordion>
-							<nb-accordion-item>
-								<nb-accordion-item-header>
-									Details
-								</nb-accordion-item-header>
-								<nb-accordion-item-body>`
-								+ response.details[ 0 ].message
-								+ `
-								</nb-accordion-item-body>
-							</nb-accordion-item>
-						</nb-accordion>`;
-				
-				this.matUiService.dialog( title, content );
-			})
+	emptyWorkorderScanField(): void {
+		this.workorder = '';
+		this.isHeimarbeitScanned = true;
 	}
 
+	cancelProcess(): void {
+		this.unSelecetHeimarbeiter();
+		this.emptyHeimarbeits();
+	}
 
 
 }

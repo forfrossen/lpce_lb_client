@@ -2,6 +2,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatExpansionModule } from '@angular/material';
 
 import {
   NbActionsModule,
@@ -19,7 +20,7 @@ import {
   NbContextMenuModule,
   NbToastrModule,
   NbDialogModule,
-  NbDialogConfig,
+  NbDialogConfig, NbAccordionModule
 } from '@nebular/theme';
 
 import { NbSecurityModule } from '@nebular/security';
@@ -41,7 +42,7 @@ import {
   ThreeColumnsLayoutComponent,
   TwoColumnsLayoutComponent,
 } from './layouts';
-import { confirmComponent, dialogComponent } from 'app/_ui-components/dialog.component';
+import { confirmComponent, dialogComponent, errorComponent } from 'app/_ui-components/dialog.component';
 import { DEFAULT_THEME } from './styles/theme.default';
 //import { COSMIC_THEME } from './styles/theme.cosmic';
 import { CORPORATE_THEME } from './styles/theme.corporate';
@@ -51,6 +52,7 @@ import { MatDialogModule, MatButtonModule, MatButtonToggleModule } from '@angula
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 
 const NB_MODULES = [
+  NbAccordionModule,MatExpansionModule,
   NbCardModule,
   NbLayoutModule,
   NbTabsetModule,
@@ -84,12 +86,12 @@ const COMPONENTS = [
   SampleLayoutComponent,
   ThreeColumnsLayoutComponent,
   TwoColumnsLayoutComponent,
-  confirmComponent, dialogComponent
+  confirmComponent, dialogComponent, errorComponent
 ];
 
 const ENTRY_COMPONENTS = [
 	ThemeSwitcherListComponent,
-	confirmComponent, dialogComponent
+	confirmComponent, dialogComponent, errorComponent
 ];
 
 const PIPES = [
