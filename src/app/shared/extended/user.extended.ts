@@ -10,7 +10,6 @@ import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../sdk/models/User';
 import { UserApi } from '../sdk/services/custom/User';
-import { SocketConnection } from '../sdk/sockets/socket.connections';
 
 @Injectable( { providedIn: 'root' } )
 export class UserApiExtended extends UserApi {

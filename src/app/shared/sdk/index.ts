@@ -44,14 +44,13 @@ import { CommonModule } from '@angular/common';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CookieBrowser } from './storage/cookie.browser';
 import { StorageBrowser } from './storage/storage.browser';
-import { SocketBrowser } from './sockets/socket.browser';
-import { SocketDriver } from './sockets/socket.driver';
-import { SocketConnection } from './sockets/socket.connections';
-import { RealTime } from './services/core/real.time';
 import { UserApi } from './services/custom/User';
+import { AccessTokenApi } from './services/custom/AccessToken';
 import { MessageApi } from './services/custom/Message';
 import { TeileinfoNeuApi } from './services/custom/TeileinfoNeu';
 import { HeimarbeiterApi } from './services/custom/Heimarbeiter';
+import { HeimarbeitApi } from './services/custom/Heimarbeit';
+import { UserIdentityApi } from './services/custom/UserIdentity';
 /**
 * @module SDKBrowserModule
 * @description
@@ -66,8 +65,7 @@ import { HeimarbeiterApi } from './services/custom/Heimarbeiter';
   declarations: [ ],
   exports:      [ ],
   providers:    [
-    ErrorHandler,
-    SocketConnection
+    ErrorHandler
   ]
 })
 export class SDKBrowserModule {
@@ -81,14 +79,15 @@ export class SDKBrowserModule {
         LoopBackAuth,
         LoggerService,
         SDKModels,
-        RealTime,
         UserApi,
+        AccessTokenApi,
         MessageApi,
         TeileinfoNeuApi,
         HeimarbeiterApi,
+        HeimarbeitApi,
+        UserIdentityApi,
         internalStorageProvider,
-        { provide: SDKStorage, useClass: StorageBrowser },
-        { provide: SocketDriver, useClass: SocketBrowser }
+        { provide: SDKStorage, useClass: StorageBrowser }
       ]
     };
   }

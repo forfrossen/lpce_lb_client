@@ -5,12 +5,13 @@ import { SDKModels } from './SDKModels';
 import { BaseLoopBackApi } from '../core/base.service';
 import { LoopBackConfig } from '../../lb.config';
 import { LoopBackAuth } from '../core/auth.service';
-import { LoopBackFilter, SDKToken, AccessToken } from '../../models/BaseModels';
+import { LoopBackFilter, SDKToken } from '../../models/BaseModels';
 import { ErrorHandler } from '../core/error.service';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../../models/User';
-import { SocketConnection } from '../../sockets/socket.connections';
+import { AccessToken } from '../../models/AccessToken';
+import { UserIdentity } from '../../models/UserIdentity';
 
 
 /**
@@ -21,12 +22,11 @@ export class UserApi extends BaseLoopBackApi {
 
   constructor(
     @Inject(HttpClient) protected http: HttpClient,
-    @Inject(SocketConnection) protected connection: SocketConnection,
     @Inject(SDKModels) protected models: SDKModels,
     @Inject(LoopBackAuth) protected auth: LoopBackAuth,
     @Optional() @Inject(ErrorHandler) protected errorHandler: ErrorHandler
   ) {
-    super(http,  connection,  models, auth, errorHandler);
+    super(http,  models, auth, errorHandler);
   }
 
   /**
@@ -743,91 +743,31 @@ export class UserApi extends BaseLoopBackApi {
    * 
    *
    */
-	public login( credentials?: any, include: any = 'user', rememberMe: boolean = true, customHeaders?: Function ): Observable<any> {
-		//public login(credentials: any, include: any = 'user', rememberMe: boolean = true, customHeaders?: Function): Observable<any> {
-		let _method: string = "POST";
-		let _url: string = LoopBackConfig.getPath() + "/auth/ad"
-		// + LoopBackConfig.getApiVersion() +
-		//"/users/login";
-		let _routeParams: any = {};
-		let _postBody: any = {
-			//credentials: { 'username': 'asdf', 'password': 'asdf' }
-		};
-		let _urlParams: any = {};
-		if ( typeof include !== 'undefined' && include !== null ) _urlParams.include = include;
-		
-		/*
-		console.log( ' User.ts - method: %O', _method );
-		console.log( ' User.ts - url: %O', _url );
-		console.log( ' User.ts - routeParams: %O', _routeParams );
-		console.log( ' User.ts - urlParams: %O', _urlParams );
-		console.log( ' User.ts - postBody: %O', _postBody );
-		console.log( ' User.ts -  customHeaders: %O', customHeaders );
-		*/
+  public login(credentials: any, include: any = 'user', rememberMe: boolean = true, customHeaders?: Function): Observable<any> {
+    let _method: string = "POST";
+    let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
+    "/users/login";
+    let _routeParams: any = {};
+    let _postBody: any = {
+      credentials: credentials
+    };
+    let _urlParams: any = {};
+    if (typeof include !== 'undefined' && include !== null) _urlParams.include = include;
+    let result = this.request(_method, _url, _routeParams, _urlParams, _postBody, null, customHeaders)
+      .pipe(
+        map(
+        (response: any) => {
+          response.ttl = parseInt(response.ttl);
+          response.rememberMe = rememberMe;
+          this.auth.setToken(response);
+          return response;
+        }
+      )
+      );
+      return result;
+      
+  }
 
-		//let result = this.request( _method, _url, _routeParams, _urlParams, _postBody, null, customHeaders )
-		let result = this.http.request( _method, _url + '?include=user', { body: _postBody, observe: 'response', withCredentials: true } )
-			.pipe(
-				map( ( response: any ) => {
-					console.log( ' User.ts - response: %O', response );
-					return response;
-				} ),
-				map( ( response: any ) => {
-					response.body.ttl = parseInt( '3600' );
-					response.body.rememberMe = rememberMe;
-					//response.body.id = response.access_token;
-					console.log( ' User.ts - response: %O', response );
-					this.auth.setToken( response.body );
-					this.auth.save();
-					return response;
-				}
-				)
-			);
-		return result;
-
-	}
-	
-  public login_bak(credentials?: any, include: any = 'user', rememberMe: boolean = true, customHeaders?: Function): Observable<any> {
-	//public login(credentials: any, include: any = 'user', rememberMe: boolean = true, customHeaders?: Function): Observable<any> {
-	  let _method: string = "POST";
-	  let _url: string = LoopBackConfig.getPath() + "/auth/ad"
-	  // + LoopBackConfig.getApiVersion() +
-	  //"/users/login";
-	  let _routeParams: any = {};
-	  let _postBody: any = {
-		credentials: { 'username': 'asdf', 'password': 'asdf'}
-	  };
-	  let _urlParams: any = {};
-	  if (typeof include !== 'undefined' && include !== null) _urlParams.include = include;
-		
-		console.log( ' User.ts - method: %O', _method );
-		console.log( ' User.ts - url: %O', _url );
-		console.log( ' User.ts - routeParams: %O', _routeParams );
-		console.log( ' User.ts - urlParams: %O', _urlParams );
-		console.log( ' User.ts - postBody: %O', _postBody );
-		console.log( ' User.ts -  customHeaders: %O',  customHeaders );
-	  
-	  let result = this.request( _method, _url, _routeParams, _urlParams, _postBody, null, customHeaders )
-		.pipe(
-		  map(( response: any ) => {
-				console.log( ' User.ts - response: %O', response );
-				return response;
-		  }),
-		  map(( response: any ) => {
-				response.ttl = parseInt(response.ttl);
-				response.rememberMe = rememberMe;
-				response.id = response.access_token;
-				console.log( ' User.ts - response: %O', response );
-				  this.auth.setToken(response);
-			  this.auth.save();
-			return response;
-		  }
-		)
-		);
-		return result;
-		
-	}
-  
   /**
    * Logout a user with access token.
    *

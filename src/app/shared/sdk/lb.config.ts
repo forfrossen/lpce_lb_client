@@ -27,7 +27,7 @@ export class LoopBackConfig {
   private static filterOn: string = 'headers';
   private static whereOn: string = 'headers';
   private static secure: boolean = false;
-  private static withCredentials: boolean = true;
+  private static withCredentials: boolean = false;
 
   public static setApiVersion(version: string = 'api'): void {
     LoopBackConfig.version = version;
@@ -97,7 +97,7 @@ export class LoopBackConfig {
     return LoopBackConfig.secure;
   }
 
-  public static setRequestOptionsCredentials(withCredentials: boolean = true): void {
+  public static setRequestOptionsCredentials(withCredentials: boolean = false): void {
     LoopBackConfig.withCredentials = withCredentials;
   }
 

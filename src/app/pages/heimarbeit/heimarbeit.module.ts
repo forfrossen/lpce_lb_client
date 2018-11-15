@@ -1,10 +1,13 @@
 import { NgModule }      				from '@angular/core';
 import { CommonModule } 				from '@angular/common';
 
-import { NbInputModule, 
-		 NbButtonModule, 
-		 NbSelectModule  } 				
-from '@nebular/theme';
+import {
+	NbInputModule, 
+	NbButtonModule, 
+	NbSelectModule,
+	NbListModule,
+	NbUserModule 
+} 	from '@nebular/theme';
 
 import { BrowserAnimationsModule }		from '@angular/platform-browser/animations';
 import { ThemeModule } 					from '../../@theme/theme.module';
@@ -26,7 +29,9 @@ import { HeimarbeitRoutingModule } 		from './heimarbeit-routing.module';
 		ThemeModule,
 		NbInputModule,
 		NbButtonModule,
-		NbSelectModule
+		NbSelectModule,
+		NbListModule,
+		NbUserModule 
 	],
 	declarations: [
 		HeimarbeitComponent,

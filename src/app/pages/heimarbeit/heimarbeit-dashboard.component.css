@@ -13,3 +13,58 @@ select option {
 select:last-child {
 	padding-top: 0.5625rem;
 }
+
+.heimarbeiters nb-list-item {
+	padding: 0.5625rem 2rem !important;
+	transition: all .2s ease-in-out;
+}
+
+.heimarbeiters nb-list-item:first-child{
+	border-top: none;
+}
+
+.heimarbeiters nb-list-item:hover{
+	font-weight: bolder;
+	padding-left: 3rem !important;
+	transition: all .2s ease-in-out;
+}
+
+.heimarbeiters .heimarbeiterSelected {
+	font-weight: bolder;
+	padding-left: 3rem !important;
+	transition: all .2s ease-in-out;
+}
+
+.heimarbeiters .heimarbeiterSelected:hover {
+	font-weight: bolder;
+	padding-left: 4rem !important;
+	transition: all .2s ease-in-out;
+}
+
+.highlight{
+	transition: all .5s ease-in-out;
+	background-color: aqua;
+}
+
+.HeimarbeitAuftraegeListe .badgee {
+	padding: 0.5625rem 2rem 0.5625rem 1rem !important;
+	/*margin-right: 1rem;
+	border-right: 1px #a4abb3 solid;
+	border-left: 1px #a4abb3 solid;
+	border-radius: 50%;*/
+	display: inline-block;
+	color: #a4abb3;
+	font-size: 1rem;
+	line-height: 1.25;
+	font-weight: bolder;
+}
+
+.HeimarbeitAuftraegeListe .heimarbeit-content{
+	display: inline-block;
+	font-size: 1rem;
+    line-height: 1.25;
+}
+
+.first {
+	padding: 25px;
+}

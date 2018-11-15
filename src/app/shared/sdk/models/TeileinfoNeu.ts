@@ -2,7 +2,7 @@
 
 declare var Object: any;
 export interface TeileinfoNeuInterface {
-  "id": number;
+  "id"?: number;
   "zeichnungsnummer"?: string;
   "teileinfoAllg"?: string;
   "dateAllg"?: Date;

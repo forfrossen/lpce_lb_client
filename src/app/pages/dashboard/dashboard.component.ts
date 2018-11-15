@@ -85,7 +85,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		private themeService: NbThemeService,
 		private http: HttpClient,
 		private auth: LoopBackAuth,
-		private mySSO: SSO;
+		private mySSO: SSO,
 		//private roleProvider: RoleProvider,
 	) {
 

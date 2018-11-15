@@ -9,14 +9,14 @@ import { LoopBackFilter,  } from '../../models/BaseModels';
 import { ErrorHandler } from '../core/error.service';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Heimarbeiter } from '../../models/Heimarbeiter';
+import { Heimarbeit } from '../../models/Heimarbeit';
 
 
 /**
- * Api services for the `Heimarbeiter` model.
+ * Api services for the `Heimarbeit` model.
  */
 @Injectable()
-export class HeimarbeiterApi extends BaseLoopBackApi {
+export class HeimarbeitApi extends BaseLoopBackApi {
 
   constructor(
     @Inject(HttpClient) protected http: HttpClient,
@@ -40,13 +40,13 @@ export class HeimarbeiterApi extends BaseLoopBackApi {
    *
    * <em>
    * (The remote method definition does not provide any description.
-   * This usually means the response is a `Heimarbeiter` object.)
+   * This usually means the response is a `Heimarbeit` object.)
    * </em>
    */
   public patchOrCreate(data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PATCH";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Heimarbeiters";
+    "/Heimarbeits";
     let _routeParams: any = {};
     let _postBody: any = {
       data: data
@@ -59,7 +59,7 @@ export class HeimarbeiterApi extends BaseLoopBackApi {
   /**
    * Patch attributes for a model instance and persist it into the data source.
    *
-   * @param {any} id Heimarbeiter id
+   * @param {any} id Heimarbeit id
    *
    * @param {object} data Request data.
    *
@@ -71,13 +71,13 @@ export class HeimarbeiterApi extends BaseLoopBackApi {
    *
    * <em>
    * (The remote method definition does not provide any description.
-   * This usually means the response is a `Heimarbeiter` object.)
+   * This usually means the response is a `Heimarbeit` object.)
    * </em>
    */
   public patchAttributes(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PATCH";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Heimarbeiters/:id";
+    "/Heimarbeits/:id";
     let _routeParams: any = {
       id: id
     };
@@ -91,9 +91,9 @@ export class HeimarbeiterApi extends BaseLoopBackApi {
 
   /**
    * The name of the model represented by this $resource,
-   * i.e. `Heimarbeiter`.
+   * i.e. `Heimarbeit`.
    */
   public getModelName() {
-    return "Heimarbeiter";
+    return "Heimarbeit";
   }
 }

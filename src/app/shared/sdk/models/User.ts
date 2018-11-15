@@ -1,4 +1,8 @@
 /* tslint:disable */
+import {
+  AccessToken,
+  UserIdentity
+} from '../index';
 
 declare var Object: any;
 export interface UserInterface {
@@ -8,9 +12,9 @@ export interface UserInterface {
   "emailVerified"?: boolean;
   "id"?: number;
   "password"?: string;
-  accessTokens?: any[];
+  accessTokens?: AccessToken[];
   credentials?: any[];
-  identities?: any[];
+  identities?: UserIdentity[];
 }
 
 export class User implements UserInterface {
@@ -20,9 +24,9 @@ export class User implements UserInterface {
   "emailVerified": boolean;
   "id": number;
   "password": string;
-  accessTokens: any[];
+  accessTokens: AccessToken[];
   credentials: any[];
-  identities: any[];
+  identities: UserIdentity[];
   constructor(data?: UserInterface) {
     Object.assign(this, data);
   }
@@ -84,8 +88,8 @@ export class User implements UserInterface {
       relations: {
         accessTokens: {
           name: 'accessTokens',
-          type: 'any[]',
-          model: '',
+          type: 'AccessToken[]',
+          model: 'AccessToken',
           relationType: 'hasMany',
                   keyFrom: 'id',
           keyTo: 'userId'
@@ -100,8 +104,8 @@ export class User implements UserInterface {
         },
         identities: {
           name: 'identities',
-          type: 'any[]',
-          model: '',
+          type: 'UserIdentity[]',
+          model: 'UserIdentity',
           relationType: 'hasMany',
                   keyFrom: 'id',
           keyTo: 'userId'

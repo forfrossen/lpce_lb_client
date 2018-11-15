@@ -34,8 +34,7 @@ export class LoopBackAuth {
     this.token.userId = this.load('userId');
     this.token.created = this.load('created');
     this.token.ttl = this.load('ttl');
-	this.token.rememberMe = this.load('rememberMe');
-	  console.log( 'Loopback SDK Aauth Service Constructor running. Loaded token: %O', this.token );
+    this.token.rememberMe = this.load('rememberMe');
   }
   /**
    * @method setRememberMe
