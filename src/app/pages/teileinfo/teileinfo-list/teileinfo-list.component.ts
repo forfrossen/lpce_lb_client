@@ -53,7 +53,7 @@ export class TeileinfoListComponent implements OnDestroy{
 		this.TiSettings = this.createColDefs();
 		this.TiSource = new LocalDataSource();		
 
-		teileinfoNeuApi.find( { limit: 50 } )
+		teileinfoNeuApi.find( { limit: 50, order: 'created desc' } )
 			.subscribe( ( teileinfoNeus: TeileinfoNeuInterface[] ) => {
 				this.TiSource.load( teileinfoNeus );
 			},
@@ -76,7 +76,13 @@ export class TeileinfoListComponent implements OnDestroy{
 
 	tableAction( event, action ): void {
 		var tableActionConfig: {} = {create:{}, edit:{}, delete:{}, configured: false};
-		this.toastrService.success( "", action );
+
+		if ( action == 'create' || action == 'edit') {
+			event.newData.dateAllg = ( event.newData.dateAllg === '' ) ? null : event.newData.dateAllg;
+			event.newData.dateSek = ( event.newData.dateSek === '' ) ? null : event.newData.dateSek;
+			event.newData.teileinfoAllg = ( event.newData.teileinfoAllg === '' ) ? null : event.newData.teileinfoAllg;
+			event.newData.teileinfoSek = ( event.newData.teileinfoSek === '' ) ? null : event.newData.teileinfoSek;
+		}
 
 		if ( action == 'create' ) {
 			tableActionConfig = {
@@ -116,14 +122,12 @@ export class TeileinfoListComponent implements OnDestroy{
 		this.MatUiService.confirm( title, message )
 			.subscribe( confirmStatus => {
 				if ( confirmStatus === true ) {
-					this.log.info( 'User confirmed action' );
 					tableActionConfig[action].APIaction.subscribe( data => {
 						this.log.info( data );
 						this.toastrService.success( "", "Done" );
 						event.confirm.resolve( event.newData );
 					}, err => {
 						this.log.error( err );
-						this.toastrService.danger( "", "Error: " + err.name );
 						this.MatUiService.dialog( "Error: " + err.name, err.message );
 						event.confirm.reject( err );
 					} );

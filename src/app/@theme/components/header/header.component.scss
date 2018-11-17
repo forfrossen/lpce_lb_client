@@ -33,6 +33,16 @@
     align-items: center;
     width: auto;
 
+	.blink_me {
+		animation: blinker 1s linear infinite;
+	  }
+	  
+	  @keyframes blinker {
+		50% {
+		  opacity: 0;
+		}
+	  }
+
     .navigation {
       @include nb-ltr(padding-right, nb-theme(padding));
       @include nb-rtl(padding-left, nb-theme(padding));

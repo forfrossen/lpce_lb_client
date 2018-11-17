@@ -11,30 +11,7 @@ import { NbAccessChecker } from '@nebular/security';
 			Hello from {{getTitle()}} Component.
 		</nb-card-body>
 		<nb-card-footer></nb-card-footer>
-	</nb-card>
-	<nb-card>
-		<nb-card-header>{{AutoAuth}}</nb-card-header>
-		<nb-card-body>
-			Auth Result: <br />
-			<pre>{{getData() | json}}</pre>
-		</nb-card-body>
-		<nb-card-footer>
-			<button nbButton (click)="authMe()" status="primary">Auth Me</button>
-			<button *ngIf="accessChecker.isGranted('create', 'comments') | async" >Post Comment</button>
-		</nb-card-footer>
-	</nb-card>
-	<nb-card>
-		<nb-card-header>{{AuthMe}}</nb-card-header>
-		<nb-card-body>
-			Auth Result: <br />
-			<pre>{{getAuthData() | json}}</pre>
-		</nb-card-body>
-		<nb-card-footer>
-			<button nbButton (click)="authMe()" status="primary">Auth Me</button>
-			<button nbButton (click)="authMe()" *ngIf="accessChecker.isGranted('root', 'admin') | async" status="primary">Show if Admin</button>
-		</nb-card-footer>
-	</nb-card>
-	
+	</nb-card>	
 	`,
 } )
 	
