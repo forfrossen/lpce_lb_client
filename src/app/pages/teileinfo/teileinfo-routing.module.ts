@@ -5,18 +5,19 @@ import { TeileinfoComponent } from './teileinfo.component';
 import { TeileinfoDashboardComponent } 		from './teileinfo-dashboard.component';
 import { TeileinfoListComponent } from './teileinfo-list/teileinfo-list.component';
 
-const routes: Routes = [{ 
-	path: '', 
+const routes: Routes = [{
+	path: '',
 	component: TeileinfoComponent,
 	children: [{
-		path: 'dashboard', 
-		component: TeileinfoDashboardComponent, 
-		pathMatch: 'full' 
-	},{
-		path: 'list', 
-		component: TeileinfoListComponent, 
+		path: 'dashboard',
+		component: TeileinfoDashboardComponent,
+		pathMatch: 'full',
+	},
+	{
+		path: 'list',
+		component: TeileinfoListComponent,
 		canActivate: [AuthGuard],
-		pathMatch: 'full' 
+		pathMatch: 'full',
 	}]
 }];
 
@@ -26,4 +27,3 @@ const routes: Routes = [{
 })
 
 export class TeileinfoRoutingModule { };
- 

@@ -47,7 +47,7 @@ import 'web-animations-js';  // Run `npm install --save web-animations-js`.
 
 /** Evergreen browsers require these. **/
 import 'core-js/es6/reflect';
-import 'core-js/es7/reflect';
+
 
 // Add global to window, assigning the value of window itself.
 (window as any).global = window;

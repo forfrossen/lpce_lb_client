@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { takeWhile } from 'rxjs/operators/takeWhile';
+import { takeWhile } from 'rxjs/operators';
 
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 

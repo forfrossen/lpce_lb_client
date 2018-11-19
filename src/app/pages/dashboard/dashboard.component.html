@@ -2,7 +2,9 @@
 	<div class="col-sm">
 		<nb-card>
 			<nb-card-header>Hello from ngx-admin sandbox project.</nb-card-header>
-			<nb-card-body>{{LoopbackData | json}}</nb-card-body>
+			<nb-card-body>
+				{{LoopbackData | json}}
+			</nb-card-body>
 			<nb-card-footer>
 				<button nbButton shape="semi-round" hero outline size="large" (click)="LoopAuthAD()">Clear</button>
 				<button nbButton shape="semi-round" hero outline size="large" (click)="LoopGimme()">Auth</button>

@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
-import { takeWhile } from 'rxjs/operators/takeWhile';
+import { takeWhile ,  catchError, retry, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, retry, map } from 'rxjs/operators';
 import { Observable  } from 'rxjs';
-import { toPromise } from 'rxjs/operator/toPromise';
+
 import { reject } from 'q';
 import { NbAuthService, NbTokenService } from '@nebular/auth'
 

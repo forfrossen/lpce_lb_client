@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
+import { Observable ,  observable, of, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { NbAuthService, NbAuthSimpleToken } from '@nebular/auth';
 import { NbRoleProvider } from '@nebular/security';
 import { SSO } from './SSO.service';
 import { UserService } from '../data/users.service';
-import { observable, of, BehaviorSubject } from 'rxjs';
 
 
 @Injectable()

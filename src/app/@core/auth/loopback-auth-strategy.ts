@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of as observableOf } from 'rxjs';
-import { switchMap, map, catchError } from 'rxjs/operators';
-import { delay } from 'rxjs/operators';
+import { switchMap, map, catchError ,  delay } from 'rxjs/operators';
 
 import { NbAuthStrategy } from '@nebular/auth/strategies/auth-strategy';
 import { NbAuthResult } from '@nebular/auth/services/auth-result';
