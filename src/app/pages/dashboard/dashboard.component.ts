@@ -89,30 +89,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	) {
 
 		LoopBackConfig.setBaseURL( BASE_URL );
-		LoopBackConfig.setApiVersion( API_VERSION );	
-		
+		LoopBackConfig.setApiVersion( API_VERSION );
 /*
 		this.http.get( '/express-passport' )
 			.subscribe (( data: ADUser ) => {
 				this.ADUser = data
 			} );
-*/		
-		
-		
+*/
 	}
 
 	LoopAuthAD() {
-		
 		this.NBTokenService.clear();
 	}
-	
+
 	LoopGimme() {
 
 		this.mySSO.Login()
 			.then( ( info ) => {
 				console.log('Info!: %O', info)
 			})
-			.catch((err)=>{
+			.catch( ( err ) => {
 				console.error('ERROR!: %O', err)
 			})
 

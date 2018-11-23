@@ -1,0 +1,4 @@
+#ordersTable, nb-card {
+	height: auto !important;
+	max-height: 100% !important;
+}

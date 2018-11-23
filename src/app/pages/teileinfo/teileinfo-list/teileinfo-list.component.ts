@@ -1,23 +1,29 @@
-import { Component, OnDestroy, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, Inject } from '@angular/core';
+import {FormControl, FormGroup, ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { takeWhile } from 'rxjs/operators';
 
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 
-import { NbToastrService } from '@nebular/theme';
-import { NbThemeService } from '@nebular/theme';
-import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
-
+import { NbToastrService } 									from '@nebular/theme';
+import { NbThemeService } 									from '@nebular/theme';
+import { Ng2SmartTableModule, LocalDataSource } 			from 'ng2-smart-table';
+import { NgSelectModule, NgOption } 						from '@ng-select/ng-select';
 
 import { BASE_URL, API_VERSION }							from 'app/shared/base.url.config';
 import { LoopBackConfig, LoggerService } 					from 'app/shared/sdk';
-import { TeileinfoNeu, TeileinfoNeuInterface, Message,  } 	from 'app/shared/sdk/models';
+import { TeileinfoNeu, TeileinfoNeuInterface, Message } 	from 'app/shared/sdk/models';
+import { Items, ItemsInterface }						 	from 'app/shared/sdk/models';
 import { TeileinfoNeuApi } 									from 'app/shared/sdk/services';
+import { ItemsApi } 										from 'app/shared/sdk/services';
 
 import {  MatUiService } 									from 'app/_ui-components/dialog.component'
 
 import { dateRendererComponent } 							from './dateRenderer.component';
-import { NbToastrConfig } from '@nebular/theme/components/toastr/toastr-config';
-import { Observable } from 'rxjs';
+import { NbToastrConfig } 									from '@nebular/theme/components/toastr/toastr-config';
+import { Subject, Observable, of, concat } 					from 'rxjs';
+
+import * as Handsontable from 'handsontable';
+import { HotTableRegisterer } from '@handsontable/angular';
 
 interface CardSettings {
 	title: string;
@@ -29,40 +35,65 @@ interface CardSettings {
 	selector: 'TeileinfoListComponent',
 	templateUrl: './teileinfo-list.component.html',
 	styleUrls: [ './teileinfo-list.component.css' ],
-
 } )
-  
-export class TeileinfoListComponent implements OnDestroy{
-	
-	private teileinfoNeu: TeileinfoNeuInterface;
-	public TiSource: LocalDataSource;
-	private alive: boolean = true;
-	public TiSettings: any;
+
+export class TeileinfoListComponent implements OnInit, OnDestroy {
+
+	teileinfoNeu: TeileinfoNeuInterface;
+	item: ItemsInterface;
+	items: ItemsInterface[];
+	itemsLoading: boolean = true;
+	itemsfetched: boolean = false;
+
+	TiSource: LocalDataSource;
+	TiSettings: any;
+
+
+	alive: boolean = true;
 
 	constructor(
 		private log: LoggerService,
 		private teileinfoNeuApi: TeileinfoNeuApi,
 		private toastrService: NbToastrService,
-		private MatUiService: MatUiService,
+		private matUiService: MatUiService,
 		private themeService: NbThemeService,
-
+		private itemsApi: ItemsApi,
 	) {
-		
+
 		LoopBackConfig.setBaseURL( BASE_URL );
 		LoopBackConfig.setApiVersion( API_VERSION );
 		this.TiSettings = this.createColDefs();
-		this.TiSource = new LocalDataSource();		
+		this.TiSource = new LocalDataSource();
 
-		teileinfoNeuApi.find( { limit: 50, order: 'created desc' } )
-			.subscribe( ( teileinfoNeus: TeileinfoNeuInterface[] ) => {
-				this.TiSource.load( teileinfoNeus );
+	}
+
+	ngOnInit(): void {
+
+		this.teileinfoNeuApi.find( { limit: 50, order: 'created desc' } )
+		.subscribe( ( teileinfoNeus: TeileinfoNeuInterface[] ) => {
+			this.TiSource.load( teileinfoNeus );
+		},
+		error => {
+			this.log.error( error );
+		} );
+
+		this.loadItems();
+	}
+
+	private loadItems(): void {
+		this.itemsApi.find( { limit: 50, order: 'IBLITM asc' } )
+			.subscribe( ( items: ItemsInterface[] ) => {
+				this.items = items;
+				this.itemsLoading = false;
 			},
 			error => {
 				this.log.error( error );
-			} );
-
+			},
+			() => {
+				this.log.info( 'Items fetched: %O', this.items );
+				this.log.info( 'Items: %O', this.items[ 0 ].ibbuyr );
+			});
 	}
-	
 
 
 	getInfobyID( id: number ) {
@@ -75,74 +106,75 @@ export class TeileinfoListComponent implements OnDestroy{
 
 
 	tableAction( event, action ): void {
-		var tableActionConfig: {} = {create:{}, edit:{}, delete:{}, configured: false};
+		let tableActionConfig: {} = { create: {}, edit: {}, delete: {}, configured: false };
 
-		if ( action == 'create' || action == 'edit') {
+
+		if ( action === 'create' || action === 'edit') {
 			event.newData.dateAllg = ( event.newData.dateAllg === '' ) ? null : event.newData.dateAllg;
 			event.newData.dateSek = ( event.newData.dateSek === '' ) ? null : event.newData.dateSek;
 			event.newData.teileinfoAllg = ( event.newData.teileinfoAllg === '' ) ? null : event.newData.teileinfoAllg;
 			event.newData.teileinfoSek = ( event.newData.teileinfoSek === '' ) ? null : event.newData.teileinfoSek;
 		}
 
-		if ( action == 'create' ) {
+		if ( action === 'create' ) {
 			tableActionConfig = {
 				create: {
 					APIaction: this.teileinfoNeuApi.create( event.newData ),
 					messageTitle: 'Confirm Item Creation',
-					messageBody: 'Are you sure you want to add a new item?'
+					messageBody: 'Are you sure you want to add a new item?',
 				},
 				configured: true,
 			}
 		}
-		if ( action == 'edit' ) {
+		if ( action === 'edit' ) {
 			tableActionConfig = {
 				edit: {
 					APIaction: this.teileinfoNeuApi.updateAttributes( event.data[ 'id' ], event.newData ),
 					messageTitle: 'Please Confirm Update',
-					messageBody: 'Are you sure you want to update?'
+					messageBody: 'Are you sure you want to update?',
 				},
 				configured: true,
 			}
 		}
 
-		if ( action == 'delete' ) {
+		if ( action === 'delete' ) {
 			tableActionConfig = {
 				delete: {
 					APIaction: this.teileinfoNeuApi.deleteById( event.data[ 'id' ] ),
 					messageTitle: 'Please confirm Deletion',
-					messageBody: 'Are you sure you want to delete this item?'
+					messageBody: 'Are you sure you want to delete this item?',
 				},
 				configured: true,
 			}
 		}
 
-		var message = tableActionConfig[action].messageBody;
-		var title = tableActionConfig[action].messageTitle
+		const message = tableActionConfig[action].messageBody;
+		const title = tableActionConfig[action].messageTitle
 
-		this.MatUiService.confirm( title, message )
+		this.matUiService.confirm( title, message )
 			.subscribe( confirmStatus => {
 				if ( confirmStatus === true ) {
 					tableActionConfig[action].APIaction.subscribe( data => {
 						this.log.info( data );
-						this.toastrService.success( "", "Done" );
+						this.toastrService.success( '', 'Done' );
 						event.confirm.resolve( event.newData );
 					}, err => {
 						this.log.error( err );
-						this.MatUiService.dialog( "Error: " + err.name, err.message );
+						this.matUiService.dialog( 'Error: ' + err.name, err.message );
 						event.confirm.reject( err );
 					} );
 				} else {
 					this.log.info( 'Cancelled' );
 					event.confirm.reject();
-				} 
+				}
 		} );
 	}
-	
-	enterKeyDown( event ):void {
+
+	enterKeyDown( event ): void {
 		event.srcElement.blur();
 	}
 
-	createColDefs():object {
+	createColDefs(): object {
 		return {
 			mode: 'inline',
 			add: {
@@ -245,7 +277,7 @@ export class TeileinfoListComponent implements OnDestroy{
 
 
 	onSaveConfirm( event ): void {
-		this.MatUiService.confirm( 'Please Confirm Update', 'Are you sure you want to update?')
+		this.matUiService.confirm( 'Please Confirm Update', 'Are you sure you want to update?')
 			.subscribe( confirmTrue => {
 				if ( confirmTrue ) {
 					this.log.info( 'Confirmed' );
@@ -256,7 +288,7 @@ export class TeileinfoListComponent implements OnDestroy{
 					}, err => {
 						this.log.error( err );
 						this.toastrService.danger( "", "Error: " + err.name );
-						this.MatUiService.dialog( "Error: " + err.name, err.message );
+						this.matUiService.dialog( "Error: " + err.name, err.message );
 						event.confirm.reject( err );
 					} );
 				} else {
@@ -266,7 +298,7 @@ export class TeileinfoListComponent implements OnDestroy{
 		} );
 	}
 	onCreateConfirm( event ): void  {
-		this.MatUiService.confirm( 'Confirm Item Creation', 'Are you sure you want to add a new item?')
+		this.matUiService.confirm( 'Confirm Item Creation', 'Are you sure you want to add a new item?')
 			.subscribe( confirmTrue => {
 				if ( confirmTrue ) {
 					this.log.info( 'Confirmed' );
@@ -277,7 +309,7 @@ export class TeileinfoListComponent implements OnDestroy{
 					}, err => {
 						this.log.error( err );
 						this.toastrService.danger( "", "Error: " + err.name );
-						this.MatUiService.dialog( "Error: " + err.name, err.message );
+						this.matUiService.dialog( "Error: " + err.name, err.message );
 						event.confirm.reject( err );
 					} );
 				} else {
@@ -288,7 +320,7 @@ export class TeileinfoListComponent implements OnDestroy{
 	}
 
 	onDeleteConfirm( event ): void  {
-		this.MatUiService.confirm( 'Please confirm Deletion', 'Are you sure you want to delete this item?')
+		this.matUiService.confirm( 'Please confirm Deletion', 'Are you sure you want to delete this item?')
 			.subscribe( confirmTrue => {
 				if ( confirmTrue ) {
 					this.log.info( 'Confirmed' );
@@ -299,7 +331,7 @@ export class TeileinfoListComponent implements OnDestroy{
 					}, err => {
 						this.log.error( err );
 						this.toastrService.danger( "", "Error: " + err.name );
-						this.MatUiService.dialog( "Error: " + err.name, err.message );
+						this.matUiService.dialog( "Error: " + err.name, err.message );
 						event.confirm.reject( err );
 					} );
 				} else {

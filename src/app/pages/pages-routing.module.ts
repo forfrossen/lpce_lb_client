@@ -17,11 +17,15 @@ const routes: Routes = [{
 	},
 	{
 		path: 'teileinfo',
-		loadChildren: './teileinfo/teileinfo.module#TeileinfoModule'
+		loadChildren: './teileinfo/teileinfo.module#TeileinfoModule',
 	},
 	{
 		path: 'heimarbeit',
-		loadChildren: './heimarbeit/heimarbeit.module#HeimarbeitModule'
+		loadChildren: './heimarbeit/heimarbeit.module#HeimarbeitModule',
+	},
+	{
+		path: 'openorders',
+		loadChildren: './openorders/openorders.module#OpenOrdersModule',
 	},
     {
       path: '',

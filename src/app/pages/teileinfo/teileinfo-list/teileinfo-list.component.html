@@ -2,19 +2,32 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<nb-card>
+				
 				<nb-card-header>
 					Teileinfo
 				</nb-card-header>
+				
+				<nb-card-header>
+					
+					<ng-select  [items]="items"
+						bindLabel="iblitm"
+						bindValue="ibitm"
+						placeholder="Select an Item"
+						[loading]="itemsLoading">
+					</ng-select>
+				
+				</nb-card-header>
+				
 				<nb-card-body>
 
-				<ng2-smart-table 
-					[settings]="TiSettings"
-					[source]="TiSource"
-					(deleteConfirm)="tableAction($event, 'delete')"
-					(editConfirm)="tableAction($event, 'edit')"
-					(keydown.enter)="enterKeyDown($event)"
-					(createConfirm)="tableAction($event, 'create')">
-				</ng2-smart-table>
+					<ng2-smart-table 
+						[settings]="TiSettings"
+						[source]="TiSource"
+						(deleteConfirm)="tableAction($event, 'delete')"
+						(editConfirm)="tableAction($event, 'edit')"
+						(keydown.enter)="enterKeyDown($event)"
+						(createConfirm)="tableAction($event, 'create')">
+					</ng2-smart-table>
 			
 				</nb-card-body>
 			</nb-card>

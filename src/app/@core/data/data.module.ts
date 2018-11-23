@@ -6,11 +6,12 @@ import { StateService } from './state.service';
 
 import { LoopBackConfig, LoggerService } from 'app/shared/sdk';
 import { UserApi, LoopBackAuth } from 'app/shared/sdk/services';
+
 import { SSO } from '../auth/SSO.service';
 
 const SERVICES = [
 	UserService, SSO,
-	StateService, UserApi, LoopBackAuth, LoopBackConfig, LoggerService
+	StateService, UserApi, LoopBackAuth, LoopBackConfig, LoggerService,
 ];
 
 @NgModule( {

@@ -26,7 +26,7 @@ import { SDKBrowserModule, InternalStorage, CookieBrowser } from './shared/sdk/i
 
 @NgModule( {
 	declarations: [
-		AppComponent
+		AppComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -35,18 +35,18 @@ import { SDKBrowserModule, InternalStorage, CookieBrowser } from './shared/sdk/i
 		AppRoutingModule,
 		SDKBrowserModule.forRoot({
 			provide: InternalStorage,
-			useClass: CookieBrowser
+			useClass: CookieBrowser,
 		  }),
 		NgbModule.forRoot(),
 		ThemeModule.forRoot(),
 		CoreModule.forRoot(),
-	],	
+	],
 	providers: [
 		AuthGuard,
 		{ provide: APP_BASE_HREF, useValue: '/' },
 	],
 	bootstrap: [ AppComponent ],
 } )
-	
+
 export class AppModule {
 }

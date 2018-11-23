@@ -12,7 +12,7 @@
 @import './pace.theme';
 
 @import './bootstrap-rtl';
-
+@import '~handsontable/dist/handsontable.full.css';
 //@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 // install the framework and custom global styles
@@ -34,6 +34,8 @@
 
 @import '~@nebular/bootstrap/styles/globals';
 // ...
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 @include nb-install() {
   // ...

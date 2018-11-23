@@ -11,15 +11,12 @@ import { Ng2SmartTableModule } 			from 'ng2-smart-table';
 import { TeileinfoComponent } 			from './teileinfo.component';
 import { TeileinfoDashboardComponent } 	from './teileinfo-dashboard.component';
 import { TeileinfoListComponent }		from './teileinfo-list/teileinfo-list.component';
-//import { NgbdModalContent } 			from './teileinfo-list/modal.component'
-//import { UiConfirmModule } 				from './teileinfo-list/confirm-module'
-
-//import { richTextEditorComponent } 	from './teileinfo-list/richTextEditor.component';
 import { dateRendererComponent } 		from './teileinfo-list/dateRenderer.component';
 
-import { TeileinfoRoutingModule } from './teileinfo-routing.module';
+import { TeileinfoRoutingModule } 		from './teileinfo-routing.module';
+import { NgSelectModule } 				from '@ng-select/ng-select';
 
-@NgModule({ 
+@NgModule({
 	imports: [
 	  CommonModule,
 		TeileinfoRoutingModule,
@@ -27,15 +24,15 @@ import { TeileinfoRoutingModule } from './teileinfo-routing.module';
 		HttpClientModule,
 		Ng2SmartTableModule,
 		ThemeModule,
+		NgSelectModule,
 	],
 	declarations: [
 		TeileinfoComponent,
 		TeileinfoDashboardComponent,
 		TeileinfoListComponent,
 		dateRendererComponent,
-		//richTextEditorComponent,
 	],
 	entryComponents: [ dateRendererComponent ],
 	providers: [  ]
   })
-  export class TeileinfoModule {} 
+export class TeileinfoModule { }

@@ -32,4 +32,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
 			},
 		],
 	},
+	{
+		title: 'Open Orders',
+		icon: 'ion-home',
+		link: '/pages/openorders',
+	},
 ];

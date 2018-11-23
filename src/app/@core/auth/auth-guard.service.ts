@@ -8,11 +8,12 @@ import { SSO } from 'app/@core/auth/SSO.service'
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-	private sName:string = 'Auth-guard.service - '
+	private sName: string = 'Auth-guard.service - '
 
+
+	// private mySSO: SSO,
 	constructor(
 		private authService: NbAuthService,
-		private mySSO: SSO,
 		private router: Router,
 	) {
 

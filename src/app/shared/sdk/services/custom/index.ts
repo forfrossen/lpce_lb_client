@@ -5,6 +5,8 @@ export * from './Message';
 export * from './TeileinfoNeu';
 export * from './Heimarbeiter';
 export * from './Heimarbeit';
+export * from './Items';
+export * from './OpenOrders';
 export * from './UserIdentity';
 export * from './SDKModels';
 export * from './logger.service';

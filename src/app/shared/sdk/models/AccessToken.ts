@@ -1,4 +1,7 @@
 /* tslint:disable */
+import {
+  User
+} from '../index';
 
 declare var Object: any;
 export interface AccessTokenInterface {
@@ -7,8 +10,7 @@ export interface AccessTokenInterface {
   "scopes"?: Array<any>;
   "created"?: Date;
   "userId"?: number;
-  //"principalType"?: string;
-  user?: any;
+  user?: User;
 }
 
 export class AccessToken implements AccessTokenInterface {
@@ -17,8 +19,7 @@ export class AccessToken implements AccessTokenInterface {
   "scopes": Array<any>;
   "created": Date;
   "userId": number;
-  //"principalType": string;
-  user: any;
+  user: User;
   constructor(data?: AccessTokenInterface) {
     Object.assign(this, data);
   }
@@ -72,13 +73,13 @@ export class AccessToken implements AccessTokenInterface {
         "userId": {
           name: 'userId',
           type: 'number'
-        }
+        },
       },
       relations: {
         user: {
           name: 'user',
-          type: 'any',
-          model: '',
+          type: 'User',
+          model: 'User',
           relationType: 'belongsTo',
                   keyFrom: 'userId',
           keyTo: 'id'

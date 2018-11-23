@@ -50,6 +50,8 @@ import { MessageApi } from './services/custom/Message';
 import { TeileinfoNeuApi } from './services/custom/TeileinfoNeu';
 import { HeimarbeiterApi } from './services/custom/Heimarbeiter';
 import { HeimarbeitApi } from './services/custom/Heimarbeit';
+import { ItemsApi } from './services/custom/Items';
+import { OpenOrdersApi } from './services/custom/OpenOrders';
 import { UserIdentityApi } from './services/custom/UserIdentity';
 /**
 * @module SDKBrowserModule
@@ -85,6 +87,8 @@ export class SDKBrowserModule {
         TeileinfoNeuApi,
         HeimarbeiterApi,
         HeimarbeitApi,
+        ItemsApi,
+        OpenOrdersApi,
         UserIdentityApi,
         internalStorageProvider,
         { provide: SDKStorage, useClass: StorageBrowser }

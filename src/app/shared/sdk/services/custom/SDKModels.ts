@@ -6,6 +6,8 @@ import { Message } from '../../models/Message';
 import { TeileinfoNeu } from '../../models/TeileinfoNeu';
 import { Heimarbeiter } from '../../models/Heimarbeiter';
 import { Heimarbeit } from '../../models/Heimarbeit';
+import { Items } from '../../models/Items';
+import { OpenOrders } from '../../models/OpenOrders';
 import { UserIdentity } from '../../models/UserIdentity';
 
 export interface Models { [name: string]: any }
@@ -20,6 +22,8 @@ export class SDKModels {
     TeileinfoNeu: TeileinfoNeu,
     Heimarbeiter: Heimarbeiter,
     Heimarbeit: Heimarbeit,
+    Items: Items,
+    OpenOrders: OpenOrders,
     UserIdentity: UserIdentity,
     
   };
