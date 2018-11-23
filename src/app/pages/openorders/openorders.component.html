@@ -30,6 +30,7 @@
 				*ngIf="isOrdersFetched" 
 				[hotId]="instance"
 				[settings]="settingsObj"
+				[afterChange]="onAfterChange"
 				on-after-init="ctrl.onAfterInit">
 			</hot-table>		
 

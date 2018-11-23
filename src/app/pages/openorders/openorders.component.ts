@@ -3,6 +3,7 @@ import { Component, OnDestroy,
 import { FormControl }										from '@angular/forms';
 import { NbThemeService, NbToastrService } 					from '@nebular/theme';
 import { HttpClient, HttpHeaders } 							from '@angular/common/http';
+import { of }									 			from 'rxjs';
 import { takeWhile, catchError, retry, map } 				from 'rxjs/operators';
 import { MatUiService } 									from 'app/_ui-components/dialog.component'
 import * as Handsontable 									from 'handsontable';
@@ -13,7 +14,9 @@ import { LoopBackConfig, LoggerService } 					from 'app/shared/sdk';
 import { User, UserInterface, Message, SDKToken } 			from 'app/shared/sdk/models';
 import { LoopBackAuth } 									from 'app/shared/sdk/services';
 import { OpenOrders, OpenOrdersInterface  }				 	from 'app/shared/sdk/models';
+import { OpenOrdersComment, OpenOrdersCommentInterface  }	from 'app/shared/sdk/models';
 import { OpenOrdersApi } 									from 'app/shared/sdk/services';
+import { OpenOrdersCommentApi } 							from 'app/shared/sdk/services';
 
 
 @Component({
@@ -23,7 +26,7 @@ import { OpenOrdersApi } 									from 'app/shared/sdk/services';
 } )
 
 export class OpenOrdersComponent implements OnInit, OnDestroy {
-
+	submitError:		boolean		= false;
 	alive:				boolean 	= false;
 	isOrdersFetched: 	boolean 	= false;
 	instance: 			string 		= 'ordersTable';
@@ -33,12 +36,14 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 	//{ data: 'pdmcu', title: 'pdmcu', readOnly: true },
 	settingsObj: 		Handsontable.GridSettings = {
 		data: this.orders, autoColumnSize: true, columnSorting: true, manualColumnFreeze: true, contextMenu: true, comments: true,
-
 		columns: [
 			{ data: 'pddoco', title: 'pddoco', type: 'numeric', readOnly: true },
 			{ data: 'pdlnid', title: 'pdlnid', type: 'numeric', readOnly: true },
 			{ data: 'pdan8', title: 'pdan8', type: 'numeric', readOnly: true },
 			{ data: 'pdan801', title: 'pdan801', readOnly: true },
+			{ data: 'comment', title: 'Kommentar' },
+			{ data: 'created', title: 'Komment Date', readOnly: true },
+			{ data: 'createdby', title: 'CreatedBy', readOnly: true },
 			{ data: 'pddrqj', title: 'pddrqj', type: 'date', correctFormat: true, defaultDate: '01/01/1900', readOnly: true },
 			{ data: 'pdtrdj', title: 'pdtrdj', type: 'date', correctFormat: true, defaultDate: '01/01/1900', readOnly: true },
 			{ data: 'pdpddj', title: 'pdpddj', type: 'date', correctFormat: true, defaultDate: '01/01/1900', readOnly: true },
@@ -59,6 +64,7 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 		private log: 			LoggerService,
 		private themeService: 	NbThemeService,
 		private openOrdersApi: 	OpenOrdersApi,
+		private openOrdersCommentApi: 	OpenOrdersCommentApi,
 		private hotRegisterer: 	HotTableRegisterer,
 		private toastrService: 	NbToastrService,
 		private matUiService:	MatUiService,
@@ -68,8 +74,9 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 	}
 
 	loadOrRefreshOrders (): void {
-		
-		let filters: any = { where: {}, limit: 50 };
+		//var filter = { where: { name: { like: val, options: 'i'} } };
+
+		let filters: any = { where: {}, limit: 50, order: 'pdan801 asc, pddoco asc' };
 		
 		if ( this.selectedOrderType )
 			filters.where.pddcto = this.selectedOrderType;
@@ -95,7 +102,58 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	on
+	onAfterChange = ( hotInstance, changes, source ) => {
+		if ( !changes ) {
+			this.log.info( 'skipping due to no changes' );
+			return;
+		}
+		if ( source === 'internal') {
+			this.log.info( 'skipping due internal cell update' );
+			return;
+		}
+		console.log( 'Source: ' + source );
+		
+		//const observeableChanges = of( changes );
+		//observeableChanges.subscribe( change => {
+		try {
+			changes.forEach( change => {
+
+				//if ( oldVal === newVal )
+				const [ row, prop, oldVal, newVal ] = change;
+				const pddoco = hotInstance.getDataAtCell( row, 'pddoco' );
+				const pdlnid = hotInstance.getDataAtCell( row, 'pdlnid' );
+	
+				//console.log( 'Change pddoco: %s + pdlnid: %s + change: %s', pddoco, pdlnid, newVal );
+				const newOpenOrdersComment: OpenOrdersCommentInterface = {
+					pddoco: pddoco,
+					pdlnid: pdlnid,
+					comment: newVal,
+					created: null,
+					createdby: null,
+					version: null,
+				}
+	
+				this.openOrdersCommentApi.create( newOpenOrdersComment )
+					.subscribe( response => {
+						hotInstance.setDataAtRowProp( row, 'created', response.created, 'internal' );
+						hotInstance.setDataAtRowProp( row, 'createdby', response.createdby, 'internal' );
+						//console.log(response);
+					}, error => {
+						console.log( error );
+						this.submitError = true;
+						const title = 'Error: ' + error.statusCode;
+						this.matUiService.error( title, error.details[ 0 ].message );
+					} )
+			})
+		} catch ( err ) {
+			this.log.error( err );
+		} finally {
+			if ( ! this.submitError ) this.toastrService.success( 'Daten erfolgreich eingetragen', 'Gespeichert' );
+			this.submitError = false;
+		}
+		
+			return;
+	}
 
 	ngOnInit() {
 

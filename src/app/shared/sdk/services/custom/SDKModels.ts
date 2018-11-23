@@ -8,6 +8,7 @@ import { Heimarbeiter } from '../../models/Heimarbeiter';
 import { Heimarbeit } from '../../models/Heimarbeit';
 import { Items } from '../../models/Items';
 import { OpenOrders } from '../../models/OpenOrders';
+import { OpenOrdersComment } from '../../models/OpenOrdersComment';
 import { UserIdentity } from '../../models/UserIdentity';
 
 export interface Models { [name: string]: any }
@@ -24,6 +25,7 @@ export class SDKModels {
     Heimarbeit: Heimarbeit,
     Items: Items,
     OpenOrders: OpenOrders,
+    OpenOrdersComment: OpenOrdersComment,
     UserIdentity: UserIdentity,
     
   };

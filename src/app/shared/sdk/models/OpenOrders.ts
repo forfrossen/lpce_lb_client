@@ -18,6 +18,10 @@ export interface OpenOrdersInterface {
   "pdnxtr"?: string;
   "pduorg"?: number;
   "pduopn"?: number;
+  "comment"?: string;
+  "version"?: number;
+  "created"?: Date;
+  "createdby"?: string;
 }
 
 export class OpenOrders implements OpenOrdersInterface {
@@ -37,6 +41,10 @@ export class OpenOrders implements OpenOrdersInterface {
   "pdnxtr": string;
   "pduorg": number;
   "pduopn": number;
+  "comment": string;
+  "version": number;
+  "created": Date;
+  "createdby": string;
   constructor(data?: OpenOrdersInterface) {
     Object.assign(this, data);
   }
@@ -133,6 +141,22 @@ export class OpenOrders implements OpenOrdersInterface {
         "pduopn": {
           name: 'pduopn',
           type: 'number'
+        },
+        "comment": {
+          name: 'comment',
+          type: 'string'
+        },
+        "version": {
+          name: 'version',
+          type: 'number'
+        },
+        "created": {
+          name: 'created',
+          type: 'Date'
+        },
+        "createdby": {
+          name: 'createdby',
+          type: 'string'
         },
       },
       relations: {
