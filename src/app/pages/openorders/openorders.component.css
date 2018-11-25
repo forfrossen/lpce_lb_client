@@ -1,4 +1,16 @@
+nb-accordion {
+	margin-bottom: 1.5rem;
+}
+
 #ordersTable, nb-card {
 	height: auto !important;
 	max-height: 100% !important;
+}
+
+nb-card, nb-card-contet {
+	height:100% !important;
+}
+
+#layoutOrdersContent{
+	height:100% !important;
 }

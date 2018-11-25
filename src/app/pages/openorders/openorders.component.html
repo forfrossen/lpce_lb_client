@@ -1,41 +1,44 @@
-<div class="row">
-	<div class="col-xl">
-		<nb-card>
-
-			<nb-card-header>
-				Open Orders
-			</nb-card-header>
-
-			<nb-card-header>
-				<div class="row">
-					<div class="col-lg-3">
-						<nb-select 
-							outline status="info" size="medium"
-							placeholder="Order Type" 
-							selectedChange=""	
-							[(selected)]="selectedOrderType">
-							<nb-option value="OO">OO</nb-option>
-							<nb-option value="OU">OU</nb-option>
-							<nb-option value="OC">OC</nb-option>
-							<nb-option value="OP">OP</nb-option>
-						</nb-select>
-					</div>
-					<div class="col-lg-3"><button nbButton (click)="loadOrRefreshOrders()">Lade Orders</button></div>
-					<div class="col-lg-3"></div>
-					<div class="col-lg-3"></div>
-				</div>	
-			</nb-card-header>
-
-			<hot-table 
-				*ngIf="isOrdersFetched" 
-				[hotId]="instance"
-				[settings]="settingsObj"
-				[afterChange]="onAfterChange"
-				on-after-init="ctrl.onAfterInit">
-			</hot-table>		
-
-			
-			
-		</nb-card>
+<div id="layoutOrdersContent">
+	<div class="row" id="header1">
+		<div class="col-xl">
+			<nb-accordion>
+				<nb-accordion-item>
+					<nb-accordion-item-header>Filter & Sortirung</nb-accordion-item-header>
+					<nb-accordion-item-body>
+						<div class="row">
+							<div class="col-lg-3">
+								<nb-select 
+									outline status="info" size="medium"
+									placeholder="Order Type" 
+									selectedChange=""	
+									[(selected)]="selectedOrderType">
+									<nb-option value="OO">OO</nb-option>
+									<nb-option value="OU">OU</nb-option>
+									<nb-option value="OC">OC</nb-option>
+									<nb-option value="OP">OP</nb-option>
+								</nb-select>
+							</div>
+							<div class="col-lg-3"><button nbButton (click)="loadOrRefreshOrders()">Lade Orders</button></div>
+							<div class="col-lg-3"></div>
+							<div class="col-lg-3"></div>
+						</div>
+					</nb-accordion-item-body>
+				</nb-accordion-item>
+			</nb-accordion>
+		</div>
+	</div>
+	<div class="row" id="ordersContent">
+		<div class="col-xl">
+			<nb-card>	
+				<nb-card-body id="gridContainer">
+					<hot-table
+						[hotId]="instance"
+						[settings]="settingsObj"
+						[afterChange]="onAfterChange"
+						on-after-init="ctrl.onAfterInit">
+					</hot-table>		
+				</nb-card-body>			
+			</nb-card>
+		</div>
 	</div>
 </div>

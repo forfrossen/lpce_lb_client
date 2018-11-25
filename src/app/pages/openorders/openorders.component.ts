@@ -1,5 +1,5 @@
 import { Component, OnDestroy, 
-	OnInit, ChangeDetectionStrategy } 						from '@angular/core';
+	OnInit, ChangeDetectionStrategy, ViewChild  }			from '@angular/core';
 import { FormControl }										from '@angular/forms';
 import { NbThemeService, NbToastrService } 					from '@nebular/theme';
 import { HttpClient, HttpHeaders } 							from '@angular/common/http';
@@ -23,6 +23,7 @@ import { OpenOrdersCommentApi } 							from 'app/shared/sdk/services';
 	selector: 'ngx-openorders',
 	templateUrl: './openorders.component.html',
 	styleUrls: [ './openorders.component.css' ],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 } )
 
 export class OpenOrdersComponent implements OnInit, OnDestroy {
@@ -30,12 +31,15 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 	alive:				boolean 	= false;
 	isOrdersFetched: 	boolean 	= false;
 	instance: 			string 		= 'ordersTable';
+	hotInstance:		any;
 	selectedOrderType:	string 		= '';
 	orders: 			OpenOrdersInterface[];
+
 	//{ data: 'pddcto', title: 'pddcto', readOnly: true },
-	//{ data: 'pdmcu', title: 'pdmcu', readOnly: true },
+	//{ data: 'pdmcu', title: 'pdmcu', readOnly: true },data: this.orders,
 	settingsObj: 		Handsontable.GridSettings = {
-		data: this.orders, autoColumnSize: true, columnSorting: true, manualColumnFreeze: true, contextMenu: true, comments: true,
+		data: Handsontable.helper.createSpreadsheetData(17, 50), autoColumnSize: true, columnSorting: true, manualColumnFreeze: true, contextMenu: true, startRows: 50,
+		viewportRowRenderingOffset: 50,undo: true, height: 200,
 		columns: [
 			{ data: 'pddoco', title: 'pddoco', type: 'numeric', readOnly: true },
 			{ data: 'pdlnid', title: 'pdlnid', type: 'numeric', readOnly: true },
@@ -73,9 +77,23 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 		LoopBackConfig.setApiVersion( API_VERSION );
 	}
 
-	loadOrRefreshOrders (): void {
-		//var filter = { where: { name: { like: val, options: 'i'} } };
+	calculateGridHeight(): number {
+		
+		const h: number = document.getElementById( 'layoutOrdersContent' ).clientHeight;
+		const i: number = document.getElementById( 'header1' ).scrollHeight;
+		//const j: number = document.getElementById( 'header2' ).scrollHeight;
+		//const k: number = document.getElementById( 'gridContainer' ).clientHeight;
 
+		//this.log.info( h, i, j, h - i - j - ( 21 * 3 ) )
+		//this.log.info( k )
+		//return h-i-j - ( 21 *3);	
+		return h - i;
+	}
+
+	loadOrRefreshOrders (): void {
+
+		//var filter = { where: { name: { like: val, options: 'i'} } };
+		this.isOrdersFetched = false;
 		let filters: any = { where: {}, limit: 50, order: 'pdan801 asc, pddoco asc' };
 		
 		if ( this.selectedOrderType )
@@ -87,18 +105,17 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 			.subscribe( ( orders: OpenOrdersInterface[] ) => {
 				this.orders = orders;
 				this.isOrdersFetched = true;
-
-				setTimeout( () => {
-					const hotInstance = this.hotRegisterer.getInstance( this.instance );
-					hotInstance.updateSettings({
-						data: this.orders,
-					}, true );
-				}, 1000 )
-
 			},
 			error => {
 				this.log.error( error );
 				this.matUiService.dialog('Error', 'Etwas ist schief gelaufen beim abruf der Daten! <br /><br />' + error)
+			},
+			() => {
+				const hotInstance = this.hotRegisterer.getInstance( this.instance );
+				hotInstance.loadData(this.orders);
+				hotInstance.updateSettings( {
+					height: this.calculateGridHeight( ),
+				}, true)
 			});
 	}
 
@@ -111,7 +128,7 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 			this.log.info( 'skipping due internal cell update' );
 			return;
 		}
-		console.log( 'Source: ' + source );
+		this.log.info( 'Source: ' + source );
 		
 		//const observeableChanges = of( changes );
 		//observeableChanges.subscribe( change => {
@@ -163,7 +180,7 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 
 	onAfterInit() {
 
-		const hotInstance = this.hotRegisterer.getInstance( this.instance );
+		this.hotInstance = this.hotRegisterer.getInstance( this.instance );
 		return;
 	}
 
