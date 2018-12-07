@@ -11,9 +11,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './@core/core.module';
-//import { NbPasswordAuthStrategy, NbAuthModule, NbAuthJWTToken, NbAuthSimpleToken } from '@nebular/auth';
-//import { KerbADAuthStrategy } from './@core/auth/kerbad-auth-strategy';
-import { AuthGuard } from './@core/auth/auth-guard.service';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,7 +18,10 @@ import { ThemeModule } from './@theme/theme.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { SDKBrowserModule, InternalStorage, CookieBrowser } from './shared/sdk/index';
+import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
+import { RoleProvider } from './@core/auth/role.provider';
 
+import { of as observableOf } from 'rxjs/observable/of';
 
 
 @NgModule( {
@@ -38,11 +38,10 @@ import { SDKBrowserModule, InternalStorage, CookieBrowser } from './shared/sdk/i
 			useClass: CookieBrowser,
 		  }),
 		NgbModule.forRoot(),
-		ThemeModule.forRoot(),
+		ThemeModule.forRoot(),		
 		CoreModule.forRoot(),
 	],
 	providers: [
-		AuthGuard,
 		{ provide: APP_BASE_HREF, useValue: '/' },
 	],
 	bootstrap: [ AppComponent ],

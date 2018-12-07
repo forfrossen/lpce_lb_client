@@ -6,13 +6,14 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { TeileinfoModule } from './teileinfo/teileinfo.module';
 import { HeimarbeitModule } from './heimarbeit/heimarbeit.module';
 import { OpenOrdersModule } from './openorders/openorders.module';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { PagesRoutingModule } from './pages-routing.module';
 import { ThemeModule } from '../@theme/theme.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 
 
 const PAGES_COMPONENTS = [
-  PagesComponent,
+  PagesComponent, UnauthorizedComponent,
 ];
 
 @NgModule({

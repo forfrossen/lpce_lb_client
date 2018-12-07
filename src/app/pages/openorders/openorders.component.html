@@ -1,14 +1,17 @@
-<div id="layoutOrdersContent">
-	<div class="row" id="header1">
+<div id="layoutOrdersContent">	
+	<div class="row">
 		<div class="col-xl">
 			<nb-accordion>
-				<nb-accordion-item>
-					<nb-accordion-item-header>Filter & Sortirung</nb-accordion-item-header>
-					<nb-accordion-item-body>
+				<nb-accordion-item #item>
+					<nb-accordion-item-header id="header1">
+						Filter & Sortirung
+						<i data-eva="info-outline"></i>
+					</nb-accordion-item-header>
+					<nb-accordion-item-body class="filter-container">
 						<div class="row">
-							<div class="col-lg-3">
+							<!--<div class="col-lg-3">
 								<nb-select 
-									outline status="info" size="medium"
+									outline status="info" size="small"
 									placeholder="Order Type" 
 									selectedChange=""	
 									[(selected)]="selectedOrderType">
@@ -17,10 +20,77 @@
 									<nb-option value="OC">OC</nb-option>
 									<nb-option value="OP">OP</nb-option>
 								</nb-select>
+							</div>-->
+							<div class="col-lg-2">
+								<ng-select
+									[(ngModel)]="selectedOrderTypes" id="typeSelectInput"
+									[items]="typesArray" [multiple]="true" [virtualScroll]="false"  
+									bindLabel="name" bindValue="value"
+									placeholder="Typ" appendTo="body">
+								</ng-select>
 							</div>
+							<div class="col-lg-2">
+								<ng-select
+									[(ngModel)]="selectedOrders" id="ordersSelectInput"
+									[items]="orders$ | async" [multiple]="true" [virtualScroll]="true"  
+									bindLabel="pddoco" bindValue="pddoco"
+									[typeahead]="ordersInput$"
+									placeholder="Orders auswählen" appendTo="body"
+									loadingText="Orders laden, ...">
+									<ng-template ng-footer-tmp>
+										Selected count: {{selectedOrders.length}}
+									</ng-template>
+								</ng-select>
+							</div>
+							<div class="col-lg-3">
+								<ng-select
+									[(ngModel)]="selectedItems" id="itemSelectInput"
+									[items]="items$ | async" [multiple]="true" [virtualScroll]="true"  
+									bindLabel="pdlitm" bindValue="pdlitm"
+									[typeahead]="itemsInput$"
+									placeholder="Artkel auswählen" appendTo="body"
+									loadingText="Artikel laden, ...">
+									<ng-template ng-footer-tmp>
+										Selected count: {{selectedItems.length}}
+									</ng-template>
+								</ng-select>
+							</div>
+							<div class="col-lg-3">
+								<ng-select
+									[(ngModel)]="selectedSuppliers" id="supplierSelectInput"
+									[items]="suppliers$ | async" [multiple]="true" [virtualScroll]="true" 
+									bindLabel="pdan801" bindValue="pdan8"
+									[typeahead]="suppliersInput$"
+									placeholder="Lieferanten auswählen" appendTo="body"
+									loadingText="Lieferanten laden, ...">
+									<ng-template ng-footer-tmp>
+										Selected count: {{selectedSuppliers.length}}
+									</ng-template>
+								</ng-select>
+							</div>
+							<div class="col-lg-3"></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-4">
+								<div [(ngModel)]="selectLate" ngbRadioGroup
+									class="btn-group btn-group-toggle btn-outline-toggle-group btn-group-full-width btn-toggle-radio-group">
+									<label ngbButtonLabel class="btn btn-outline-primary">
+										<input ngbButton type="radio" value="all" checked="checked"> All
+									</label>
+									<label ngbButtonLabel class="btn btn-outline-primary">
+										<input ngbButton type="radio" value="promise"> Promise Late
+									</label>
+									<label ngbButtonLabel class="btn btn-outline-primary">
+										<input ngbButton type="radio" value="request"> Request Late
+									</label>
+					 			</div>
+							</div>
+							<div class="col-lg-1"></div>
+							<div class="col-lg-7"><h5>Orders gefunden: {{ ordersFound }}</h5></div>
+						</div>
+						<div class="row">
 							<div class="col-lg-3"><button nbButton (click)="loadOrRefreshOrders()">Lade Orders</button></div>
-							<div class="col-lg-3"></div>
-							<div class="col-lg-3"></div>
+							<div class="col-lg-3"><!--<button nbButton (click)="undoTableAction()">Undo</button>--></div>
 						</div>
 					</nb-accordion-item-body>
 				</nb-accordion-item>

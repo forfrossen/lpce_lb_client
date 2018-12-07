@@ -1,3 +1,4 @@
+/* tslint:disable */
 import { ModuleWithProviders, NgModule, Optional, SkipSelf, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NbAuthModule, NbAuthJWTToken, NbAuthSimpleToken } from '@nebular/auth';
@@ -11,88 +12,77 @@ import { AnalyticsService } from './utils/analytics.service';
 import { KerbADAuthStrategy } from './auth/kerbad-auth-strategy';
 import { LoopbackAuthStrategy } from './auth/loopback-auth-strategy';
 import { RoleProvider } from './auth/role.provider';
+import { AuthGuard } from './auth/auth-guard.service';
 
 export const NB_CORE_PROVIDERS = [
-  ...DataModule.forRoot().providers,
-  ...NbAuthModule.forRoot({
+	...DataModule.forRoot().providers,
+	...NbAuthModule.forRoot( {
 
-    strategies: [
-		KerbADAuthStrategy.setup( {
-			name: 'Kerberos',
-			token: {
-				class: NbAuthJWTToken,
-			},
-			baseEndpoint: 			'http://qcd480w04:3001/',
-			login: {
-				endpoint: 			'auth',
-				method: 			'post',
-				requireValidToken: 	 true,
-			},
-		} ),
-		LoopbackAuthStrategy.setup( {
-			name: 'Loopback',
-			token: {
-				class: NbAuthSimpleToken,
-				key: 'modified_token'
-			},
-			baseEndpoint: 			'http://qcd480w04:3000/auth/',
-			login: {
-				endpoint: 			'ad',
-				method: 			'post',
-				requireValidToken: 	 true,
-			},
-		} ),
-	],
-  }).providers,
+		strategies: [
+			LoopbackAuthStrategy.setup( {
+				name: 'Loopback',
+				token: {
+					class: NbAuthSimpleToken,
+					key: 'modified_token'
+				},
+				baseEndpoint: 'http://qcd480w04:3000/auth/',
+				login: {
+					endpoint: 'ad',
+					method: 'post',
+					requireValidToken: true,
+				},
+			} ),
+		],
+	} ).providers,
 
-  NbSecurityModule.forRoot({
-    accessControl: {
-      guest: {
-        view: '*',
-      },
-      user: {
-        parent: 'guest',
-        create: '*',
-        edit: '*',
-        remove: '*',
-	  },
-	  QCD480GGOUAdministrators: {
-		  parent: 'user',
-		  root: 'admin',
-		  view: '*',
-		  create: '*',
-		  edit: '*',
-		  remove: '*',
-	  }
-    },
-  }).providers,
+	NbSecurityModule.forRoot( {
+		accessControl: {
+			guest: {
+				access: [ '/pages/dashboard', '/pages/unauthorized' ],
+			},
+			QCD480GGUsers: {
+				parent: 'guest',
+			},
+			QCD480GG: {
+				access: [ '/pages/dashboard', '/pages/unauthorized' ],
+			},
+			QCD480GGOUAdministrators: {
+				parent: 'QCD480GGUsers',
+				access: '*',
+				root: 'admin',
+				view: '*',
+				create: '*',
+				edit: '*',
+				remove: '*',
+				admin: 'admin',				
+			}
+		},
+	} ).providers,
+	{ provide: NbRoleProvider, useClass: RoleProvider },
 
-  {
-    provide: NbRoleProvider, useClass: RoleProvider,
-  },
-  AnalyticsService
+	AnalyticsService, 
 ];
 
-@NgModule({
-  imports: [
-    CommonModule,
-  ],
-  exports: [
-    NbAuthModule,
-  ],
-  declarations: [],
-})
+@NgModule( {
+	imports: [
+		CommonModule,
+	],
+	exports: [
+		NbAuthModule,
+	],
+	declarations: [],
+} )
 export class CoreModule {
-  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
-    throwIfAlreadyLoaded(parentModule, 'CoreModule');
-  }
+	constructor( @Optional() @SkipSelf() parentModule: CoreModule ) {
+		throwIfAlreadyLoaded( parentModule, 'CoreModule' );
+	}
 
-  static forRoot(): ModuleWithProviders {
-    return <ModuleWithProviders>{
-      ngModule: CoreModule,
-      providers: [
-        ...NB_CORE_PROVIDERS,
-      ],
-    };
-  }
+	static forRoot(): ModuleWithProviders {
+		return <ModuleWithProviders> {
+			ngModule: CoreModule,
+			providers: [
+				...NB_CORE_PROVIDERS, RoleProvider, AuthGuard
+			],
+		};
+	}
 }

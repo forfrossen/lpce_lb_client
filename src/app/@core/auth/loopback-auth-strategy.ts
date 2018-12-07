@@ -52,7 +52,7 @@ export class LoopbackAuthStrategy extends NbAuthStrategy {
 					if ( this.getOption( `${module}.alwaysFail` ) ) {
 						throw this.createFailResponse( data );
 					}
-					console.log( this.sName + 'RES: %O', res );
+					console.log( this.sName, 'RES: ', res );
 					return res;
 				} ),
 				map( ( res: any ) => {
@@ -65,20 +65,20 @@ export class LoopbackAuthStrategy extends NbAuthStrategy {
 						*/
 						//this.userApi.login();
 						
-						//console.log( this.sName + 'getAccessTokenId: %O', this.LBAuth.getAccessTokenId() );
-						//console.log( this.sName + 'getToken: %O', this.LBAuth.getToken() );
-						//console.log( this.sName + 'response: %O', res );
+						//console.log( this.sName, 'getAccessTokenId: ', this.LBAuth.getAccessTokenId() );
+						//console.log( this.sName, 'getToken: ', this.LBAuth.getToken() );
+						//console.log( this.sName, 'response: ', res );
 
 						let modified_token: any =  JSON.parse(JSON.stringify(res.body))
 						
 						res.body[ 'modified_token' ] = modified_token;
 						
-						console.log( this.sName + 'response: %O', res );
+						console.log( this.sName, 'response: ', res );
 						//res.body.data.access_token = res.body.access_token; //{ access_token: res.access_token, id: res.id, userId: res.userId };
 
 					} else {
 
-						console.error( 'Access Token not given in Server response: %O', res.body );
+						console.error( 'Access Token not given in Server response: ', res.body );
 						
 					}
 					

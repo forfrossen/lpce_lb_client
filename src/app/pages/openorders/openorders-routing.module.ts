@@ -7,7 +7,6 @@ import { OpenOrdersComponent } from './openorders.component';
 const routes: Routes = [{
 	path: '',
 	component: OpenOrdersComponent,
-
 }];
 
 @NgModule({

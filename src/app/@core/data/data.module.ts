@@ -4,14 +4,15 @@ import { CommonModule } from '@angular/common';
 import { UserService } from './users.service';
 import { StateService } from './state.service';
 
+import { LoggerServiceExtended } from 'app/shared/extended/logger.service.extended';
 import { LoopBackConfig, LoggerService } from 'app/shared/sdk';
 import { UserApi, LoopBackAuth } from 'app/shared/sdk/services';
 
 import { SSO } from '../auth/SSO.service';
 
 const SERVICES = [
-	UserService, SSO,
-	StateService, UserApi, LoopBackAuth, LoopBackConfig, LoggerService,
+	SSO, UserService,
+	StateService, UserApi, LoopBackAuth, LoopBackConfig, LoggerService, LoggerServiceExtended,
 ];
 
 @NgModule( {

@@ -2500,7 +2500,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
         if (value == null) value = '';
         storage[key] = value;
       } catch (err) {
-        console.log('Cannot access local/session storage:', err);
+        console.log('Cannot access local/session storage: ', err);
       }
     }
 

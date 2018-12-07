@@ -97,8 +97,8 @@ export class LoopBackConfig {
     return LoopBackConfig.secure;
   }
 
-  public static setRequestOptionsCredentials(withCredentials: boolean = false): void {
-    LoopBackConfig.withCredentials = withCredentials;
+  public static setRequestOptionsCredentials(withCredentials: boolean = true): void {
+    LoopBackConfig.withCredentials = true;
   }
 
   public static getRequestOptionsCredentials(): boolean {

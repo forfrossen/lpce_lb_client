@@ -19,7 +19,8 @@ import { HttpClientModule } 			from '@angular/common/http';
 import { OpenOrdersComponent } 			from './openorders.component';
 import { OpenOrdersRoutingModule } 		from './openorders-routing.module';
 
-import { HotTableModule } from '@handsontable/angular';
+import { HotTableModule } 				from '@handsontable/angular';
+import { NgSelectModule } 				from '@ng-select/ng-select';
 
 @NgModule({ 
 	imports: [
@@ -34,12 +35,16 @@ import { HotTableModule } from '@handsontable/angular';
 		NbListModule,
 		NbUserModule,
 		NbTabsetModule,
+		NgSelectModule,
 		HotTableModule.forRoot(),
 	],
 	declarations: [
 		OpenOrdersComponent,
 	],
 		entryComponents: [  ],
-	providers: [  ]
-  })
-  export class OpenOrdersModule {} 
+	providers: [ ],
+} )
+	
+export class OpenOrdersModule {
+	
+} 

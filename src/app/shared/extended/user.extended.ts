@@ -40,26 +40,26 @@ export class UserApiExtended extends UserApi {
 		if ( typeof include !== 'undefined' && include !== null ) _urlParams.include = include;
 
 		/*
-		console.log( ' User.ts - method: %O', _method );
-		console.log( ' User.ts - url: %O', _url );
-		console.log( ' User.ts - routeParams: %O', _routeParams );
-		console.log( ' User.ts - urlParams: %O', _urlParams );
-		console.log( ' User.ts - postBody: %O', _postBody );
-		console.log( ' User.ts -  customHeaders: %O', customHeaders );
+		console.log( ' User.ts - method: ', _method );
+		console.log( ' User.ts - url: ', _url );
+		console.log( ' User.ts - routeParams: ', _routeParams );
+		console.log( ' User.ts - urlParams: ', _urlParams );
+		console.log( ' User.ts - postBody: ', _postBody );
+		console.log( ' User.ts -  customHeaders: ', customHeaders );
 		*/
 
 		//let result = this.request( _method, _url, _routeParams, _urlParams, _postBody, null, customHeaders )
 		let result = this.http.request( _method, _url + '?include=user', { body: _postBody, observe: 'response', withCredentials: true } )
 			.pipe(
 				map( ( response: any ) => {
-					console.log( ' User.ts - response: %O', response );
+					console.log( ' User.ts - response: ', response );
 					return response;
 				} ),
 				map( ( response: any ) => {
 					response.body.ttl = parseInt( '3600' );
 					response.body.rememberMe = rememberMe;
 					//response.body.id = response.access_token;
-					console.log( ' User.ts - response: %O', response );
+					console.log( ' User.ts - response: ', response );
 					this.auth.setToken( response.body );
 					this.auth.save();
 					return response;

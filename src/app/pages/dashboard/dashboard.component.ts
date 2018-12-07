@@ -6,17 +6,20 @@ import { Observable  } from 'rxjs';
 
 import { reject } from 'q';
 import { NbAuthService, NbTokenService } from '@nebular/auth'
-
+import { NbAccessChecker } from '@nebular/security';
 
 //import { RoleProvider } 							from 'app/@core/auth/role.provider';
 
 import { BASE_URL, API_VERSION }							from 'app/shared/base.url.config';
-import { LoopBackConfig, LoggerService } 					from 'app/shared/sdk';
+import { LoopBackConfig }				 					from 'app/shared/sdk';
 import { User, UserInterface, Message, SDKToken } 			from 'app/shared/sdk/models';
 import { LoopBackAuth } 									from 'app/shared/sdk/services';
 import { UserApiExtended } 									from 'app/shared/extended/user.extended';
+import { LoggerServiceExtended } 							from 'app/shared/extended/logger.service.extended'
 import { pipe } 											from '@angular/core/src/render3/pipe';
 import { SSO } from 'app/@core/auth/SSO.service';
+import { RoleProvider } from '../../@core/auth/role.provider'
+
 
 interface CardSettings {
 	title: string;
@@ -29,12 +32,12 @@ interface LBAuthResponse{
 	userId: number;
 }
 
-interface ADUser{
+interface ADUser {
 	account: {
 		displayName: string,
 		name: {
 			familyName: string,
-			givenName: string
+			givenName: string,
 		},
 		emails: [{value: string}],
 		_json: {
@@ -56,10 +59,10 @@ interface ADUser{
 			originalMaxAge: string,
 			expires: string,
 			httpOnly: string,
-			path: string
+			path: string,
 		},
 		__lastAccess: string,
-		authenticatedPrincipal: string
+		authenticatedPrincipal: string,
 	}
 }
 
@@ -70,22 +73,21 @@ interface ADUser{
 export class DashboardComponent implements OnInit, OnDestroy {
 
 	private alive = false;
-	private lbToken: SDKToken["id"];
+	private lbToken: SDKToken['id'];
 	public ADUser: ADUser;
 	public LoopbackData: any;
 	public roles: string[] = [];
 	private UserIf: UserInterface;
 	public TiSettings: any;
+	sName: string =  'Dashboard.Component - ';
+
 
 	constructor(
-		private log: LoggerService,
-		private NBAuthService: NbAuthService,
+		private log: LoggerServiceExtended,
 		private NBTokenService: NbTokenService,
 		private themeService: NbThemeService,
-		private http: HttpClient,
-		private auth: LoopBackAuth,
-		private mySSO: SSO,
-		//private roleProvider: RoleProvider,
+		//public roleProvider: RoleProvider,
+		public accessChecker: NbAccessChecker,
 	) {
 
 		LoopBackConfig.setBaseURL( BASE_URL );
@@ -98,30 +100,61 @@ export class DashboardComponent implements OnInit, OnDestroy {
 */
 	}
 
+	Test() {
+		this.log.inform( 'tested' );
+	}
+
 	LoopAuthAD() {
 		this.NBTokenService.clear();
 	}
 
 	LoopGimme() {
 
-		this.mySSO.Login()
-			.then( ( info ) => {
-				console.log('Info!: %O', info)
-			})
-			.catch( ( err ) => {
-				console.error('ERROR!: %O', err)
-			})
+		this.accessChecker.isGranted( 'view', 'news' ).subscribe( result => {
+			this.log.inform( this.sName, 'Admin Access granted ================>', result );
+		});
 
 	}
 
 	ngOnInit() {
 
 		this.alive = true;
+
+
+		/*
+		this.roleProvider.getRole()
+			.pipe(
+				map( role => {
+					this.log.inform( this.sName, 'ROLES ARRAY.isarray', Array.isArray( role ) );
+					this.log.inform( this.sName, 'ROLES ARRAY.length', role.length );
+					this.log.inform( this.sName, 'ROLES ARRAY', role );
+					return Array.isArray( role ) ? role : [ role ];
+				} ),
+				map( roles => {
+					return roles.some(  role => {
+						this.log.inform( this.sName, 'ROLES FOUND IN ARRAY', role );
+						if ( role === 'QCD480GGOUAdministrators' )
+							return true;
+						else
+							return false;
+					} );
+				} ) )
+				.subscribe( result => {
+					this.log.inform( this.sName, 'RESULT asdf ================>', result );
+				});
+
+
+		this.roleProvider.getRole()
+			.subscribe( roles => this.LoopbackData = roles )
+*/		
+		// this.roleProvider.getRole()
+			
+
 /*
 		this.roleProvider.getRole()
 			.pipe(
 				map( role => {
-					console.log ( role );
+					this.log.inform ( role );
 				})
 			)
 */

@@ -3,11 +3,15 @@
 		<nb-card>
 			<nb-card-header>Hello from ngx-admin sandbox project.</nb-card-header>
 			<nb-card-body>
-				{{LoopbackData | json}}
+				{{ LoopbackData | json }}
 			</nb-card-body>
 			<nb-card-footer>
 				<button nbButton shape="semi-round" hero outline size="large" (click)="LoopAuthAD()">Clear</button>
 				<button nbButton shape="semi-round" hero outline size="large" (click)="LoopGimme()">Auth</button>
+				<button *ngIf="accessChecker.isGranted('view', 'thisButton') | async" 	nbButton shape="semi-round" hero outline size="large" (click)="Test()">Auth</button>
+				<button *ngIf="accessChecker.isGranted('create', 'comments') | async"  	nbButton shape="semi-round" hero outline size="large" (click)="Test()">Post Comment</button>
+				<button *ngIf="accessChecker.isGranted('qwer', 'qwer') | async"  		nbButton shape="semi-round" hero outline size="large" (click)="Test()">quer</button>
+				<button *nbIsGranted="['admin', 'admin']" 								nbButton shape="semi-round" hero outline size="large" (click)="Test()">admin</button>
 			</nb-card-footer>
 		</nb-card>
 	</div>

@@ -14,3 +14,18 @@ nb-card, nb-card-contet {
 #layoutOrdersContent{
 	height:100% !important;
 }
+
+.handsometable {
+	color: black !important;
+}
+
+.filter-container .row {
+	margin-bottom: 1.5rem;
+}
+.filter-container .row:last {
+	margin-bottom: 0rem;
+}
+
+.ng-placeholder {
+	top: 0px !important;
+}
