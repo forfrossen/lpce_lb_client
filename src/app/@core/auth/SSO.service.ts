@@ -16,7 +16,7 @@ import { UserService } from '../data/users.service';
 export class SSO {
 
 	private sName: string = 'SSO.service - '
-	private debug: boolean = true;
+	
 	isLoginFailed: boolean = false;
 
 	constructor(
@@ -30,42 +30,38 @@ export class SSO {
 		LoopBackConfig.setApiVersion( API_VERSION );
 		LoopBackConfig.setRequestOptionsCredentials( true );
 
-		//this.Login
 	}
 
 	async loginProcedure( ): Promise<any> {
-		return new Promise( ( resolve, reject ) => {
-			this.NBAuthService.isAuthenticated().toPromise()
-				.then(  isAuthenticated => this.loginNB( isAuthenticated ) )
-				.then(  () => this.loginLB() )
-				.then(  () => this.userService.setUser() )
-				.then(  () => resolve( 'Login done' ) )
-				.catch( () => {
-					this.handleLoginFailure();
-					if ( !this.isLoginFailed ) this.loginProcedure();
-					else alert( ' Sorry, anmeldung Fehlgeschlagen. Bitte IT verständigen!' );
-				});
-		} )
+		try {
+			return await this.NBAuthService.isAuthenticated().toPromise()
+				.then( isAuthenticated => this.loginNB( isAuthenticated ) )
+				.then( () => this.loginLB() )
+				.then( () => this.userService.setUser() )
+				.then( () => { return 'Login done' } )	
+		} catch ( err ) {
+			this.handleLoginFailure();
+		}
 	}
 	
 	async loginNB( isAuthenticated ): Promise<any> {
 		
 		return new Promise( ( resolve, reject ) => {
 			
-			if ( isAuthenticated ) {
-				if ( this.debug ) this.log.inform( this.sName, ' NB already authenticated!' );
+			if ( isAuthenticated && ! this.isLoginFailed ) {
+				this.log.inform( this.sName, ' NB already authenticated!' );
 				return resolve();
 			} 
 			
-			if ( this.debug ) this.log.inform( this.sName, ' NB not yet authenticated!' );
+			this.log.inform( this.sName, ' NB not yet authenticated!' );
 			
 			this.NBAuthService.authenticate( 'Loopback' ).toPromise()
 				.then( ( authResult: NbAuthResult ) => {
 					if ( authResult.isFailure() ) {
-						if ( this.debug ) this.log.inform( this.sName, ' Nb Login Attempt UNsuccessfull!!!: ', authResult )
+						this.log.inform( this.sName, ' Nb Login Attempt UNsuccessfull!!!: ', authResult )
 						return reject( 'Could not login NB. Error: ' + authResult.getErrors() )
 					} else {
-						if ( this.debug ) this.log.inform( this.sName, ' Nb Login Attempt successfull: ', authResult )
+						this.log.inform( this.sName, ' Nb Login Attempt successfull: ', authResult )
 						return resolve()
 					}
 				} )
@@ -77,29 +73,29 @@ export class SSO {
 	async loginLB() {
 		return new Promise( ( Resolve, Reject ) => {
 			if ( this.LBAuth.getAccessTokenId() ) {
-				if ( this.debug ) this.log.inform( this.sName, ' LB already authenticated. TokenID: ', this.LBAuth.getAccessTokenId() )
+				this.log.inform( this.sName, ' LB already authenticated. TokenID: ', this.LBAuth.getAccessTokenId() )
 				return Resolve();
 			}
 
-			if ( this.debug ) this.log.inform( this.sName, ' LB no TokenID: ', this.LBAuth.getAccessTokenId() )
+			this.log.inform( this.sName, ' LB no TokenID: ', this.LBAuth.getAccessTokenId() )
 			
 			this.NBAuthService.getToken().toPromise()
 				.then( ( token: NbAuthSimpleToken ) => {
 					if ( token.isValid() ) {
-						if ( this.debug ) this.log.inform( this.sName, ' building tmpToken from NBToken');
+						this.log.inform( this.sName, ' building tmpToken from NBToken');
 						const userId = token.getValue()[ 'userId' ];
 						const accessTokenId = token.getValue()[ 'access_token' ];
 						const tmpToken: any = { id: accessTokenId, userId: userId }
-						if ( this.debug ) this.log.inform( this.sName, ' userId: ', userId );
-						if ( this.debug ) this.log.inform( this.sName, ' accessTokenId: ', accessTokenId );
-						if ( this.debug ) this.log.inform( this.sName, ' tmpToken: ', tmpToken );
-						if ( this.debug ) this.log.inform( this.sName, ' set LBAuth token' );
+						this.log.inform( this.sName, ' userId: ', userId );
+						this.log.inform( this.sName, ' accessTokenId: ', accessTokenId );
+						this.log.inform( this.sName, ' tmpToken: ', tmpToken );
+						this.log.inform( this.sName, ' set LBAuth token' );
 						this.LBAuth.setToken( tmpToken );
 						this.LBAuth.setRememberMe( true );
 						this.LBAuth.save();
 						Resolve();
 					} else {
-						if ( this.debug ) this.log.inform( this.sName, ' NB Token not valid: ', token);
+						this.log.inform( this.sName, ' NB Token not valid: ', token);
 						reject();
 					}
 				} )
@@ -109,17 +105,18 @@ export class SSO {
 
 	private handleError( data?: any ) {
 		return ( error: any ) => {
-			if ( this.debug ) this.log.error( this.sName, error );
+			this.log.error( this.sName, error );
 			Promise.reject();
 		}
 	}
 
 	handleLoginFailure(): void {
+
 		this.log.error( this.sName, ' =================== LOGIN FAILED, EXECUTING FALLBACK ACTION =================== ' );
 		this.isLoginFailed = true;
+		
 		sessionStorage.clear();
 		localStorage.clear();
-
 
 		const cookies = document.cookie.split( ';' );
 		
@@ -129,7 +126,8 @@ export class SSO {
 			const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
 			document.cookie = name + 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
 		}
-
+		if ( !this.isLoginFailed ) this.loginProcedure();
+		else alert( 'Sorry, login not working. Even after wiping cache and trying again...' );
 	}
 }
 
@@ -141,10 +139,10 @@ export class SSO {
 			this.NBAuthService.isAuthenticated().toPromise()
 				.then( isAuthenticated => {
 					if ( isAuthenticated ) {
-						if ( this.debug ) this.log.inform( this.sName, ' NB already Authenticated!' )
+						this.log.inform( this.sName, ' NB already Authenticated!' )
 						this.loginLB()
 							.then( () => {
-								if ( this.debug ) this.log.inform( this.sName, ' LB Authenticated!' )
+								this.log.inform( this.sName, ' LB Authenticated!' )
 								this.userService.setUser()
 									.then( () => {
 										resolve('Login done');
@@ -153,15 +151,15 @@ export class SSO {
 							} )
 							.catch( this.handleError() );
 					} else {
-						if ( this.debug ) this.log.inform( this.sName, ' NB not yet Authenticated!' )
+						this.log.inform( this.sName, ' NB not yet Authenticated!' )
 						this.loginNb()
 							.then( () => {
-								if ( this.debug ) this.log.inform( this.sName, ' NB Authenticated!' )
+								this.log.inform( this.sName, ' NB Authenticated!' )
 								if ( !this.LBAuth.getAccessTokenId() ) {
-									if ( this.debug ) this.log.inform( this.sName, ' LB no TokenID: ', this.LBAuth.getAccessTokenId() )
+									this.log.inform( this.sName, ' LB no TokenID: ', this.LBAuth.getAccessTokenId() )
 									this.loginLB()
 										.then( () => {
-											if ( this.debug ) this.log.inform( this.sName, ' LB Authenticated!' )
+											this.log.inform( this.sName, ' LB Authenticated!' )
 											this.userService.setUser().then( () => { resolve('Login done'); } ).catch( this.handleError() );
 										} )
 										.catch( this.handleError() );
@@ -184,15 +182,15 @@ export class SSO {
 			this.userAPI.getCurrent()
 				.toPromise()
 				.then( userData => {
-					if ( this.debug ) this.log.inform( this.sName, 'UserData: ', userData );
+					this.log.inform( this.sName, 'UserData: ', userData );
 					this.userAPI.findByIdIdentities( userData.id, userData.id )
 						.toPromise()
 						.then( ( data: any ) => {
-							if ( this.debug ) this.log.inform( this.sName, 'findByIdIdentities: ', data );
+							this.log.inform( this.sName, 'findByIdIdentities: ', data );
 							this.LBAuth.setRememberMe( true );
 							this.LBAuth.setUser( data );
 							this.LBAuth.save();
-							if ( this.debug ) this.log.inform( this.sName, 'LB User Profile: ', this.LBAuth.getCurrentUserData() );
+							this.log.inform( this.sName, 'LB User Profile: ', this.LBAuth.getCurrentUserData() );
 							resolve();
 						} )
 						.catch( this.handleError() );
@@ -210,7 +208,7 @@ export class SSO {
 					if ( authResult.isFailure() ) {
 						reject( 'Could not login NB. Error: ' + authResult.getErrors() )
 					} else {
-						if ( this.debug ) this.log.inform( this.sName, ' Nb Login Attempt successfull: ', authResult )
+						this.log.inform( this.sName, ' Nb Login Attempt successfull: ', authResult )
 						resolve()
 					}
 				} )
@@ -224,20 +222,20 @@ export class SSO {
 				.toPromise()
 				.then( ( token: NbAuthSimpleToken ) => {
 					if ( token.isValid() ) {
-						if ( this.debug ) this.log.inform( this.sName, ' building tmpToken from NBToken: ', token );
+						this.log.inform( this.sName, ' building tmpToken from NBToken: ', token );
 						const userId = token.getValue()[ 'userId' ];
 						const accessTokenId = token.getValue()[ 'access_token' ];
 						const tmpToken: any = { id: accessTokenId, userId: userId }
-						if ( this.debug ) this.log.inform( this.sName, ' userId: ', userId );
-						if ( this.debug ) this.log.inform( this.sName, ' accessTokenId: ', accessTokenId );
-						if ( this.debug ) this.log.inform( this.sName, ' tmpToken: ', tmpToken );
-						if ( this.debug ) this.log.inform( this.sName, ' set LBAuth token' );
+						this.log.inform( this.sName, ' userId: ', userId );
+						this.log.inform( this.sName, ' accessTokenId: ', accessTokenId );
+						this.log.inform( this.sName, ' tmpToken: ', tmpToken );
+						this.log.inform( this.sName, ' set LBAuth token' );
 						this.LBAuth.setToken( tmpToken );
 						this.LBAuth.setRememberMe( true );
 						this.LBAuth.save();
 						Resolve();
 					} else {
-						if ( this.debug ) this.log.inform( this.sName, ' NB Token not valid: ', token);
+						this.log.inform( this.sName, ' NB Token not valid: ', token);
 						reject();
 					}
 				} )

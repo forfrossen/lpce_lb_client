@@ -126,7 +126,7 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 	}
 
 	filtersFor( action: string, term?: string ): any {
-		const limit = 50;
+		const limit = 100;
 		let filters: any = { where: { and: [] }, limit: limit, order: '' };
 		
 		const today = new Date().setHours( 0, 0, 0, 0 );

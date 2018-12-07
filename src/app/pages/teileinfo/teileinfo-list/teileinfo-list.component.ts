@@ -45,7 +45,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 	items: ItemsInterface[];
 	itemsLoading: boolean = true;
 	itemsfetched: boolean = false;
-
+	sName: string = 'Teileinfo-List.Component';
 	TiSource: LocalDataSource;
 	TiSettings: any;
 
@@ -91,8 +91,8 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 				this.log.error( error );
 			},
 			() => {
-				this.log.inform( 'Items fetched: ', this.items );
-				this.log.inform( 'Items: ', this.items[ 0 ].ibbuyr );
+				this.log.inform( this.sName, 'Items fetched: ', this.items );
+				this.log.inform( this.sName, 'Items: ', this.items[ 0 ].ibbuyr );
 			});
 	}
 
@@ -101,7 +101,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		this.teileinfoNeuApi.findById( id )
 			.subscribe( ( teileinfo: TeileinfoNeu ) => {
 				this.teileinfoNeu = teileinfo;
-				this.log.inform( this.teileinfoNeu );
+				this.log.inform( this.sName, this.teileinfoNeu );
 			} );
 	}
 
@@ -156,7 +156,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 			.subscribe( confirmStatus => {
 				if ( confirmStatus === true ) {
 					tableActionConfig[action].APIaction.subscribe( data => {
-						this.log.inform( data );
+						this.log.inform( this.sName, data );
 						this.toastrService.success( '', 'Done' );
 						event.confirm.resolve( event.newData );
 					}, err => {
@@ -165,7 +165,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 						event.confirm.reject( err );
 					} );
 				} else {
-					this.log.inform( 'Cancelled' );
+					this.log.inform( this.sName, 'Cancelled' );
 					event.confirm.reject();
 				}
 		} );
@@ -281,9 +281,9 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		this.matUiService.confirm( 'Please Confirm Update', 'Are you sure you want to update?')
 			.subscribe( confirmTrue => {
 				if ( confirmTrue ) {
-					this.log.inform( 'Confirmed' );
+					this.log.inform( this.sName, 'Confirmed' );
 					this.teileinfoNeuApi.updateAttributes( event.data[ 'id' ], event.newData ).subscribe( data => {
-						this.log.inform( data );
+						this.log.inform( this.sName, data );
 						this.toastrService.success( "", "Saved" );
 						event.confirm.resolve( event.newData );
 					}, err => {
@@ -293,7 +293,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 						event.confirm.reject( err );
 					} );
 				} else {
-					this.log.inform( 'Cancelled' );
+					this.log.inform( this.sName, 'Cancelled' );
 					event.confirm.reject();
 				} 
 		} );
@@ -302,9 +302,9 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		this.matUiService.confirm( 'Confirm Item Creation', 'Are you sure you want to add a new item?')
 			.subscribe( confirmTrue => {
 				if ( confirmTrue ) {
-					this.log.inform( 'Confirmed' );
+					this.log.inform( this.sName, 'Confirmed' );
 					this.teileinfoNeuApi.create( event.newData ).subscribe( data => {
-						this.log.inform( data );
+						this.log.inform( this.sName, data );
 						this.toastrService.success( "", "Saved" );
 						event.confirm.resolve( event.newData );
 					}, err => {
@@ -314,7 +314,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 						event.confirm.reject( err );
 					} );
 				} else {
-					this.log.inform( 'Cancelled' );
+					this.log.inform( this.sName, 'Cancelled' );
 					event.confirm.reject();
 				} 
 			} );
@@ -324,9 +324,9 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		this.matUiService.confirm( 'Please confirm Deletion', 'Are you sure you want to delete this item?')
 			.subscribe( confirmTrue => {
 				if ( confirmTrue ) {
-					this.log.inform( 'Confirmed' );
+					this.log.inform( this.sName, 'Confirmed' );
 					this.teileinfoNeuApi.deleteById( event.data[ 'id' ] ).subscribe( data => {
-						this.log.inform( data );
+						this.log.inform( this.sName, data );
 						this.toastrService.success( "", "Deleted" );
 						event.confirm.resolve( event.newData );
 					}, err => {
@@ -336,7 +336,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 						event.confirm.reject( err );
 					} );
 				} else {
-					this.log.inform( 'Cancelled' );
+					this.log.inform( this.sName, 'Cancelled' );
 					event.confirm.reject();
 				} 
 			} );
@@ -349,12 +349,12 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 
 
 	onSaveConfirm( event ): void {
-		this.log.inform( event );
+		this.log.inform( this.sName, event );
 		this.confirmService.confirm( { title: 'Please Confirm Update', message: 'Are you sure you want to update?' } )
 			.then( () => {
-				this.log.inform( 'Confirmed' );
+				this.log.inform( this.sName, 'Confirmed' );
 				this.teileinfoNeuApi.updateAttributes( event.data[ 'id' ], event.newData ).subscribe( data => {
-					this.log.inform( data );
+					this.log.inform( this.sName, data );
 					this.toastrService.success( "", "Saved" );
 					event.confirm.resolve( event.newData );
 				}, err => {
@@ -365,7 +365,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 				} );
 			} )
 			.catch( () => {
-				this.log.inform( 'Cancelled' );
+				this.log.inform( this.sName, 'Cancelled' );
 				event.confirm.reject();
 			} )
 	}
@@ -373,9 +373,9 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 	onCreateConfirm( event ): void  {
 		this.confirmService.confirm( { title: 'Confirm Item Creation', message: 'Are you sure you want to add a new item?' } )
 			.then( () => { 
-				this.log.inform( 'Confirmed' )
+				this.log.inform( this.sName, 'Confirmed' )
 				this.teileinfoNeuApi.create( event.newData ).subscribe( data => {
-					this.log.inform( data )
+					this.log.inform( this.sName, data )
 					this.toastrService.success( "", "Saved" );
 					event.confirm.resolve( event.newData );
 				}, err => {
@@ -386,7 +386,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 				} );
 			} )
 			.catch( () => {
-				this.log.inform( 'Cancelled' );
+				this.log.inform( this.sName, 'Cancelled' );
 				event.confirm.reject();
 			} )
 	}
@@ -394,9 +394,9 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 	onDeleteConfirm( event ): void  {
 		this.confirmService.confirm( { title: 'Please confirm Deletion', message: 'Are you sure you want to delete this item?' } )
 			.then( () => { 
-				this.log.inform( 'Confirmed' );
+				this.log.inform( this.sName, 'Confirmed' );
 				this.teileinfoNeuApi.deleteById( event.data[ 'id' ] ).subscribe( data => {
-					this.log.inform( data )
+					this.log.inform( this.sName, data )
 					this.toastrService.success( "", "Deleted" );
 					event.confirm.resolve( event.newData );
 				}, err => {
@@ -407,7 +407,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 				} );
 			} )
 			.catch( () => {
-				this.log.inform( 'Cancelled' );
+				this.log.inform( this.sName, 'Cancelled' );
 				event.confirm.reject();
 			} )
 	}

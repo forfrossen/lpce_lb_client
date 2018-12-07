@@ -22,7 +22,7 @@ export class LoopbackAuthStrategy extends NbAuthStrategy {
 	
 	private loopbackAuthStrategyOptions: LoopbackAuthStrategyOptions = new LoopbackAuthStrategyOptions();
 	protected defaultOptions: LoopbackAuthStrategyOptions = this.loopbackAuthStrategyOptions;
-	private sName = 'Loopback-auth-strategy - ';
+	sName: string = 'Loopback-auth-strategy - ';
 
 	static setup( options: LoopbackAuthStrategyOptions ): [ NbAuthStrategyClass, LoopbackAuthStrategyOptions ] {
 		return [ LoopbackAuthStrategy, options ];

@@ -29,7 +29,6 @@ export class HeaderComponent implements OnInit {
 	userMenu: 		object[]	= [ { title: 'Profile' }, { title: 'Log out' } ];
 	environment: 	string		= '';
 	sName:			string 		= 'header.component - ';
-	debug:			boolean		= false;
 	
 	constructor(
 		private sidebarService: NbSidebarService,
@@ -50,7 +49,7 @@ export class HeaderComponent implements OnInit {
 	async getUserInfo() {
 		return await this.userService.getUser()
 			.subscribe( user => {
-					if ( this.debug ) this.log.inform( this.sName, 'User: ', user );
+					this.log.inform( this.sName, 'User: ', user );
 					this.user = user;
 				});
 	}

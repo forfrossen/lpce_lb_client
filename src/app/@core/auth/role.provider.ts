@@ -11,8 +11,7 @@ import { LoggerServiceExtended } from 'app/shared/extended/logger.service.extend
 export class RoleProvider implements NbRoleProvider {
 
 	private sName: string = 'role.provider - ';
-	private debug: boolean = false;
-
+	
 	constructor(
 		private userService: UserService,
 		private log: LoggerServiceExtended,
@@ -20,7 +19,7 @@ export class RoleProvider implements NbRoleProvider {
 	}
 
 	getRole(): Observable<string[]> {
-		if ( this.debug ) this.log.inform( this.sName, 'Groups: ', this.userService.getGroups() );
+		this.log.inform( this.sName, 'Groups: ', this.userService.getGroups() );
 		return this.userService.getGroups();
 		//return of(['guest', 'user', 'QCD480GGOUAdministrators']);
 	}

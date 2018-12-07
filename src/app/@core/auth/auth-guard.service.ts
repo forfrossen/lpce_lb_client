@@ -13,7 +13,7 @@ import { SSO } from 'app/@core/auth/SSO.service'
 export class AuthGuard implements CanActivate {
 
 	private sName: string = 'Auth-guard.service - '
-	private debug: boolean = true;
+	
 	private isLoggedIn: boolean = false;
 
 	constructor(
@@ -47,15 +47,15 @@ export class AuthGuard implements CanActivate {
 			
 			return this.handleLogin()
 				.then( info => {
-					if ( this.debug ) this.log.inform( this.sName, 'Post Login Info: ', info );	
+					this.log.inform( this.sName, 'Post Login Info: ', info );	
 					this.isLoggedIn = true;
 				} )
 				.then( () => {
-					if ( this.debug ) this.log.inform( this.sName, 'Checking for access now!' );	
+					this.log.inform( this.sName, 'Checking for access now!' );	
 					return this.checkAccess(state.url);
 				})
 				.catch( err => {
-					if ( this.debug ) this.log.error( this.sName, 'Error ================>', err );
+					this.log.error( this.sName, 'Error ================>', err );
 					this.router.navigate( [ '/pages/unauthorized' ] );
 					return false;
 				})
@@ -68,7 +68,7 @@ export class AuthGuard implements CanActivate {
 		try {
 			return await this.mySSO.loginProcedure();
 		} catch (err) {
-			if ( this.debug ) this.log.error( this.sName, 'ERROR: ', err );
+			this.log.error( this.sName, 'ERROR: ', err );
 			this.router.navigate( [ '/pages/unauthorized' ] );
 			return false;
 		}
@@ -79,7 +79,7 @@ export class AuthGuard implements CanActivate {
 		return await this.accessChecker.isGranted( 'access', url )
 			.toPromise()
 			.then( result => {
-				if ( this.debug ) this.log.inform( this.sName, 'Access granted for', url, ' ================>', result );
+				this.log.inform( this.sName, 'Access granted for', url, ' ================>', result );
 				return result;
 			})
 	}

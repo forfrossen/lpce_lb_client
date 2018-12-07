@@ -43,7 +43,6 @@ export class UserService {
 	user: MyUserInterface = this.guest;
 	groups: string[] = this.guest.ADProfile._groups;
 	sName: string = 'user.service - ';
-	debug: boolean = true;
 
 	constructor(
 		private log: LoggerServiceExtended,
@@ -71,11 +70,11 @@ export class UserService {
 	}
 
 	async setUser() {
-		return new Promise( ( resolve, reject ) => {
-			this.userAPI.getIdentities( this.LBAuth.getCurrentUserId() ).toPromise()
+		try {
+			return await this.userAPI.getIdentities( this.LBAuth.getCurrentUserId() ).toPromise()
 				.then( userIdentities => {
-					
-					if ( this.debug ) this.log.inform( this.sName, 'LB User Profile: ', userIdentities[ 0 ] );
+						
+					this.log.inform( this.sName, 'LB User Profile: ', userIdentities[ 0 ] );
 					
 					const tmpUser: MyUserInterface = {
 						name: userIdentities[ 0 ].profile.displayName,
@@ -88,15 +87,14 @@ export class UserService {
 					this.groups = tmpUser.ADProfile._groups;
 
 					this.log.inform( this.sName, 'This User: ', this.user );
-					resolve();
+					return true;
 
 				} )
-				.catch( err => {
-					console.error( this.sName, 'Could not retrieve user info due to Error: ', err )
-					reject( err );
-				} )
-			
-		} )
+		} catch ( err ) {
+			this.log.error( this.sName, 'Could not retrieve user info due to Error: ', err )
+			return Promise.reject( err );
+		}
+
 	}
 
 	getUserA(): Observable<any> {
@@ -108,27 +106,27 @@ export class UserService {
 					const userId = token.getValue()[ 'userId' ];
 					const accessTokenId = token.getValue()[ 'access_token' ];
 
-					if ( this.debug ) this.log.inform( this.sName, 'Nbtoken: ', token.getValue()[ 'userId' ] );
+					this.log.inform( this.sName, 'Nbtoken: ', token.getValue()[ 'userId' ] );
 					//return this.guest;
 
 					if ( !token.isValid() ) {
-						if ( this.debug ) this.log.inform( this.sName, 'sorry, token invalid!' );
+						this.log.inform( this.sName, 'sorry, token invalid!' );
 						return this.guest;
 					} else {
 
 
 						// Wenn LBAuth kein Token hat, dann aus dem Nebular Token zusammenbauen und speichern
 						if ( !this.LBAuth.getAccessTokenId() && !this.LBAuth.getToken()[ 'id' ] ) {
-							if ( this.debug ) this.log.inform( this.sName, 'LBAuth no token!!!!!!!!!!!!!!!!: ', this.LBAuth.getAccessTokenId() );
+							this.log.inform( this.sName, 'LBAuth no token!!!!!!!!!!!!!!!!: ', this.LBAuth.getAccessTokenId() );
 							const tmpToken: any = { id: accessTokenId, userId: userId }
 							this.LBAuth.setToken( tmpToken );
 							this.LBAuth.setRememberMe( true );
 							this.LBAuth.save();
 						}
 
-						if ( this.debug ) this.log.inform( this.sName, 'getAccessTokenId: ', this.LBAuth.getAccessTokenId() );
-						if ( this.debug ) this.log.inform( this.sName, 'getToken: ', this.LBAuth.getToken() );
-						if ( this.debug ) this.log.inform( this.sName, 'LBAuth Check: ', this.LBAuth.getToken() );
+						this.log.inform( this.sName, 'getAccessTokenId: ', this.LBAuth.getAccessTokenId() );
+						this.log.inform( this.sName, 'getToken: ', this.LBAuth.getToken() );
+						this.log.inform( this.sName, 'LBAuth Check: ', this.LBAuth.getToken() );
 						//this.LBAuth.setToken = token.getValue();
 					}
 
@@ -138,7 +136,7 @@ export class UserService {
 
 	private handleError( data?: any ) {
 		return ( error: any ) => {
-			if ( this.debug ) if ( this.debug ) this.log.inform( error );
+			this.log.inform( error );
 		}
 	}
 }
