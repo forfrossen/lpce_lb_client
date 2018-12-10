@@ -24,7 +24,8 @@
 							<div class="col-lg-2">
 								<ng-select
 									[(ngModel)]="selectedOrderTypes" id="typeSelectInput"
-									[items]="typesArray" [multiple]="true" [virtualScroll]="false"  
+									[items]="typesArray" [multiple]="true" [virtualScroll]="false"
+									(change)="countMatchingOrders( 'count' )"
 									bindLabel="name" bindValue="value"
 									placeholder="Typ" appendTo="body">
 								</ng-select>
@@ -33,6 +34,7 @@
 								<ng-select
 									[(ngModel)]="selectedOrders" id="ordersSelectInput"
 									[items]="orders$ | async" [multiple]="true" [virtualScroll]="true"  
+									(change)="countMatchingOrders( 'count' )"
 									bindLabel="pddoco" bindValue="pddoco"
 									[typeahead]="ordersInput$"
 									placeholder="Orders auswählen" appendTo="body"
@@ -46,6 +48,7 @@
 								<ng-select
 									[(ngModel)]="selectedItems" id="itemSelectInput"
 									[items]="items$ | async" [multiple]="true" [virtualScroll]="true"  
+									(change)="countMatchingOrders( 'count' )"
 									bindLabel="pdlitm" bindValue="pdlitm"
 									[typeahead]="itemsInput$"
 									placeholder="Artkel auswählen" appendTo="body"
@@ -59,6 +62,7 @@
 								<ng-select
 									[(ngModel)]="selectedSuppliers" id="supplierSelectInput"
 									[items]="suppliers$ | async" [multiple]="true" [virtualScroll]="true" 
+									(change)="countMatchingOrders( 'count' )"
 									bindLabel="pdan801" bindValue="pdan8"
 									[typeahead]="suppliersInput$"
 									placeholder="Lieferanten auswählen" appendTo="body"
@@ -68,29 +72,40 @@
 									</ng-template>
 								</ng-select>
 							</div>
-							<div class="col-lg-3"></div>
+							<div class="col-lg-2"></div>
 						</div>
 						<div class="row">
 							<div class="col-lg-4">
 								<div [(ngModel)]="selectLate" ngbRadioGroup
 									class="btn-group btn-group-toggle btn-outline-toggle-group btn-group-full-width btn-toggle-radio-group">
-									<label ngbButtonLabel class="btn btn-outline-primary">
+									<label ngbButtonLabel class="btn btn-outline-info">
 										<input ngbButton type="radio" value="all" checked="checked"> All
 									</label>
-									<label ngbButtonLabel class="btn btn-outline-primary">
+									<label ngbButtonLabel class="btn btn-outline-info">
 										<input ngbButton type="radio" value="promise"> Promise Late
 									</label>
-									<label ngbButtonLabel class="btn btn-outline-primary">
+									<label ngbButtonLabel class="btn btn-outline-info">
 										<input ngbButton type="radio" value="request"> Request Late
 									</label>
 					 			</div>
 							</div>
 							<div class="col-lg-1"></div>
-							<div class="col-lg-7"><h5>Orders gefunden: {{ ordersFound }}</h5></div>
 						</div>
 						<div class="row">
-							<div class="col-lg-3"><button nbButton (click)="loadOrRefreshOrders()">Lade Orders</button></div>
-							<div class="col-lg-3"><!--<button nbButton (click)="undoTableAction()">Undo</button>--></div>
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4"></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-4"><h5>Orders gefunden: {{ ordersFound }}</h5></div>
+							<div class="col-lg-4">
+								<button nbButton hero 
+								fullWidth status="success"
+								(click)="loadOrRefreshOrders()">
+								Lade Orders
+								</button>
+							</div>
+							<div class="col-lg-4"><!--<button nbButton (click)="undoTableAction()">Undo</button>--></div>
 						</div>
 					</nb-accordion-item-body>
 				</nb-accordion-item>
@@ -104,8 +119,7 @@
 					<hot-table
 						[hotId]="instance"
 						[settings]="settingsObj"
-						[afterChange]="onAfterChange"
-						on-after-init="onAfterInit">
+						[afterChange]="onAfterChange">
 					</hot-table>		
 				</nb-card-body>			
 			</nb-card>

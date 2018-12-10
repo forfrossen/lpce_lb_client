@@ -30,7 +30,7 @@ export class LoggerServiceExtended extends LoggerService {
 		'Loopback-auth-strategy':  this.loginAndUserSections,
 		'header.component': false,
 		'Dashboard.Component': false,
-		'Openorders.Component': false,
+		'Openorders.Component': true,
 		'Teileinfo-List.Component': false,
 	}
 	

@@ -1,3 +1,7 @@
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-placeholder {
+	top: 8.5px !important;
+}
+
 nb-accordion {
 	margin-bottom: 1.5rem;
 }
@@ -26,6 +30,3 @@ nb-card, nb-card-contet {
 	margin-bottom: 0rem;
 }
 
-.ng-placeholder {
-	top: 0px !important;
-}

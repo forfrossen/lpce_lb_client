@@ -9,7 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { of, from, Observable, Subject, concat } from 'rxjs';
 import {
 	takeWhile, catchError, retry, map, tap, pluck,
-	groupBy, mergeMap, toArray, distinct, switchMap, debounceTime, distinctUntilChanged, filter,
+	groupBy, mergeMap, toArray, distinct, switchMap, debounceTime, distinctUntilChanged, filter, flatMap, concatAll
 } from 'rxjs/operators';
 
 import { MatUiService } from 'app/_ui-components/dialog.component'
@@ -57,7 +57,7 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 	orders: 			OpenOrdersInterface[ ];
 	items$:				Observable<{}[]>;
 	suppliers$:			Observable<{}[]>;
-	orders$: 			Observable<{}[]>;
+	orders$: 			Observable<any>;
 	itemsInput$ 	  = new Subject<string>();
 	suppliersInput$   = new Subject<string>();
 	ordersInput$   	  = new Subject<string>();
@@ -94,9 +94,9 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 			{ colWidths: 95,   readOnly: true, editor: false, data: 'pddrqj', title: 'Request',			className: 'htRight htMiddle' },
 			{ colWidths: 95,   readOnly: true, editor: false, data: 'pdpddj', title: 'Promise',			className: 'htRight htMiddle' },
 			{ colWidths: 95,   readOnly: true, editor: false, data: 'pdtrdj', title: 'Order Date', 		className: 'htRight htMiddle' },
+			{ colWidths: 150,  data: 'comment', title: 'Kommentar' },
 			{ colWidths: 90,   editor: false, data: 'created', title: 'Komment Date', 					className: 'htRight htMiddle' },
 			{ colWidths: 90,   editor: false, data: 'createdby', title: 'User' 			},
-			{ colWidths: 150,  data: 'comment', title: 'Kommentar' },
 		],
 	};
 
@@ -114,63 +114,154 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 		LoopBackConfig.setApiVersion( API_VERSION );
 	}
 
-	calculateGridHeight(): number {
+	ngOnInit() {
+		this.alive = true;
 
+		this.hotInstance = this.hotRegisterer.getInstance( this.instance );
+		this.log.inform( this.sName, 'hot instance set' );
+		this.hotInstance.updateSettings( {}, false );
+		
+		this.loadOrRefreshOrders();
+
+		this.items$ = this.itemsInput$.pipe(
+			debounceTime( 500 ),
+			distinctUntilChanged(),
+			tap( () => this.isItemsLoading = true ),
+			switchMap( term =>
+				this.openOrdersApi.find( this.filtersFor( 'pdlitm', term ) ).pipe(
+					catchError( () => of( [] ) ),
+					concatAll(),distinct(),toArray(),
+					tap( () => this.isItemsLoading = false ))))
+		
+		this.suppliers$ = this.suppliersInput$.pipe(
+			debounceTime( 500 ),
+			distinctUntilChanged(),
+			tap( () => this.isSuppliersLoading = true ),
+			switchMap( term =>
+				this.openOrdersApi.find( this.filtersFor( 'pdan801', term ) ).pipe(
+					catchError( () => of( [] ) ),
+					concatAll(), distinct( x => x.pdan8 ), toArray(),
+					tap( () => this.isSuppliersLoading = false ))))
+		
+		this.orders$ = this.ordersInput$.pipe(
+			debounceTime( 500 ),
+			distinctUntilChanged(),
+			tap( () => this.isOrdersLoading = true ),
+			switchMap( term =>
+				this.openOrdersApi.find( this.filtersFor( 'pddoco', term ) ).pipe(
+					catchError( () => of( [] ) ),
+					concatAll(),distinct(),toArray(),
+					tap( () => this.isOrdersLoading = false ))))
+
+
+		eva.replace( {
+			animation: {
+				type: 'pulse',
+				hover: true,
+				infinite: true,
+			},
+		});
+	}
+
+	ngOnDestroy() {
+		this.alive = false;
+	}
+
+	negativeValueRenderer( instance, td, row, col, prop, value, cellProperties ) {
+		Handsontable.renderers.TextRenderer.apply( this, arguments );
+
+		// if row contains negative number
+		if ( parseInt( value, 10 ) < 0 ) {
+			// add class "negative"
+			td.className = 'make-me-red';
+		}
+
+		if ( !value || value === '' ) {
+			td.style.background = '#EEE';
+		}
+		else {
+			if ( value === 'Nissan' ) {
+				td.style.fontStyle = 'italic';
+			}
+			td.style.background = '';
+		}
+	}
+
+
+
+	calculateGridHeight(): number {
 		const h: number = document.getElementById( 'layoutOrdersContent' ).clientHeight;
 		const i: number = document.getElementById( 'header1' ).scrollHeight;
 		const j: number = h - ( i * 2 ) - 31;
 		
-		this.log.inform( this.sName, 'heights: h:' + h + ', i: ' + i + ', j: ' + j );
+		// this.log.inform( this.sName, 'heights: h:' + h + ', i: ' + i + ', j: ' + j );
 
 		return j;
 	}
 
 	filtersFor( action: string, term?: string ): any {
-		const limit = 100;
-		let filters: any = { where: { and: [] }, limit: limit, order: '' };
-		
-		const today = new Date().setHours( 0, 0, 0, 0 );
-		const yesterdayNow = new Date().setDate( new Date().getDate() - 1)
-		const yesterday = new Date( new Date( new Date().setDate( new Date().getDate() - 1 ) ).setHours( 0, 0, 0, 0 ) );
-		
-		const lastYear = new Date( new Date().setFullYear( new Date().getFullYear() - 1 ) );
+		//this.log.inform( this.sName, 'action: ', action, ' term: ', term );
 
-		if ( this.selectedOrderTypes.length ) filters.where.and.push( { pddcto: { inq: this.selectedOrderTypes } } );	
-		if ( this.selectedItems.length ) 		filters.where.and.push( { pdlitm: { inq: this.selectedItems } } );
-		if ( this.selectedSuppliers.length ) 	filters.where.and.push( { pdan8:  { inq: this.selectedSuppliers } } );
-		if ( this.selectedOrders.length )		filters.where.and.push( { pddoco: { inq: this.selectedOrders } } );
-		if ( this.selectLate === 'promise' )	filters.where.and.push( { pdpddj: { lt:  yesterday } } );
-		if ( this.selectLate === 'request' )	filters.where.and.push( { pddrqj: { lt:  yesterday } } );
-		
-		filters.where.and.push( { pddrqj: { gt: lastYear } } );
-		
-		// Filters for ng-select fields autocomplete
-		if ( term ) {
-			filters.fields = {};
-			filters.fields[ action ] 	= true;
-			filters.fields.pdan8		= ( action === 'pdan801' ) ? true : false;	
-			filters.limit 				= limit;	
-			filters.where[action] 		= { like: term + '%' };
-			filters.order				= action + ' asc';
-		} else if ( action === 'table' ) {
-			filters.order 				= 'pdan801 asc, pddoco asc';
-			filters.limit 				= limit;			
-		}
-		
-		// CLEANUP !
-		if (  filters.where.and.length === 1 ) {
-			filters.where = filters.where.and[0];
-			delete filters.where.and;
-		} else if ( Object.keys( filters.where.and ).length === 0 ) {
-			delete filters.where.and;
-		}			
-		
-		if ( Object.keys(filters.where).length === 0 )
-			delete filters.where;
+		term = ( term === '*' ) ? '%' : term;
 
-		this.log.inform( this.sName, 'Filters: ', filters );
+		const limit 		= 100;
+		const today 		= new Date().setHours( 0, 0, 0, 0 );
+		const yesterdayNow	= new Date().setDate( new Date().getDate() - 1)
+		const yesterday 	= new Date( new Date( new Date().setDate( new Date().getDate() - 1 ) ).setHours( 0, 0, 0, 0 ) );
+		const lastYear 		= new Date( new Date().setFullYear( new Date().getFullYear() - 1 ) );
+		let   filters: any 	= { where: { and: [] }, limit: limit, order: '' };
 		
-		return filters;
+		try {
+
+			if ( this.selectedOrderTypes.length ) filters.where.and.push( { pddcto: { inq: this.selectedOrderTypes } } );
+			if ( this.selectedItems.length ) filters.where.and.push( { pdlitm: { inq: this.selectedItems } } );
+			if ( this.selectedSuppliers.length ) filters.where.and.push( { pdan8: { inq: this.selectedSuppliers } } );
+			if ( this.selectedOrders.length ) filters.where.and.push( { pddoco: { inq: this.selectedOrders } } );
+			if ( this.selectLate === 'promise' ) filters.where.and.push( { pdpddj: { lt: yesterday } } );
+			if ( this.selectLate === 'request' ) filters.where.and.push( { pddrqj: { lt: yesterday } } );
+			
+			filters.where.and.push( { pddrqj: { gt: lastYear } } );
+			
+			// Filters for ng-select fields autocomplete
+			if ( term ) {
+				filters.fields = {};
+				filters.fields[ action ] = true;
+				filters.fields.pdan8 = ( action === 'pdan801' ) ? true : false;
+				filters.limit = limit;
+				
+				/*
+				//filters.where.and[ action ] = { like: term + '%' };
+				let tmpObj = {};
+				tmpObj[ action ] = { like: term + '%' };
+				filters.where.and.push( tmpObj );
+				*/
+				
+				filters.where.and.push( { [ action ]: { like: term + '%' } } );
+				filters.order = action + ' asc';
+			} else if ( action === 'table' ) {
+				filters.order = 'pdan801 asc, pddoco asc';
+				filters.limit = limit;
+			}
+
+	
+			// CLEANUP !
+			if (  filters.where.and.length === 1 ) {
+				filters.where = filters.where.and[0];
+				delete filters.where.and;
+			} else if ( Object.keys( filters.where.and ).length === 0 ) {
+				delete filters.where.and;
+			}			
+			if ( Object.keys(filters.where).length === 0 )
+				delete filters.where;
+					
+			
+			//this.log.inform( this.sName, 'Filters: ', filters );
+		} catch ( err ) {
+			this.log.inform( this.sName, 'Error: ', err );
+		} finally {
+			return filters;
+		}	
+		
 	}
 
 	loadOrRefreshOrders(): void {
@@ -178,10 +269,9 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 		let  filters = this.filtersFor( 'table' );
 
 		this.isOrdersFetched = false;
-
-
 		
-
+		this.countMatchingOrders( filters );
+		
 		this.openOrdersApi.find( filters )
 			.subscribe(( orders: OpenOrdersInterface[] ) => {
 				this.orders = orders;			
@@ -191,28 +281,31 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 				this.matUiService.dialog( 'Error', 'Etwas ist schief gelaufen beim abruf der Daten! <br /><br />' + error )
 			},
 			() => {
-				const hotInstance = this.hotRegisterer.getInstance( this.instance );
-				hotInstance.loadData( this.orders );
+				if ( ! this.hotInstance )
+					this.hotInstance = this.hotRegisterer.getInstance( this.instance );
+				
+				this.hotInstance.loadData( this.orders );
 
 				if ( !this.isGritHeightSet ) {
-					hotInstance.updateSettings( { height: this.calculateGridHeight() }, true )	
-					hotInstance.render();
+					this.hotInstance.updateSettings( { height: this.calculateGridHeight() }, true )	
+					this.hotInstance.render();
 					this.isGritHeightSet = true;
 				} 
 				this.isOrdersFetched = true;
-				if ( !this.submitError ) this.toastrService.success( 'Daten erfolgreich geladen', 'Erfolg!' );
+				if ( !this.submitError ) this.toastrService.success( 'Daten erfolgreich geladen', 'Erfolg!' );				
 			} );
-			
+	}
+
+	countMatchingOrders( filters ) {
+		filters = ( filters === 'count' ) ? this.filtersFor( 'count' ) : filters;
+
 		this.openOrdersApi.count( filters.where )
 			.subscribe( result => {
 				this.ordersFound = result.count;
-				this.log.inform( this.sName, 'Found %s Orders!', result.count.toString() );
-			})
-			
-			
-		
+				this.log.inform( this.sName, 'Orders found: ', result.count.toString() );
+			} )
 	}
-
+	
 	onAfterChange = ( hotInstance, changes, source ) => {
 		if ( !changes ) {
 			// this.log.inform( this.sName, 'onAfterChange - skipping due to no changes' );
@@ -269,78 +362,18 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 		return;
 	}
 
-	ngOnInit() {
-
-		this.alive = true;
-		
-		this.loadOrRefreshOrders();
-
-		this.items$ = this.itemsInput$.pipe(
-			debounceTime( 500 ),
-			distinctUntilChanged(),
-			tap( () => this.isItemsLoading = true ),
-			//switchMap( term => this.openOrdersApi.find( { where: { pdlitm: { like: term + '%' } }, order: 'pdlitm asc' } ).pipe(
-			switchMap( term => this.openOrdersApi.find( this.filtersFor( 'pdlitm', term ) ).pipe(
-				catchError( () => of( [] ) ),
-				tap( () => this.isItemsLoading = false ),
-			) ) )
-		
-		this.suppliers$ = this.suppliersInput$.pipe(
-			debounceTime( 500 ),
-			distinctUntilChanged(),
-			tap( () => this.isSuppliersLoading = true ),
-			//switchMap( term => this.openOrdersApi.find( { where: { pdan801: { like: term + '%' } }, order: 'pdan801 asc' } ).pipe(
-			switchMap( term => this.openOrdersApi.find( this.filtersFor( 'pdan801', term ) ).pipe(
-				catchError( () => of( [] ) ),
-				tap( () => this.isSuppliersLoading = false ),
-			) ) )
-		
-		this.orders$ = this.ordersInput$.pipe(
-			debounceTime( 500 ),
-			distinctUntilChanged(),
-			tap( () => this.isOrdersLoading = true ),
-			//switchMap( term => this.openOrdersApi.find( { where: { pdan801: { like: term + '%' } }, order: 'pdan801 asc' } ).pipe(
-			switchMap( term => this.openOrdersApi.find( this.filtersFor( 'pddoco', term ) ).pipe(
-				catchError( () => of( [] ) ),
-				tap( () => this.isOrdersLoading = false ),
-			) ) )
-		
-		eva.replace( {
-			animation: {
-				type: 'pulse',
-				hover: true,
-				infinite: true,
-			},
-		});
-	}
-
-
-
-	ngOnDestroy() {
-		this.alive = false;
-	}
-
-	onAfterInit() {
-
-		const hotInstance = this.hotRegisterer.getInstance( this.instance );
-		hotInstance.updateSettings( {}, false );
-		hotInstance.render();
-		return;
-	}
-
 	undoTableAction() {
 		//const hotInstance = this.hotRegisterer.getInstance( this.instance );
-		//hotInstance.plu undo();
+		this.hotInstance.undo();
 	}
 
 	formateDate( date: any ): string {
-		const dDate = new Date(date);
-		const day = dDate.getDate();
-		const month = dDate.getMonth() + 1;
-		const year = dDate.getFullYear();
-		const returnDate = ( '0' + day.toString() ).slice( -2 ) + '.' + ( '0' + month.toString() ).slice( -2 ) + '.' + year;
-		return returnDate;
-					
+		const dDate 		= new Date(date);
+		const day 			= dDate.getDate();
+		const month 		= dDate.getMonth() + 1;
+		const year 			= dDate.getFullYear();
+		const returnDate 	= ( '0' + day.toString() ).slice( -2 ) + '.' + ( '0' + month.toString() ).slice( -2 ) + '.' + year;
+		return returnDate;			
 	}
 }
 
