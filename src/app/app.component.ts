@@ -17,10 +17,13 @@ export class AppComponent implements OnInit {
 	constructor(
 		private analytics: AnalyticsService,
 	) {
-		
+
 	}
 
 	ngOnInit() {
+		var stylesheet = document.styleSheets[0];
+		stylesheet.disabled = true;
+		
 		this.analytics.trackPageViews();
 	}
 }

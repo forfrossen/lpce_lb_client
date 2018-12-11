@@ -52,14 +52,18 @@ export class UserApiExtended extends UserApi {
 		let result = this.http.request( _method, _url + '?include=user', { body: _postBody, observe: 'response', withCredentials: true } )
 			.pipe(
 				map( ( response: any ) => {
-					console.log( ' User.ts - response: ', response );
+					
+					//console.log( ' User.ts - response: ', response );
+					
 					return response;
 				} ),
 				map( ( response: any ) => {
 					response.body.ttl = parseInt( '3600' );
 					response.body.rememberMe = rememberMe;
 					//response.body.id = response.access_token;
-					console.log( ' User.ts - response: ', response );
+					
+					//console.log( ' User.ts - response: ', response );
+					
 					this.auth.setToken( response.body );
 					this.auth.save();
 					return response;

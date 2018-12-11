@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NbAuthService, NbAuthResult, NbAuthToken, NbAuthSimpleToken } from '@nebular/auth';
+import { NbAuthService, NbAuthResult, NbAuthToken, NbAuthSimpleToken, NbTokenService } from '@nebular/auth';
 import { switchMap, map, catchError, tap } from 'rxjs/operators';
 import { pipe } from 'rxjs';
 
@@ -22,6 +22,7 @@ export class SSO {
 	constructor(
 		private NBAuthService: NbAuthService,
 		private LBAuth: LoopBackAuth,
+		private NBTokenService: NbTokenService,
 		private userAPI: UserApi,
 		private userService: UserService,
 		private log: LoggerServiceExtended,
@@ -33,41 +34,112 @@ export class SSO {
 	}
 
 	async loginProcedure( ): Promise<any> {
+
 		try {
-			return await this.NBAuthService.isAuthenticated().toPromise()
-				.then( isAuthenticated => this.loginNB( isAuthenticated ) )
-				.then( () => this.loginLB() )
-				.then( () => this.userService.setUser() )
-				.then( () => { return 'Login done' } )	
+			
+			this.log.inform( this.sName, 'Clearing Token Storage now' );
+			
+			// Clear Token Storage, ensure no old local Tokens interfere with the authentication process
+			let NBTokenClearer	= await this.NBTokenService.clear().toPromise();
+			let emptyNBToken 	= await this.NBTokenService.get().toPromise();
+			if ( emptyNBToken.getValue() === '' ) this.log.inform( this.sName, 'NB Token deleted' );
+			
+			let clearedLBToken	= await this.LBAuth.clear();
+			let emptyLBToken	= await this.LBAuth.getToken();
+			if ( emptyLBToken.id === null ) this.log.inform( this.sName, 'LB Token deleted' );
+			
+			// Authenticate against Backend Server
+			let NBAuthResult	= await this.NBAuthService.authenticate( 'Loopback' ).toPromise();			
+			if ( NBAuthResult.isSuccess() ) this.log.inform( this.sName, ' Nb Login Attempt successfull: ', NBAuthResult.getResponse() );
+			else throw new Error( 'Could not login NB. Error: ' + NBAuthResult.getErrors() );
+
+			// Getting Token from Nebular Token Service to build LB Token
+			let NBToken = await this.NBAuthService.getToken().toPromise()
+			
+			// Building LB Access Token from Nebular token
+			if ( NBToken.isValid() ) {
+
+				this.log.inform( this.sName, ' building tmpToken from NBToken:', NBToken.getValue() );
+
+				const tmpLBToken: SDKToken = {
+					id: NBToken.getValue()[ 'access_token' ],
+					userId: NBToken.getValue()[ 'userId' ],
+					ttl: 60 * 60,
+					scopes: '',
+					created: new Date(),
+					rememberMe: true,
+					user: '',
+				};
+
+				this.log.inform( this.sName, ' setting LBAuth-Token now: ', tmpLBToken );
+				this.LBAuth.setToken( tmpLBToken );
+				this.LBAuth.save();
+
+			} else throw new Error( 'NB Token is not valid!: ' + NBToken.toString() );
+			
+			// Getting User Info from Backend and setting them 
+			let userInfoSetr = await this.userService.setUser();
+			
+
+
+			return Promise.resolve( 'Login done' )
+
 		} catch ( err ) {
-			this.handleLoginFailure();
+			this.handleLoginFailure( err );
 		}
 	}
-	
-	async loginNB( isAuthenticated ): Promise<any> {
+
+
+	handleLoginFailure(err): void {
+
+		this.log.error( this.sName, ' =================== LOGIN FAILED, EXECUTING FALLBACK ACTION =================== ' );
+		this.log.inform( this.sName, 'ERROR: ', err );
+		this.isLoginFailed = true;
 		
-		return new Promise( ( resolve, reject ) => {
-			
-			if ( isAuthenticated && ! this.isLoginFailed ) {
-				this.log.inform( this.sName, ' NB already authenticated!' );
-				return resolve();
-			} 
-			
-			this.log.inform( this.sName, ' NB not yet authenticated!' );
-			
-			this.NBAuthService.authenticate( 'Loopback' ).toPromise()
-				.then( ( authResult: NbAuthResult ) => {
-					if ( authResult.isFailure() ) {
-						this.log.inform( this.sName, ' Nb Login Attempt UNsuccessfull!!!: ', authResult )
-						return reject( 'Could not login NB. Error: ' + authResult.getErrors() )
-					} else {
-						this.log.inform( this.sName, ' Nb Login Attempt successfull: ', authResult )
-						return resolve()
-					}
-				} )
-				.catch( this.handleError() );
-			
-		})
+		sessionStorage.clear();
+		localStorage.clear();
+
+		const cookies = document.cookie.split( ';' );
+		
+		for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i];
+			const eqPos = cookie.indexOf('=');
+			const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+			document.cookie = name + 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
+		}
+		if ( !this.isLoginFailed ) this.loginProcedure();
+		else {
+			alert( 'Sorry, login not working. Even after wiping cache and trying again...' );
+			location.reload();
+		}
+	}
+}
+
+
+/*
+
+	
+	async loginNB( ): Promise<any> {
+		
+		if ( isAuthenticated && ! this.isLoginFailed ) {
+			this.log.inform( this.sName, ' NB already authenticated!' );
+			return Promise.resolve();
+		} 
+		
+		this.log.inform( this.sName, ' NB not yet authenticated!' );
+
+		
+		return await this.NBAuthService.authenticate( 'Loopback' )
+			.subscribe( ( authResult: NbAuthResult ) => {
+				if ( authResult.isFailure() ) {
+					this.log.inform( this.sName, ' Nb Login Attempt UNsuccessfull!!!: ', authResult )
+					throw new Error( 'Could not login NB. Error: ' + authResult.getErrors() );
+				} else {
+					this.log.inform( this.sName, ' Nb Login Attempt successfull: ', authResult );
+					return Promise.resolve();
+				}
+			} )
+
 	}
 
 	async loginLB() {
@@ -103,36 +175,8 @@ export class SSO {
 		})
 	}
 
-	private handleError( data?: any ) {
-		return ( error: any ) => {
-			this.log.error( this.sName, error );
-			Promise.reject();
-		}
-	}
-
-	handleLoginFailure(): void {
-
-		this.log.error( this.sName, ' =================== LOGIN FAILED, EXECUTING FALLBACK ACTION =================== ' );
-		this.isLoginFailed = true;
-		
-		sessionStorage.clear();
-		localStorage.clear();
-
-		const cookies = document.cookie.split( ';' );
-		
-		for (let i = 0; i < cookies.length; i++) {
-			const cookie = cookies[i];
-			const eqPos = cookie.indexOf('=');
-			const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-			document.cookie = name + 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
-		}
-		if ( !this.isLoginFailed ) this.loginProcedure();
-		else alert( 'Sorry, login not working. Even after wiping cache and trying again...' );
-	}
-}
 
 
-/*
 
 	Login(): Promise<any> {
 		return new Promise( ( resolve, reject ) => {

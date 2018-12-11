@@ -87,8 +87,7 @@ export class UserService {
 					this.groups = tmpUser.ADProfile._groups;
 
 					this.log.inform( this.sName, 'This User: ', this.user );
-					return true;
-
+					return Promise.resolve;
 				} )
 		} catch ( err ) {
 			this.log.error( this.sName, 'Could not retrieve user info due to Error: ', err )

@@ -20,14 +20,14 @@ export class LoggerServiceExtended extends LoggerService {
 	blanksBetweenArgs: string = '  ';
 	section: string = ';'
 
-	loginAndUserSections: boolean = false;
+	loginAndUserSections: boolean = true;
 
 	debuggingSections: object = {
 		'Auth-guard.service': this.loginAndUserSections,
 		'SSO.service':  this.loginAndUserSections,
 		'role.provider':  this.loginAndUserSections,
 		'user.service':  this.loginAndUserSections,
-		'Loopback-auth-strategy':  this.loginAndUserSections,
+		'Loopback-auth-strategy':  false,
 		'header.component': false,
 		'Dashboard.Component': false,
 		'Openorders.Component': true,

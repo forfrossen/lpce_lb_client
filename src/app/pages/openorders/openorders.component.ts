@@ -117,10 +117,6 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.alive = true;
 
-		this.hotInstance = this.hotRegisterer.getInstance( this.instance );
-		this.log.inform( this.sName, 'hot instance set' );
-		this.hotInstance.updateSettings( {}, false );
-		
 		this.loadOrRefreshOrders();
 
 		this.items$ = this.itemsInput$.pipe(
@@ -291,7 +287,9 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 					this.hotInstance.render();
 					this.isGritHeightSet = true;
 				} 
+
 				this.isOrdersFetched = true;
+				
 				if ( !this.submitError ) this.toastrService.success( 'Daten erfolgreich geladen', 'Erfolg!' );				
 			} );
 	}
