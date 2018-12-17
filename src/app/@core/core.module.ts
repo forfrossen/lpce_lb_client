@@ -38,23 +38,27 @@ export const NB_CORE_PROVIDERS = [
 	NbSecurityModule.forRoot( {
 		accessControl: {
 			guest: {
-				access: [ '/pages/dashboard', '/pages/unauthorized' ],
+				access: [ 'dashboard', 'unauthorized' ],
 			},
 			QCD480GGUsers: {
 				parent: 'guest',
+				access: [ 'dashboard', 'unauthorized' ],
 			},
-			QCD480GG: {
-				access: [ '/pages/dashboard', '/pages/unauthorized' ],
+			QCD480GG_WEB_OpenOrders: {
+				parent: 'QCD480GGUsers',
+				access: [ 'openorders' ],
+			},
+			QCD480GG_WEB_HEIMARBEIT_WRITE: {
+				parent: 'QCD480GGUsers',
+				access: [ 'heimarbeit', 'heimarbeit-dashboard' ],
+			},
+			QCD480GGIt: {
+				parent: 'QCD480GGUsers',
+				access: [ 'openorders' ],
 			},
 			QCD480GGOUAdministrators: {
 				parent: 'QCD480GGUsers',
 				access: '*',
-				root: 'admin',
-				view: '*',
-				create: '*',
-				edit: '*',
-				remove: '*',
-				admin: 'admin',				
 			}
 		},
 	} ).providers,

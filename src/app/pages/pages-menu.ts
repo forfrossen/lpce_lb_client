@@ -3,13 +3,13 @@ import { NbMenuItem } from '@nebular/theme';
 export const MENU_ITEMS: NbMenuItem[] = [
 	{
 		title: 'Dashboard',
-		icon: 'nb-grid-a',
+		icon: 'eva eva-grid-outline',
 		link: '/pages/dashboard',
 		home: true,
 	},
 	{
 		title: 'Teileinfo',
-		icon: 'ion-information',
+		icon: 'eva eva-info-outline',
 		children: [
 			{
 				title: 'Teileinfo Übersicht',
@@ -23,7 +23,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
 	},
 	{
 		title: 'Heimarbeit',
-		icon: 'ion-home',
+		icon: 'eva eva-car-outline',
 		link: '/pages/heimarbeit/dashboard',
 		children: [
 			{
@@ -34,7 +34,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
 	},
 	{
 		title: 'Open Orders',
-		icon: 'ion-home',
+		icon: 'eva eva-archive-outline',
 		link: '/pages/openorders',
 	},
 ];

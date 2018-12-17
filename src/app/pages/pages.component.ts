@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { MENU_ITEMS } from './pages-menu';
+import * as eva from 'eva-icons';
 
 @Component({
   selector: 'ngx-pages',
@@ -13,5 +14,16 @@ import { MENU_ITEMS } from './pages-menu';
 })
 export class PagesComponent {
 
-  menu = MENU_ITEMS;
+	menu = MENU_ITEMS;
+	
+	constructor() {
+		eva.replace({
+			animation: {
+			  type: 'pulse', // zoom, pulse, shake, flip
+			  hover: false, // default true
+			  infinite: false, // default false
+			}
+		  });
+
+	}
 }

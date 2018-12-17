@@ -26,44 +26,52 @@ export class AuthGuard implements CanActivate {
 		
 	}
 	
-	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+	async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 		
 		this.log.inform( this.sName, 'canActivate has been called!' );
 
 		/*
 		this.log.inform( this.sName, 'ActivatedRouteSnapshot: ', route );
 		this.log.inform( this.sName, 'RouterStateSnapshot: ', state );
-		*/
+		*/				
+		
+		let page = state.url;
+		page = page.replace( '/pages/', '' );
 
-										
-		if ( this.isLoggedIn ) {
+		try {
 			
-			this.log.inform( this.sName, 'Is logged in, checking access: ', state.url );
-			return this.checkAccess(state.url);
+			if ( ! this.isLoggedIn ) {
 			
-		} else {
+				this.log.inform( this.sName, 'Is NOT logged in, doing now: ', page );
+				
+				let loginResult = await this.mySSO.loginProcedure();
+				this.log.inform( this.sName, 'Post Login Info: ', loginResult );
+				
+				if ( loginResult ) this.isLoggedIn = true;
+				else new Error( loginResult )
+	
+			}
 			
-			this.log.inform( this.sName, 'Is NOT logged in, doing now: ', state.url );
+			this.log.inform( this.sName, 'Is logged in, checking access: ', page );
+				
+			let isGranted = await this.accessChecker.isGranted( 'access', page ).toPromise();
+			this.log.inform( this.sName, 'Access granted for', page, ' ================>', isGranted );
+
+			if ( !isGranted ) this.router.navigate( [ '/pages/unauthorized' ] );
+				
+			return isGranted;
+
+
+		} catch ( err ) {
 			
-			return this.handleLogin()
-				.then( info => {
-					this.log.inform( this.sName, 'Post Login Info: ', info );	
-					this.isLoggedIn = true;
-				} )
-				.then( () => {
-					this.log.inform( this.sName, 'Checking for access now!' );	
-					return this.checkAccess(state.url);
-				})
-				.catch( err => {
-					this.log.error( this.sName, 'Error ================>', err );
-					this.router.navigate( [ '/pages/unauthorized' ] );
-					return false;
-				})
+			this.log.error( this.sName, 'Error ================>', err );
+			this.router.navigate( [ '/pages/unauthorized' ] );
+			return Promise.reject(err);
 		
 		}
 			
 	}
-
+/*
 	async handleLogin() {
 		try {
 			return await this.mySSO.loginProcedure();
@@ -73,15 +81,12 @@ export class AuthGuard implements CanActivate {
 			return false;
 		}
 	}
-
 	async checkAccess(url) {
-
-		return await this.accessChecker.isGranted( 'access', url )
-			.toPromise()
-			.then( result => {
-				this.log.inform( this.sName, 'Access granted for', url, ' ================>', result );
-				return result;
-			})
+		let isGranted = await this.accessChecker.isGranted( 'access', url ).toPromise();
+		this.log.inform( this.sName, 'Access granted for', url, ' ================>', isGranted );
+		return isGranted;
 	}
-
+	
+*/
+	
 }
