@@ -5,4 +5,10 @@
 .mat-dialog-content{
 	padding-top: 25px !important;
 	padding-bottom: 25px !important;
+	height: 750px !important;
+}
+
+.ssrs-reportviewer, iframe{
+	border-width: 0px !important;
+	border: 0;
 }

@@ -20,7 +20,7 @@ export class LoggerServiceExtended extends LoggerService {
 	blanksBetweenArgs: string = '  ';
 	section: string = ';'
 
-	loginAndUserSections: boolean = true;
+	loginAndUserSections: boolean = false;
 
 	debuggingSections: object = {
 		'Auth-guard.service': this.loginAndUserSections,
@@ -30,7 +30,7 @@ export class LoggerServiceExtended extends LoggerService {
 		'Loopback-auth-strategy':  false,
 		'header.component': false,
 		'Dashboard.Component': false,
-		'Openorders.Component': true,
+		'Openorders.Component': false,
 		'Teileinfo-List.Component': false,
 	}
 	

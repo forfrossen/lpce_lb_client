@@ -1,67 +1,60 @@
-import {
-	Component, OnDestroy,
-	OnInit, ChangeDetectionStrategy, ViewChild,
-} from '@angular/core';
-
-import {FormControl, FormGroup, ReactiveFormsModule, FormsModule} from '@angular/forms';
-import { NbThemeService, NbToastrService } from '@nebular/theme';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { of, from, Observable, Subject, concat } from 'rxjs';
-import {
-	takeWhile, catchError, retry, map, tap, pluck,
-	groupBy, mergeMap, toArray, distinct, switchMap, debounceTime, distinctUntilChanged, filter, flatMap, concatAll
-} from 'rxjs/operators';
-
-import { MatUiService } from 'app/_ui-components/dialog.component'
-import * as eva from 'eva-icons';
-import * as Handsontable from 'handsontable';
-import { HotTableRegisterer } from '@handsontable/angular';
-
-import { BASE_URL, API_VERSION } from 'app/shared/base.url.config';
-import { LoopBackConfig, LoggerService } from 'app/shared/sdk';
-import { User, UserInterface, Message, SDKToken } from 'app/shared/sdk/models';
-import { LoopBackAuth } from 'app/shared/sdk/services';
-import { OpenOrders, OpenOrdersInterface } from 'app/shared/sdk/models';
-import { OpenOrdersComment, OpenOrdersCommentInterface } from 'app/shared/sdk/models';
-import { OpenOrdersApi } from 'app/shared/sdk/services';
-import { OpenOrdersCommentApi } from 'app/shared/sdk/services';
-import { LoggerServiceExtended } from 'app/shared/extended/logger.service.extended'
+import { Component, OnDestroy, OnInit                 					} from '@angular/core'                               ;
+import { HotTableRegisterer                                             } from '@handsontable/angular'                       ;
+import { NbToastrService                                                } from '@nebular/theme'                              ;
+import { API_VERSION, BASE_URL                          				} from 'app/shared/base.url.config'                  ;
+import { LoggerServiceExtended                                          } from 'app/shared/extended/logger.service.extended' ;
+import { LoopBackConfig                                                 } from 'app/shared/sdk'                              ;
+import { OpenOrdersCommentInterface, OpenOrdersInterface                } from 'app/shared/sdk/models'                       ;
+import { OpenOrdersApi, OpenOrdersCommentApi              				} from 'app/shared/sdk/services'                     ;
+import { MatUiService                                                   } from 'app/_ui-components/dialog.component'         ;
+import { Observable, of, Subject                       					} from 'rxjs'                                        ;
+import { catchError, concatAll, debounceTime, distinct 					} from 'rxjs/operators'                              ;
+import { distinctUntilChanged, switchMap, tap, toArray            		} from 'rxjs/operators'                              ;
+import * as eva          												  from 'eva-icons'    ;
+import * as Handsontable 												  from 'handsontable' ;
 
 
 @Component( {
-	selector: 'ngx-openorders',
+	selector   : 'ngx-openorders',
 	templateUrl: './openorders.component.html',
-	styleUrls: [ './openorders.component.css' ],
+	styleUrls  : [ './openorders.component.css' ],
 })
 
 export class OpenOrdersComponent implements OnInit, OnDestroy {
 	
-	hotInstance:		any;
-	numericFormat:		any			= { pattern: '0,0', culture: 'de-DE'};
-	selectedOrderTypes:	any[] 		= [];
-	selectedItems: 		any[] 		= [];
-	selectedSuppliers:	any[] 		= [];
-	selectedOrders:		any[] 		= [];
-	sName:				string		= 'Openorders.Component - ';
-	instance: 			string 		= 'ordersTable';
-	selectLate:			string		= 'all';
-	submitError:		boolean		= false;
-	alive:				boolean 	= false;
-	isGritHeightSet:	boolean 	= false;
-	isOrdersFetched: 	boolean 	= false;
-	isItemsLoading: 	boolean 	= true;
-	isSuppliersLoading:	boolean 	= true;
-	isOrdersLoading:	boolean 	= true;
-	dateFieldLength:	number		= 65;
-	ordersFound: 		number		= 0;
-	orders: 			OpenOrdersInterface[ ];
-	items$:				Observable<{}[]>;
-	suppliers$:			Observable<{}[]>;
-	orders$: 			Observable<any>;
-	itemsInput$ 	  = new Subject<string>();
-	suppliersInput$   = new Subject<string>();
-	ordersInput$   	  = new Subject<string>();
-	typesArray: 		{ name: string, value: string }[] = [
+	hotInstance       : any;
+	numericFormat     : any			= { pattern: '0,0', culture: 'de-DE'};
+	
+	selectedOrderTypes: any[] = [];
+	selectedItems     : any[] 		= [];
+	selectedSuppliers : any[] 		= [];
+	selectedOrders    : any[] 		= [];
+	
+	sName             : string		= 'Openorders.Component - ';
+	instance          : string 		= 'ordersTable';
+	selectLate        : string		= 'all';
+	
+	submitError       : boolean		= false;
+	alive             : boolean 	= false;
+	isGritHeightSet   : boolean 	= false;
+	isOrdersFetched   : boolean 	= false;
+	isItemsLoading    : boolean 	= true;
+	isSuppliersLoading: boolean 	= true;
+	isOrdersLoading   : boolean 	= true;
+	
+	dateFieldLength   : number		= 65;
+	ordersFound       : number		= 0;
+	
+	orders            : OpenOrdersInterface[ ];
+	items$            : Observable<{}[]>;
+	suppliers$        : Observable<{}[]>;
+	orders$           : Observable<any>;
+	
+	itemsInput$                     = new Subject<string>();
+	suppliersInput$                 = new Subject<string>();
+	ordersInput$                    = new Subject<string>();
+	
+	typesArray:	{ name: string, value: string }[] = [
 		{name: 'OO', value: 'OO'},
 		{name: 'OC', value: 'OC'},
 		{name: 'OU', value: 'OU'},
@@ -77,41 +70,71 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 	*/
 	
 
-	settingsObj: Handsontable.GridSettings = {
-		data: Handsontable.helper.createSpreadsheetData( 17, 50 ),
-		stretchH: 'all',
-		autoColumnSize: false, columnSorting: true, 
-		contextMenu: true, manualColumnResize: true,
-		undo: true, colHeaders: true, observeChanges: true, className: 'htMiddle',
-		columns: [
-			{ colWidths: 35,   readOnly: true, editor: false, data: 'pddcto', title: 'Typ' 				},
-			{ colWidths: 75,   readOnly: true, editor: false, data: 'pddoco', title: 'Order Nr', 		type: 'numeric' },
-			{ colWidths: 140,  readOnly: true, editor: false, data: 'pdlitm', title: 'Artikel' 			},
-			{ colWidths: 180,  readOnly: true, editor: false, data: 'pdan801', title: 'Lieferant' 		},
-			{ colWidths: 80,   readOnly: true, editor: false, data: 'pdan8', title: 'Lief. Nr', 		type: 'numeric' },
-			{ colWidths: 80,   readOnly: true, editor: false, data: 'pduorg', title: 'Menge', 			type: 'numeric', numericFormat: this.numericFormat },
-			{ colWidths: 80,   readOnly: true, editor: false, data: 'pduopn', title: 'Offen', 			type: 'numeric', numericFormat: this.numericFormat },
-			{ colWidths: 95,   readOnly: true, editor: false, data: 'pddrqj', title: 'Request',			className: 'htRight htMiddle' },
-			{ colWidths: 95,   readOnly: true, editor: false, data: 'pdpddj', title: 'Promise',			className: 'htRight htMiddle' },
-			{ colWidths: 95,   readOnly: true, editor: false, data: 'pdtrdj', title: 'Order Date', 		className: 'htRight htMiddle' },
-			{ colWidths: 150,  data: 'comment', title: 'Kommentar' },
-			{ colWidths: 90,   editor: false, data: 'created', title: 'Komment Date', 					className: 'htRight htMiddle' },
-			{ colWidths: 90,   editor: false, data: 'createdby', title: 'User' 			},
+	//settingsObj: Handsontable.GridSettings = {
+	settingsObj = {
+		data              : Handsontable.helper.createSpreadsheetData( 17, 50 ),
+		stretchH          : 'all',
+		autoColumnSize    : false, columnSorting: true,
+		manualColumnResize: true,
+		undo              : true, colHeaders   : true, observeChanges: true, className: 'htMiddle',
+		columns           : [
+			{ colWidths: 35,   readOnly: true,  editor: false, data: 'pddcto', 	  title: 'Typ' 			 				 },
+			{ colWidths: 75,   readOnly: true,  editor: false, data: 'pddoco', 	  title: 'Order Nr', 	 type: 'numeric' },
+			{ colWidths: 140,  readOnly: true,  editor: false, data: 'pdlitm', 	  title: 'Artikel' 		 				 },
+			{ colWidths: 180,  readOnly: true,  editor: false, data: 'pdan801',   title: 'Lieferant' 	 				 },
+			{ colWidths: 80,   readOnly: true,  editor: false, data: 'pdan8', 	  title: 'Lief. Nr', 	 type: 'numeric' },
+			{ colWidths: 80,   readOnly: true,  editor: false, data: 'pduorg', 	  title: 'Menge', 		 type: 'numeric', numericFormat: this.numericFormat },
+			{ colWidths: 80,   readOnly: true,  editor: false, data: 'pduopn', 	  title: 'Offen', 		 type: 'numeric', numericFormat: this.numericFormat },
+			{ colWidths: 95,   readOnly: true,  editor: false, data: 'pddrqj', 	  title: 'Request',		 className: 'htRight htMiddle' },
+			{ colWidths: 95,   readOnly: true,  editor: false, data: 'pdpddj', 	  title: 'Promise',		 className: 'htRight htMiddle' },
+			{ colWidths: 95,   readOnly: true,  editor: false, data: 'pdtrdj', 	  title: 'Order Date', 	 className: 'htRight htMiddle' },
+			{ colWidths: 150,  readOnly: false, editor: true,  data: 'comment',   title: 'Kommentar' 	 				 },
+			{ colWidths: 90,   readOnly: true,  editor: false, data: 'created',   title: 'Komment Date', className: 'htRight htMiddle' },
+			{ colWidths: 90,   readOnly: true,  editor: false, data: 'createdby', title: 'User' 						 },
 		],
+		contextMenu: {
+			items: {
+				"custom1": {
+					name    : 'Zeige Teileverfügbarkeit',
+					callback: (key, selection, clickEvent) => this.showItemAvaibility(key, selection, clickEvent),
+				}
+			}
+		}
 	};
 
 
 	constructor(
-		private log: 					LoggerServiceExtended,
-		private themeService: 			NbThemeService,
-		private openOrdersApi: 			OpenOrdersApi,
-		private openOrdersCommentApi: 	OpenOrdersCommentApi,
-		private hotRegisterer: 			HotTableRegisterer,
-		private toastrService: 			NbToastrService,
-		private matUiService:			MatUiService,
+		private log                 : LoggerServiceExtended,
+		private openOrdersApi       : OpenOrdersApi,
+		private openOrdersCommentApi: OpenOrdersCommentApi,
+		private hotRegisterer       : HotTableRegisterer,
+		private toastrService       : NbToastrService,
+		private matUiService        : MatUiService,
+		
 	) {
 		LoopBackConfig.setBaseURL( BASE_URL );
 		LoopBackConfig.setApiVersion( API_VERSION );
+	}
+	
+	public showItemAvaibility( key, selection, clickEvent ) {
+		/*console.log(clickEvent);
+		console.log(selection);
+		console.log(key);*/
+
+		
+		
+		if ( ( selection[ 0 ].start.row !== selection[ 0 ].end.row ) || ( selection[ 0 ].start.col !== selection[ 0 ].end.col ) ) {
+			this.matUiService.dialog( 'Warnung', 'Teileverfügbarkeit nicht bei Mehrfachauswahl möglich!' )
+		}
+		else {
+			let item: 			string = this.hotInstance.getDataAtCell( selection[ 0 ].start.row, selection[ 0 ].start.col );
+			let reportLocation: string = 'JDE+Reports/Nussdorf+Lokal/Planung/Material_Status_Report';
+			let parameters             = { Item: item };
+			this.log.info( 'Cell Data: ' + this.hotInstance.getDataAtCell( selection[0].start.row, selection[0].start.col ))
+			this.matUiService.ReportViewer( 'Reportserver', reportLocation, parameters )
+
+		}
+
 	}
 
 	ngOnInit() {
@@ -152,8 +175,8 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 
 		eva.replace( {
 			animation: {
-				type: 'pulse',
-				hover: true,
+				type    : 'pulse',
+				hover   : true,
 				infinite: true,
 			},
 		});
@@ -163,7 +186,7 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 		this.alive = false;
 	}
 
-	negativeValueRenderer( instance, td, row, col, prop, value, cellProperties ) {
+	negativeValueRenderer( td, value ) {
 		Handsontable.renderers.TextRenderer.apply( this, arguments );
 
 		// if row contains negative number
@@ -200,40 +223,41 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 
 		term = ( term === '*' ) ? '%' : term;
 
-		const limit 		= 100;
-		const today 		= new Date().setHours( 0, 0, 0, 0 );
-		const yesterdayNow	= new Date().setDate( new Date().getDate() - 1)
-		const yesterday 	= new Date( new Date( new Date().setDate( new Date().getDate() - 1 ) ).setHours( 0, 0, 0, 0 ) );
-		const lastYear 		= new Date( new Date().setFullYear( new Date().getFullYear() - 1 ) );
-		let   filters: any 	= { where: { and: [] }, limit: limit, order: '' };
+		const limit        = 100;
+		const yesterday    = new Date( new Date( new Date().setDate( new Date().getDate() - 1 ) ).setHours( 0, 0, 0, 0 ) );
+		const lastYear     = new Date( new Date().setFullYear( new Date().getFullYear() - 1 ) );
+		let   filters: any = { where: { and: [] }, limit: limit, order: '' };
 		
 		try {
 
 			if ( this.selectedOrderTypes.length ) filters.where.and.push( { pddcto: { inq: this.selectedOrderTypes } } );
-			if ( this.selectedItems.length ) filters.where.and.push( { pdlitm: { inq: this.selectedItems } } );
-			if ( this.selectedSuppliers.length ) filters.where.and.push( { pdan8: { inq: this.selectedSuppliers } } );
-			if ( this.selectedOrders.length ) filters.where.and.push( { pddoco: { inq: this.selectedOrders } } );
-			if ( this.selectLate === 'promise' ) filters.where.and.push( { pdpddj: { lt: yesterday } } );
-			if ( this.selectLate === 'request' ) filters.where.and.push( { pddrqj: { lt: yesterday } } );
+			if ( this.selectedItems.length      ) filters.where.and.push( { pdlitm: { inq: this.selectedItems } } );
+			if ( this.selectedSuppliers.length  ) filters.where.and.push( { pdan8:  { inq: this.selectedSuppliers } } );
+			if ( this.selectedOrders.length     ) filters.where.and.push( { pddoco: { inq: this.selectedOrders } } );
+			if ( this.selectLate === 'promise'  ) filters.where.and.push( { pdpddj: { lt:  yesterday } } );
+			if ( this.selectLate === 'request'  ) filters.where.and.push( { pddrqj: { lt:  yesterday } } );
 			
 			filters.where.and.push( { pddrqj: { gt: lastYear } } );
 			
+
 			// Filters for ng-select fields autocomplete
 			if ( term ) {
-				filters.fields = {};
-				filters.fields[ action ] = true;
-				filters.fields.pdan8 = ( action === 'pdan801' ) ? true : false;
-				filters.limit = limit;
+	
+				               filters.fields       = {};
+				filters.fields[ action ]            = true;
+				               filters.fields.pdan8 = ( action === 'pdan801' ) ? true : false;
+				               filters.limit        = limit;
 				
 				/*
 				//filters.where.and[ action ] = { like: term + '%' };
-				let tmpObj = {};
+				let    tmpObj    = {};
 				tmpObj[ action ] = { like: term + '%' };
 				filters.where.and.push( tmpObj );
 				*/
 				
 				filters.where.and.push( { [ action ]: { like: term + '%' } } );
 				filters.order = action + ' asc';
+
 			} else if ( action === 'table' ) {
 				filters.order = 'pdan801 asc, pddoco asc';
 				filters.limit = limit;
@@ -262,7 +286,7 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 
 	loadOrRefreshOrders(): void {
 
-		let  filters = this.filtersFor( 'table' );
+		let filters = this.filtersFor( 'table' );
 
 		this.isOrdersFetched = false;
 		
@@ -270,7 +294,7 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 		
 		this.openOrdersApi.find( filters )
 			.subscribe(( orders: OpenOrdersInterface[] ) => {
-				this.orders = orders;			
+				this.orders = orders;
 			},
 			error => {
 				this.log.error( this.sName, error );
@@ -321,18 +345,18 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 			changes.forEach( change => {
 
 				//if ( oldVal === newVal )
-				const [ row, prop, oldVal, newVal ] = change;
-				const pddoco = hotInstance.getDataAtCell( row, 'pddoco' );
-				const pdlnid = hotInstance.getDataAtCell( row, 'pdlnid' );
+				const [ row,,, newVal ] = change;
+				const pddoco            = hotInstance.getDataAtCell( row, 'pddoco' );
+				const pdlnid            = hotInstance.getDataAtCell( row, 'pdlnid' );
 
 				//console.log( 'Change pddoco: %s + pdlnid: %s + change: %s', pddoco, pdlnid, newVal );
 				const newOpenOrdersComment: OpenOrdersCommentInterface = {
-					pddoco: pddoco,
-					pdlnid: pdlnid,
-					comment: newVal,
-					created: null,
+					pddoco   : pddoco,
+					pdlnid   : pdlnid,
+					comment  : newVal,
+					created  : null,
 					createdby: null,
-					version: null,
+					version  : null,
 				}
 
 				this.openOrdersCommentApi.create( newOpenOrdersComment )
@@ -345,8 +369,8 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 						//console.log(response);
 					}, error => {
 						this.log.error( error );
-						this.submitError = true;
-						const title = 'Error: ' + error.statusCode;
+						            this.submitError = true;
+						      const title            = 'Error: ' + error.statusCode;
 						this.matUiService.error( title, error.details[ 0 ].message );
 					})
 			})
@@ -366,12 +390,12 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 	}
 
 	formateDate( date: any ): string {
-		const dDate 		= new Date(date);
-		const day 			= dDate.getDate();
-		const month 		= dDate.getMonth() + 1;
-		const year 			= dDate.getFullYear();
-		const returnDate 	= ( '0' + day.toString() ).slice( -2 ) + '.' + ( '0' + month.toString() ).slice( -2 ) + '.' + year;
-		return returnDate;			
+		const dDate      = new Date( date );
+		const day        = dDate.getDate();
+		const month      = dDate.getMonth() + 1;
+		const year       = dDate.getFullYear();
+		const returnDate = ( '0' + day.toString() ).slice( -2   ) + '.' + ( '0' + month.toString() ).slice( -2 ) + '.' + year;
+		return returnDate;
 	}
 }
 

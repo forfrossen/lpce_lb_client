@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
 import { takeWhile ,  catchError, retry, map } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Headers, RequestOptions } from '@angular/http';
 import { Observable  } from 'rxjs';
 
 import { reject } from 'q';
@@ -16,55 +17,10 @@ import { User, UserInterface, Message, SDKToken } 			from 'app/shared/sdk/models
 import { LoopBackAuth } 									from 'app/shared/sdk/services';
 import { UserApiExtended } 									from 'app/shared/extended/user.extended';
 import { LoggerServiceExtended } 							from 'app/shared/extended/logger.service.extended'
-import { pipe } 											from '@angular/core/src/render3/pipe';
-import { SSO } from 'app/@core/auth/SSO.service';
-import { RoleProvider } from '../../@core/auth/role.provider'
+import { jsonpCallbackContext } 							from '@angular/common/http/src/module';
 
+import * as XML2js from 'xml2js';
 
-interface CardSettings {
-	title: string;
-	iconClass: string;
-	type: string;
-}
-
-interface LBAuthResponse{
-	access_token: string;
-	userId: number;
-}
-
-interface ADUser {
-	account: {
-		displayName: string,
-		name: {
-			familyName: string,
-			givenName: string,
-		},
-		emails: [{value: string}],
-		_json: {
-			dn: string,
-			displayName: string,
-			givenName: string,
-			sn: string,
-			title: string,
-			userPrincipalName: string,
-			sAMAccountName: string,
-			mail: string,
-			description: string,
-			memberOfGroups: [string]
-		},
-		memberOfGroups: [string]
-	},
-	session: {
-		cookie: {
-			originalMaxAge: string,
-			expires: string,
-			httpOnly: string,
-			path: string,
-		},
-		__lastAccess: string,
-		authenticatedPrincipal: string,
-	}
-}
 
 @Component( {
 	selector: 'ngx-dashboard',
@@ -74,12 +30,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 	private alive = false;
 	private lbToken: SDKToken['id'];
-	public ADUser: ADUser;
 	public LoopbackData: any;
 	public roles: string[] = [];
 	private UserIf: UserInterface;
 	public TiSettings: any;
 	sName: string =  'Dashboard.Component - ';
+
+	enoviaJSONdata: any = {};
 
 
 	constructor(
@@ -88,31 +45,58 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		private themeService: NbThemeService,
 		//public roleProvider: RoleProvider,
 		public accessChecker: NbAccessChecker,
+		private httpClient: HttpClient,
 	) {
 
 		LoopBackConfig.setBaseURL( BASE_URL );
 		LoopBackConfig.setApiVersion( API_VERSION );
-/*
-		this.http.get( '/express-passport' )
-			.subscribe (( data: ADUser ) => {
-				this.ADUser = data
-			} );
-*/
-	}
 
-	Test() {
-		this.log.inform( 'tested' );
-	}
 
-	LoopAuthAD() {
-		this.NBTokenService.clear();
-	}
+		const enoviaAPI: string = 'http://qcd480a01.uk.parker.corp/documentSearch/DocumentSearchResultsXML.jsp';
+		
+		const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
+		//const headers = new HttpHeaders( { 'Content-Type': 'text/xml' } ).set( 'Accept', 'text/xml' );
+	
+		let params = new HttpParams()
+			.set( 'type', 'Part' )
+			.set( 'revision', '*' )
+			.set( 'name', '502KRAM12*' )
+			.set( 'current', '*' )
+			.set( 'short_description', '*' )
+			.set( 'user', 'QCDEDocSearch' )
+			.set( 'rdo', 'QCDE-Unrestricted' )
+			.set( 'results_field', 'Type,Name,Revision,State,RDO,Short_Description,FileLink' )
+	
 
-	LoopGimme() {
+		//let asdf = JSON.stringify( options ).replace( '{', '' ).replace( '}', '' )
+		
+		// console.log( params.toString() );
 
-		this.accessChecker.isGranted( 'view', 'news' ).subscribe( result => {
-			this.log.inform( this.sName, 'Admin Access granted ================>', result );
-		});
+		try {
+			this.httpClient.get( enoviaAPI, { headers: headers, responseType: 'text', params: params } ).subscribe( ( data: any ) => {
+				
+				data = data.trim();
+
+				var parser = new XML2js.Parser({
+					mergeAttrs : true
+				});
+				
+				parser.parseString( data, ( err, result ) => {
+					if ( err ) throw err;
+					
+					this.enoviaJSONdata = result.phcXML.data[ 0 ][ "z:row" ];
+
+					console.log('Done');
+				});
+
+				//console.log( data );
+			} )
+
+		} catch {
+			console.error( 'something went wrong' );
+		} finally {
+			console.log( 'enovia api query done...%O', this.enoviaJSONdata );
+		}
 
 	}
 
@@ -120,49 +104,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 		this.alive = true;
 
-
-		/*
-		this.roleProvider.getRole()
-			.pipe(
-				map( role => {
-					this.log.inform( this.sName, 'ROLES ARRAY.isarray', Array.isArray( role ) );
-					this.log.inform( this.sName, 'ROLES ARRAY.length', role.length );
-					this.log.inform( this.sName, 'ROLES ARRAY', role );
-					return Array.isArray( role ) ? role : [ role ];
-				} ),
-				map( roles => {
-					return roles.some(  role => {
-						this.log.inform( this.sName, 'ROLES FOUND IN ARRAY', role );
-						if ( role === 'QCD480GGOUAdministrators' )
-							return true;
-						else
-							return false;
-					} );
-				} ) )
-				.subscribe( result => {
-					this.log.inform( this.sName, 'RESULT asdf ================>', result );
-				});
-
-
-		this.roleProvider.getRole()
-			.subscribe( roles => this.LoopbackData = roles )
-*/		
-		// this.roleProvider.getRole()
-			
-
-/*
-		this.roleProvider.getRole()
-			.pipe(
-				map( role => {
-					this.log.inform ( role );
-				})
-			)
-*/
 	}
 
 	ngOnDestroy() {
 		this.alive = false;
 	}
 }
-
-

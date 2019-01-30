@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatExpansionModule } from '@angular/material';
-
+import { SSRSReportViewerModule } from 'ngx-ssrs-reportviewer';
 import {
   NbActionsModule,
   NbCardModule,
@@ -20,7 +20,7 @@ import {
   NbContextMenuModule,
   NbToastrModule,
   NbDialogModule,
-  NbDialogConfig, NbAccordionModule
+  NbDialogConfig, NbAccordionModule,
 } from '@nebular/theme';
 
 import { NbSecurityModule } from '@nebular/security';
@@ -42,7 +42,7 @@ import {
   ThreeColumnsLayoutComponent,
   TwoColumnsLayoutComponent,
 } from './layouts';
-import { confirmComponent, dialogComponent, errorComponent } from 'app/_ui-components/dialog.component';
+import { confirmComponent, dialogComponent, ReportViewer, errorComponent } from 'app/_ui-components/dialog.component';
 import { DEFAULT_THEME } from './styles/theme.default';
 //import { COSMIC_THEME } from './styles/theme.cosmic';
 import { CORPORATE_THEME } from './styles/theme.corporate';
@@ -69,7 +69,7 @@ const NB_MODULES = [
   NbToastrModule,
   NbDialogModule,
   NbSecurityModule,
-  MatDialogModule, MatButtonModule, MatButtonToggleModule
+  MatDialogModule, MatButtonModule, MatButtonToggleModule, SSRSReportViewerModule
   // *nbIsGranted directive
 ];
 
@@ -86,12 +86,12 @@ const COMPONENTS = [
   SampleLayoutComponent,
   ThreeColumnsLayoutComponent,
   TwoColumnsLayoutComponent,
-  confirmComponent, dialogComponent, errorComponent
+  confirmComponent, dialogComponent, errorComponent, ReportViewer
 ];
 
 const ENTRY_COMPONENTS = [
 	ThemeSwitcherListComponent,
-	confirmComponent, dialogComponent, errorComponent
+	confirmComponent, dialogComponent, errorComponent, ReportViewer
 ];
 
 const PIPES = [

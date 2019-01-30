@@ -52,7 +52,7 @@ export class LoopbackAuthStrategy extends NbAuthStrategy {
 					if ( this.getOption( `${module}.alwaysFail` ) ) {
 						throw this.createFailResponse( data );
 					}
-					console.log( this.sName, 'RES: ', res );
+					//console.log( this.sName, 'RES: ', res );
 					return res;
 				} ),
 				map( ( res: any ) => {
@@ -73,7 +73,7 @@ export class LoopbackAuthStrategy extends NbAuthStrategy {
 						
 						res.body[ 'modified_token' ] = modified_token;
 						
-						console.log( this.sName, 'response: ', res );
+						//console.log( this.sName, 'response: ', res );
 						//res.body.data.access_token = res.body.access_token; //{ access_token: res.access_token, id: res.id, userId: res.userId };
 
 					} else {

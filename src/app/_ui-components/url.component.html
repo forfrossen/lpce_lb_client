@@ -1,0 +1,20 @@
+<mat-dialog-content>
+
+	<ssrs-reportviewer
+	*ngIf='loaded'
+		[reportserver]="reportServer"
+		[reporturl]="reportUrl"
+		[showparameters]="showParameters" 
+		[parameters]="parameters" 
+		[language]="language" 
+		[height]="height"
+		[width] ="width" 
+		[toolbar]="toolbar" >
+	</ssrs-reportviewer>
+</mat-dialog-content>
+<mat-dialog-actions>
+	<div class="button-row">
+		<button mat-stroked-button color="primary" [mat-dialog-close]="true">Confirm</button>
+		<button mat-stroked-button *ngIf="getConfirmMode()" color="warn" [mat-dialog-close]="false">Cancel</button>
+	</div>
+</mat-dialog-actions>
