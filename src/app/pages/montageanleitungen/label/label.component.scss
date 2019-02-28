@@ -1,0 +1,29 @@
+@media print {
+	:not(.printMe) {
+		visibility: hidden;
+	}
+}
+
+@media print {
+	.printMe {
+		visibility: visible;
+	}
+}
+
+
+
+img.barcode			{ position: absolute; }
+div.barcode_text	{ position: absolute; }
+
+#ean_gs1			{ left: 2px; 	top: 578px; }
+#txt_gs1			{ left: 35px; 	top: 625px; font-size: 12px; }
+
+#txt_date			{ left: 35px; 	top: 640px; font-size: 12px; }
+
+#ean_item			{ left: 5px; 	top: 660px; }
+#txt_item			{ left: 25px; 	top: 695px; font-size: 10px; }
+
+#ean_lot			{ left: 5px;	top: 710px; }
+#txt_lot			{ left: 25px; 	top: 745px; font-size: 10px; }
+#txt_item1			{ left: 80px; 	top: 123px; font-size: 20px; }
+#txt_lot1			{ left: 280px; 	top: 123px; font-size: 20px; }

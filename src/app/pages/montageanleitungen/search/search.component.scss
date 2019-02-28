@@ -1,0 +1,33 @@
+:host {
+	height:100%;
+	width: 100%;
+}
+
+.row:not(:first-child) {
+	margin-top: 1rem;
+}
+
+code{
+	white-space: pre;
+}
+
+.bd-callout {
+    padding: 1.25rem;
+    border: 1px solid #eee;
+    border-left-width: .25rem;
+    border-radius: .25rem;
+}
+
+.dialog-card {
+	width: 32rem;
+}
+
+button {
+	font-size: 1.5rem !important;
+}
+
+button i {
+	margin-right: 10px;
+    border-right: 2px white solid;
+    padding-right: 10px;
+}

@@ -1,0 +1,32 @@
+<ng-container [ngSwitch]="view">
+	<!--<div style="position: absolute"><h5>{{view}}</h5></div>-->
+
+		<ng-container *ngSwitchCase="'search'" [@fadeInOut]>
+			<div class="row justify-content-md-center" >
+				<div class="col-md-auto">
+					<search-component (search)="search($event)"></search-component>
+				</div>
+			</div>
+		</ng-container>
+
+		<ng-container *ngSwitchCase="'pdfViewer'" [@fadeInOut]>
+			<pdf-viewer-component
+				[pdfSrc]='pdfSrc'
+				(next)="next()">
+			</pdf-viewer-component>
+		</ng-container>
+
+		<ng-container *ngSwitchCase="'label'" [@fadeInOut]>
+			<div class="row justify-content-center">
+				<nb-card class="dialog-card">	
+					<nb-card-header>
+						Label
+					</nb-card-header>
+					<nb-card-body>
+						<label-component></label-component>
+					</nb-card-body>
+				</nb-card>
+			</div>
+		</ng-container>
+
+</ng-container>

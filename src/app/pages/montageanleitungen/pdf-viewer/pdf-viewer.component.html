@@ -1,0 +1,37 @@
+<nb-card class="w-100 h-100" [@fadeInOut]>
+
+	<nb-card-body [nbSpinner]="loading"  nbSpinnerSize="xxlarge">
+		<embed *ngIf="showPdf" #pdfViewer width="100%" height="99%" name="plugin" id="plugin" [src]="blobSrc" type="application/pdf" internalinstanceid="10">
+	</nb-card-body>
+
+
+	<nb-card-footer>
+		<div class="row">
+
+			<div class="col my-1">
+				<button nbButton size="large" fullWidth (click)="nextClick()">
+					<i class="eva eva-repeat-outline"></i>
+					Nächster Scan
+				</button>
+			</div>
+
+			<div class="col my-1">
+				<a [href]="pdfSrc" target="_blank">
+					<button nbButton size="large" fullWidth>
+						<i class="eva eva-external-link-outline"></i>
+						Nur Anleitung
+					</button>
+				</a>
+			</div>
+
+			<div class="col my-1">
+				<button nbButton size="large" fullWidth (click)="view = 'label'">
+					<i class="eva eva-printer-outline"></i>
+					Label drucken
+				</button>
+			</div>
+
+		</div>
+	</nb-card-footer>
+
+</nb-card>

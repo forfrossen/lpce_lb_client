@@ -1,0 +1,21 @@
+
+		<img src="/assets/images/label.jpg" width="408" />
+		<input hidden="true" id="size" name="size" value="{{ size; ?>" />
+
+		<div class="barcode_text" id="txt_lot1">{{ wo }}</div>
+		<!--<div class="barcode_text" id="txt_item1">{{cp }}</div>-->
+		
+		<img width="380" height="35" class="barcode" id="ean_gs1" src="barcode.php?text=<?="11110101110" .str_replace(array("(", ")"), "", $ean) }}&size=45" />
+		<img class="barcode" id="ean_gs1" src="gs1_128/index.php?text={{ ean }}&size=45" />
+		<!--<div class="barcode_text" id="txt_gs1">{{ean }}</div>-->
+		
+		<!--<div class="barcode_text" id="txt_date">2017-07-13</div>-->
+		<div class="barcode_text" id="txt_date">{{ today | date: 'yy-MM-dd' }}</div>
+			
+		
+		<img width="210" height="35" class="barcode" id="ean_item" src="barcode.php?text={{ cp }}&size=45&codetype=code39" />
+		<div class="barcode_text" id="txt_item">{{ cp }}</div>
+		
+		<img width="210" height="35" class="barcode" id="ean_lot" src="barcode.php?text={{ wo }}&size=45&codetype=code39" />
+		<div class="barcode_text" id="txt_lot">{{ wo }}</div>
+		
