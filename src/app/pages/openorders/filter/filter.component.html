@@ -1,0 +1,118 @@
+<nb-accordion>
+	<nb-accordion-item #item>
+		<nb-accordion-item-header id="header1">
+			Fülter & Sortirung
+			<!--<i data-eva="info-outline"></i>-->
+		</nb-accordion-item-header>
+		<nb-accordion-item-body class="filter-container">
+			<div class="row">
+				<div class="col-2">
+					<ng-select
+						[(ngModel)]="selectedOrderTypes" id="typeSelectInput"
+						[items]="orderTypes$ | async" [multiple]="true" [virtualScroll]="false"
+						(change)="onNgSelectChange()"
+						bindLabel="name" bindValue="value"
+						placeholder="Typ" appendTo="body">
+					</ng-select>
+				</div>
+				<div class="col-2">
+					<ng-select
+						[(ngModel)]="selectedOrders" id="ordersSelectInput"
+						[items]="orders$ | async" [multiple]="true" [virtualScroll]="true"  
+						(change)="onNgSelectChange()"
+						bindLabel="pddoco" bindValue="pddoco"
+						[typeahead]="ordersInput$"
+						placeholder="Orders auswählen" appendTo="body"
+						loadingText="Orders laden, ...">
+						<ng-template ng-footer-tmp>
+							Selected count: {{selectedOrders.length}}
+						</ng-template>
+					</ng-select>
+				</div>
+				<div class="col-3">
+					<ng-select
+						[(ngModel)]="selectedItems" id="itemSelectInput"
+						[items]="items$ | async" [multiple]="true" [virtualScroll]="true"  
+						(change)="onNgSelectChange()"
+						bindLabel="pdlitm" bindValue="pdlitm"
+						[typeahead]="itemsInput$"
+						placeholder="Artkel auswählen" appendTo="body"
+						loadingText="Artikel laden, ...">
+						<ng-template ng-footer-tmp>
+							Selected count: {{selectedItems.length}}
+						</ng-template>
+					</ng-select>
+				</div>
+				<div class="col-3">
+					<ng-select
+						[(ngModel)]="selectedSuppliers" id="supplierSelectInput"
+						[items]="suppliers$ | async" [multiple]="true" [virtualScroll]="true" 
+						(change)="onNgSelectChange()"
+						bindLabel="pdan801" bindValue="pdan8"
+						[typeahead]="suppliersInput$"
+						placeholder="Lieferanten auswählen" appendTo="body"
+						loadingText="Lieferanten laden, ...">
+						<ng-template ng-footer-tmp>
+							Selected count: {{selectedSuppliers.length}}
+						</ng-template>
+					</ng-select>
+				</div>
+				<div class="col-2"></div>
+			</div>
+			<div class="row">
+				<div class="col-4">
+					<div [(ngModel)]="selectLate" (change)="onNgSelectChange()" ngbRadioGroup
+						class="btn-group btn-group-toggle btn-outline-toggle-group btn-group-full-width btn-toggle-radio-group">
+						<label ngbButtonLabel class="btn btn-outline-info">
+							<input ngbButton type="radio" value="all" checked="checked"> All
+						</label>
+						<label ngbButtonLabel class="btn btn-outline-info">
+							<input ngbButton type="radio" value="promise"> Promise Late
+						</label>
+						<label ngbButtonLabel class="btn btn-outline-info">
+							<input ngbButton type="radio" value="request"> Request Late
+						</label>
+					 </div>
+				</div>
+				<div class="col-3">
+					<ng-select
+						[(ngModel)]="selectedPlanners" id="plannerSelectInput"
+						[items]="planners$ | async" [multiple]="true" [virtualScroll]="true" 
+						(change)="onNgSelectChange()"
+						bindLabel="username" bindValue="username"
+						placeholder="Planner auswählen" appendTo="body"
+						loadingText="Planner laden, ...">
+						<ng-template ng-footer-tmp>
+							Selected count: {{selectedPlanners.length}}
+						</ng-template>
+					</ng-select>
+				</div>
+				<div class="col">
+					<nb-checkbox 
+						[(ngModel)]="selectedCommentOnly"
+						(change)="onNgSelectChange()">
+							Nur mit Kommentar
+					</nb-checkbox>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-4"></div>
+				<div class="col-4"></div>
+				<div class="col-4"></div>
+			</div>
+			<div class="row">
+				<div class="col-2"><h5>Bestellungen gefunden:</h5></div>
+				<div class="col-1" [nbSpinner]="loading" nbSpinnerMessage="berechne"><h5>{{ ordersFound }}</h5></div>
+				<div class="col-1"></div>
+				<div class="col-3">
+					<button nbButton hero 
+					fullWidth status="success"
+					(click)="this.searchNow.emit()">
+					Lade Orders
+					</button>
+				</div>
+				<div class="col-5"><!--<button nbButton (click)="undoTableAction()">Undo</button>--></div>
+			</div>
+		</nb-accordion-item-body>
+	</nb-accordion-item>
+</nb-accordion>
