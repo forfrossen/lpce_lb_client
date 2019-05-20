@@ -47,12 +47,19 @@ import { StorageBrowser } from './storage/storage.browser';
 import { UserApi } from './services/custom/User';
 import { AccessTokenApi } from './services/custom/AccessToken';
 import { MessageApi } from './services/custom/Message';
-import { TeileinfoNeuApi } from './services/custom/TeileinfoNeu';
+import { TeileinfoApi } from './services/custom/Teileinfo';
 import { HeimarbeiterApi } from './services/custom/Heimarbeiter';
 import { HeimarbeitApi } from './services/custom/Heimarbeit';
-import { ItemsApi } from './services/custom/Items';
-import { OpenOrdersApi } from './services/custom/OpenOrders';
-import { OpenOrdersCommentApi } from './services/custom/OpenOrdersComment';
+import { ItemApi } from './services/custom/Item';
+import { OpenOrderApi } from './services/custom/OpenOrder';
+import { OpenOrderCommentApi } from './services/custom/OpenOrderComment';
+import { WorkorderApi } from './services/custom/Workorder';
+import { EnoviaOfflineSearchFileApi } from './services/custom/EnoviaOfflineSearchFile';
+import { EnoviaReferenceItemApi } from './services/custom/EnoviaReferenceItem';
+import { MontageanweisungApi } from './services/custom/Montageanweisung';
+import { TBWEDATENApi } from './services/custom/TBWEDATEN';
+import { PlanerNrToADIDApi } from './services/custom/PlanerNrToADID';
+import { HttpForwardingApi } from './services/custom/HttpForwarding';
 import { UserIdentityApi } from './services/custom/UserIdentity';
 /**
 * @module SDKBrowserModule
@@ -85,12 +92,19 @@ export class SDKBrowserModule {
         UserApi,
         AccessTokenApi,
         MessageApi,
-        TeileinfoNeuApi,
+        TeileinfoApi,
         HeimarbeiterApi,
         HeimarbeitApi,
-        ItemsApi,
-        OpenOrdersApi,
-        OpenOrdersCommentApi,
+        ItemApi,
+        OpenOrderApi,
+        OpenOrderCommentApi,
+        WorkorderApi,
+        EnoviaOfflineSearchFileApi,
+        EnoviaReferenceItemApi,
+        MontageanweisungApi,
+        TBWEDATENApi,
+        PlanerNrToADIDApi,
+        HttpForwardingApi,
         UserIdentityApi,
         internalStorageProvider,
         { provide: SDKStorage, useClass: StorageBrowser }

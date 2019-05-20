@@ -78,7 +78,7 @@ export class SSO {
 			} else throw new Error( 'NB Token is not valid!: ' + NBToken.toString() );
 			
 			// Getting User Info from Backend and setting them 
-			let userInfoSetr = await this.userService.setUser();
+			// let userInfoSetr = await this.userService.setUser();
 			
 
 

@@ -14,6 +14,7 @@ import { OpenOrderApi, OpenOrderCommentApi, PlanerNrToADIDApi			} from 'app/shar
 import { MatUiService                                                   } from 'app/_ui-components/dialog.component'         ;
 
 import * as eva          												  from 'eva-icons'    ;
+import * as moment 														  from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class FilterService {
 
 	public selectedOrderTypes	: any[] 		= [];
 	public selectedItems     	: any[] 		= [];
+	public selectedIdentNrs    	: any[] 		= [];
 	public selectedSuppliers 	: any[] 		= [];
 	public selectedOrders    	: any[] 		= [];
 	public selectedPlanners  	: any[] 		= [];
@@ -48,17 +50,29 @@ export class FilterService {
 
 		term = ( term === '*' ) ? '%' : term;
 
-		const limit        = 10000;
-		const yesterday    = new Date( new Date( new Date().setDate( new Date().getDate() - 1 ) ).setHours( 0, 0, 0, 0 ) );
-		const lastYear     = new Date( new Date().setFullYear( new Date().getFullYear() - 1 ) );
+		const limit        = 1000;
+		//const yesterday    = new Date( new Date( new Date().setDate( new Date().getDate() - 1 ) ).setHours( 0, 0, 0, 0 ) );
+		//const yesterday    = moment(0, "HH").utc().subtract(1, 'days').format();
+		const yesterday    = moment.utc(0, "HH").format();
+
+		//const lastYear     = new Date( new Date().setFullYear( new Date().getFullYear() - 1 ) );
+		//const lastYear     = moment(0, "HH").utc().subtract(1, 'years').format();
+		const lastYear     = moment.utc(0, "HH").subtract(1, 'years').format();
 		let   filters: any = { where: { and: [] }, limit: limit, order: '' };
 		
-		console.log( this.selectedCommentOnly );
-
+		/*
+		this.log.inform( this.sName, 'yesterday: ', yesterday );
+		this.log.inform( this.sName, 'utcOffset: ', moment().utcOffset() );
+		this.log.inform( this.sName, 'yesterday2: ', yesterday2 );
+		this.log.inform( this.sName, 'last year: ', lastYear );
+		this.log.inform( this.sName, 'last year2: ', lastYear2 );
+		*/
+		
 		try {
 
 			if ( this.selectedOrderTypes.length ) filters.where.and.push( { pddcto: 			{ inq: this.selectedOrderTypes 	} } );
 			if ( this.selectedItems.length      ) filters.where.and.push( { pdlitm: 			{ inq: this.selectedItems 		} } );
+			if ( this.selectedIdentNrs.length   ) filters.where.and.push( { imdraw: 			{ inq: this.selectedIdentNrs	} } );
 			if ( this.selectedSuppliers.length  ) filters.where.and.push( { pdan8:  			{ inq: this.selectedSuppliers 	} } );
 			if ( this.selectedOrders.length     ) filters.where.and.push( { pddoco: 			{ inq: this.selectedOrders 		} } );
 			if ( this.selectedPlanners.length	) filters.where.and.push( { planerusername: 	{ inq: this.selectedPlanners 	} } );
@@ -102,7 +116,6 @@ export class FilterService {
 			if ( Object.keys(filters.where).length === 0 )
 				delete filters.where;
 					
-			console.log( filters );
 			//this.log.inform( this.sName, 'Filters: ', filters );
 		} catch ( err ) {
 			this.log.inform( this.sName, 'Error: ', err );

@@ -1,42 +1,42 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { NbSelectModule, NbButtonModule, NbButtonComponent } from '@nebular/theme';
+import { Component, OnInit, OnDestroy, Input 					} from '@angular/core';
+import { FormGroup, FormControl 								} from '@angular/forms';
+import { NbSelectModule, NbButtonModule, NbButtonComponent 		} from '@nebular/theme';
+import { NbToastrService, NbThemeService						} from '@nebular/theme';
 
-import { NbToastrService } from '@nebular/theme';
-import { NbThemeService } from '@nebular/theme';
+import { MatUiService											} from 'app/_ui-components/dialog.component'
 
-import { MatUiService } 									from 'app/_ui-components/dialog.component'
-
-import { BASE_URL, API_VERSION }							from 'app/shared/base.url.config';
-import { LoopBackConfig, LoggerService } 					from 'app/shared/sdk';
-import { Heimarbeit, Heimarbeiter  } 						from 'app/shared/sdk/models';
-import { HeimarbeitInterface, HeimarbeiterInterface  }		from 'app/shared/sdk/models';
-import { HeimarbeitApi, HeimarbeiterApi }					from 'app/shared/sdk/services';
+import { BASE_URL, API_VERSION									} from 'app/shared/base.url.config';
+import { LoopBackConfig, LoggerService 							} from 'app/shared/sdk';
+import { Heimarbeit, Heimarbeiter  								} from 'app/shared/sdk/models';
+import { HeimarbeitInterface, HeimarbeiterInterface 			} from 'app/shared/sdk/models';
+import { HeimarbeitApi, HeimarbeiterApi 						} from 'app/shared/sdk/services';
 
 @Component({
-	selector: 'HeimarbeitDComponent',
-	templateUrl: './heimarbeit-dashboard.component.html',
-	styleUrls: [ './heimarbeit-dashboard.component.css' ]
+	selector	: 	'HeimarbeitDComponent',
+	templateUrl	: 	'./heimarbeit-dashboard.component.html',
+	styleUrls	: [ './heimarbeit-dashboard.component.scss' ]
 } )
 	
 export class HeimarbeitDashboardComponent implements OnInit, OnDestroy {
 	
-	@Input() workorder: string;
-	title: string = "Heimarbeit";
-	private alive = false;
+	@Input() workorder				: string 					= '';
+	
+	title							: string 					= 'Heimarbeit';
+	sName							: string 					= 'Heimarbeit-Dashboard.Component';
 
-	Heimarbeiter: HeimarbeiterInterface = {kostenstelle: '', name: ''};
-	Heimarbeiters: HeimarbeiterInterface[] = [];
+	Heimarbeiter					: HeimarbeiterInterface 	= { kostenstelle: '', name: '' };
+	Heimarbeiters					: HeimarbeiterInterface[ ] 	= [ ];
+	Heimarbeit						: HeimarbeitInterface;
+	Heimarbeits						: HeimarbeitInterface[ ] 	= [	];
 
-	Heimarbeit: HeimarbeitInterface;
-	Heimarbeits: HeimarbeitInterface[] = [];
+	Workorders						: string[ ] 				= [ '' ];
 
-	isBadWorkorderScanned: boolean = false;
-	isHeimarbeiterSelected: boolean = false;
-	isHeimarbeitScanned: boolean = false;
-	HeimarbeiterHighlighted: boolean = false;
-
-	public Workorders: string[ ] = [ '' ];
+	isBadWorkorderScanned			: boolean 					= false;
+	isHeimarbeiterSelected			: boolean 					= false;
+	isHeimarbeitScanned				: boolean 					= false;
+	HeimarbeiterHighlighted			: boolean 					= false;
+	alive							: boolean 					= false;
+	
 
 
 	constructor(

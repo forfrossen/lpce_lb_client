@@ -51,6 +51,7 @@ export class MatUiService {
 export class confirmComponent {
 	
 	private confirmMode: boolean = true;
+	report: string = 'confirm';
 	
 	constructor(
 		public dialogRef: MatDialogRef<confirmComponent>,
@@ -70,7 +71,8 @@ export class confirmComponent {
 export class dialogComponent {
 	
 	private confirmMode: boolean = false;
-
+	report: string = 'dialog';
+	
 	constructor(
 		public dialogRef: MatDialogRef<dialogComponent>,
 		@Inject( MAT_DIALOG_DATA ) public data: DialogData
@@ -92,7 +94,8 @@ export class dialogComponent {
 export class errorComponent {
 	
 	private confirmMode: boolean = false;
-
+	report: string = 'error';
+	
 	constructor(
 		public dialogRef: MatDialogRef<errorComponent>,
 		@Inject( MAT_DIALOG_DATA ) public data: DialogData
@@ -112,16 +115,18 @@ export class errorComponent {
 } )	
 export class ReportViewer {
 	
-	private confirmMode: boolean = false;
-	reportServer: string = 'http://qcd480d06.uk.parker.corp/ReportServer/';
-	reportUrl: string = 'JDE+Reports/Nussdorf+Lokal/Planung/Material_Status_Report';
-	showParameters: string = "false"; 
-	parameters: any = this.data.parameters;
-	language: string = "de-DE";
-	width: number = 100;
-	height: number = 100;
-	toolbar: string = "false";
-	loaded: boolean = false;
+	confirmMode				: boolean	= false;
+	loaded					: boolean 	= false;
+	parameters				: any 		= this.data.parameters;
+	reportServer			: string 	= 'http://lpce480reports/ReportServer/';
+	reportUrl				: string 	= 'JDE+Reports/Nussdorf+Lokal/Planung/Material_Status_Report';
+	showParameters			: string 	= 'false'; 
+	toolbar					: string 	= 'false';
+	report					: string 	= 'report';
+	language				: string 	= 'de-DE';
+	width					: number 	= 100;
+	height					: number 	= 100;
+
 	constructor(
 		public dialogRef: MatDialogRef<ReportViewer>,
 		@Inject( MAT_DIALOG_DATA ) public data: any,

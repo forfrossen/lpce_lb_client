@@ -3,12 +3,19 @@ import { Injectable } from '@angular/core';
 import { User } from '../../models/User';
 import { AccessToken } from '../../models/AccessToken';
 import { Message } from '../../models/Message';
-import { TeileinfoNeu } from '../../models/TeileinfoNeu';
+import { Teileinfo } from '../../models/Teileinfo';
 import { Heimarbeiter } from '../../models/Heimarbeiter';
 import { Heimarbeit } from '../../models/Heimarbeit';
-import { Items } from '../../models/Items';
-import { OpenOrders } from '../../models/OpenOrders';
-import { OpenOrdersComment } from '../../models/OpenOrdersComment';
+import { Item } from '../../models/Item';
+import { OpenOrder } from '../../models/OpenOrder';
+import { OpenOrderComment } from '../../models/OpenOrderComment';
+import { Workorder } from '../../models/Workorder';
+import { EnoviaOfflineSearchFile } from '../../models/EnoviaOfflineSearchFile';
+import { EnoviaReferenceItem } from '../../models/EnoviaReferenceItem';
+import { Montageanweisung } from '../../models/Montageanweisung';
+import { TBWEDATEN } from '../../models/TBWEDATEN';
+import { PlanerNrToADID } from '../../models/PlanerNrToADID';
+import { HttpForwarding } from '../../models/HttpForwarding';
 import { UserIdentity } from '../../models/UserIdentity';
 
 export interface Models { [name: string]: any }
@@ -20,12 +27,19 @@ export class SDKModels {
     User: User,
     AccessToken: AccessToken,
     Message: Message,
-    TeileinfoNeu: TeileinfoNeu,
+    Teileinfo: Teileinfo,
     Heimarbeiter: Heimarbeiter,
     Heimarbeit: Heimarbeit,
-    Items: Items,
-    OpenOrders: OpenOrders,
-    OpenOrdersComment: OpenOrdersComment,
+    Item: Item,
+    OpenOrder: OpenOrder,
+    OpenOrderComment: OpenOrderComment,
+    Workorder: Workorder,
+    EnoviaOfflineSearchFile: EnoviaOfflineSearchFile,
+    EnoviaReferenceItem: EnoviaReferenceItem,
+    Montageanweisung: Montageanweisung,
+    TBWEDATEN: TBWEDATEN,
+    PlanerNrToADID: PlanerNrToADID,
+    HttpForwarding: HttpForwarding,
     UserIdentity: UserIdentity,
     
   };

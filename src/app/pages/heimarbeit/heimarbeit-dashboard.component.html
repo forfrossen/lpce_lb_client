@@ -1,37 +1,39 @@
-<div class="row">
+<div class="row w-100 h-100">
 	
-	<div class="col-sm">
-		<div class="heimarbeiters">
-			
-			<nb-card size="xlarge">
-				<nb-card-header class="first">
-					Heimarbeiter
-				</nb-card-header>
-				<nb-list>
-					<nb-list-item 
-						*ngFor="let heimarbeiter of Heimarbeiters"											
-						(click)="selectHeimarbeiter(heimarbeiter.kostenstelle, $event)"
-						[class.heimarbeiterSelected]="heimarbeiter.kostenstelle === Heimarbeiter.kostenstelle">
-							<nb-user [name]="heimarbeiter.name">
-							</nb-user>
-					</nb-list-item>
-				</nb-list>
-				<nb-card-footer *ngIf="isHeimarbeiterSelected">
-					<button nbButton fullWidth hero outline 
-						shape="semi-round" size="large" status="danger"
-						(click)="cancelProcess()">
-							Vorgang abbrechen
-					</button>				
-				</nb-card-footer>
-			</nb-card>
+	<div class="col heimarbeiters">
+		
+		<nb-card size="xlarge">
+	
+			<nb-card-header class="first">
+				Heimarbeiter
+			</nb-card-header>
+	
+			<nb-list>
+				<nb-list-item 
+					*ngFor="let heimarbeiter of Heimarbeiters"											
+					(click)="selectHeimarbeiter(heimarbeiter.kostenstelle, $event)"
+					[class.heimarbeiterSelected]="heimarbeiter.kostenstelle === Heimarbeiter.kostenstelle">
+						<nb-user [name]="heimarbeiter.name">
+						</nb-user>
+				</nb-list-item>
+			</nb-list>
+	
+			<nb-card-footer *ngIf="isHeimarbeiterSelected">
+				<button nbButton fullWidth 
+					shape="semi-round" size="large" status="danger"
+					(click)="cancelProcess()">
+						Vorgang abbrechen
+				</button>				
+			</nb-card-footer>
+	
+		</nb-card>
 
-		</div>
 	</div>
 
 
-	<div class="col-sm">
+	<div class="col">
 		
-		<nb-card size="xlarge" >
+		<nb-card size="xlarge">
 		
 			<nb-card-header [ngClass]="{'color bg-info': HeimarbeiterHighlighted}" >
 				<nb-user [name]="Heimarbeiter.name"></nb-user>
@@ -64,7 +66,7 @@
 			</nb-list>
 			
 			<nb-card-footer *ngIf="isHeimarbeiterSelected && isHeimarbeitScanned">
-				<button nbButton fullWidth  hero outline 
+				<button nbButton fullWidth 
 					shape="semi-round"size="large" status="success"
 					(click)="saveData()">
 						Speichern

@@ -1,0 +1,44 @@
+:host{
+	height: 100%;
+	width:100%;
+}
+
+#ordersTable, nb-card {
+	height: auto !important;
+	max-height: 100% !important;
+}
+
+#layoutOrdersContent{
+	height:100% !important;
+	display: flex;
+	flex-flow: column;
+}
+
+#ordersContent{
+	flex: 1 1 auto;
+}
+
+.handsometable {
+	color: black !important;
+	flex: 1 1 auto;
+}
+
+.hotWrapper{
+	/*display: flex;
+	flex-flow: column;*/
+	top: 	1.25rem;
+	bottom: 1.25rem;
+	left: 	1.25rem;
+	right: 	1.25rem;
+	overflow: hidden;
+	position: absolute;
+}
+
+.col {
+	display: flex;
+	> nb-card {
+		margin-bottom: 0px !important;
+		overflow: hidden;
+	}
+}
+

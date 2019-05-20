@@ -16,43 +16,17 @@ import { EnoviaOfflineSearchFileInterface, 								} from 'app/shared/sdk/models
 import { WorkorderApi, 													} from 'app/shared/sdk/services';
 import { EnoviaReferenceItemApi,                						} from 'app/shared/sdk/services';
 import { EnoviaOfflineSearchFileApi,		              				} from 'app/shared/sdk/services';
-
+import { fadeInOutAnimation 											} from 'app/_ui-components/animations';
 import { MatUiService                                                   } from 'app/_ui-components/dialog.component';
 
 import * as eva from 'eva-icons';
 
 
 @Component({
-	selector: 'ngx-montageanleitungen',
-	templateUrl: './montageanleitungen.component.html',
+	selector: 	  'ngx-montageanleitungen',
+	templateUrl:  './montageanleitungen.component.html',
 	styleUrls: 	[ './montageanleitungen.component.scss' ],
-	animations: [
-		trigger( 'fadeInOut', [
-			transition( ':enter', [
-				style({ opacity: 0, display: 'none' }),
-				sequence([
-					animate( '2ms 1000ms', style( { display: 'block' }, ) ),	
-					animate( '1000ms', style( { opacity: 1 } ) ),	
-				])
-			] ),
-			transition( ':leave', [
-				sequence([
-					animate( 1000, style( { opacity: 0 } ) ),	
-					style( { display: 'none' } ),	
-				])
-			] )
-		] ),
-		trigger( 'slideInOut', [
-			transition( ':enter', [
-				style( { opacity: 0, transform: 'translateY(-50px)' } ),
-				animate('500ms cubic-bezier(0.35, 0, 0.25, 1)', style({ opacity: 1, transform: 'none' }))
-				
-			]),
-			transition(':leave', [
-				animate( '500ms cubic-bezier(0.35, 0, 0.25, 1)', style({ opacity: 0, transform: 'translateY(20px)' }))
-			])
-		] ),
-	]
+	animations: [ fadeInOutAnimation ],
 })
 
 
@@ -71,8 +45,9 @@ export class MontageanleitungenComponent implements OnInit {
 		private toasterService					: NbToastrService,
 		private enoviaReferenceItemApi			: EnoviaReferenceItemApi,
 		private enoviaOfflineSearchFileApi		: EnoviaOfflineSearchFileApi,
+
 	) {
-		this.log.inform( this.sName, 'API_BASE_URL: ', BASE_URL );
+		//this.log.inform( this.sName, 'API_BASE_URL: ', BASE_URL );
 	}
 
 	ngOnInit() {
@@ -85,7 +60,7 @@ export class MontageanleitungenComponent implements OnInit {
 		this.alive = false;
 	}	
 
-	next() {
+/*	next() {
 		this.view				= 'search';
 		this.pdfSrc 			= '';
 	}
@@ -163,9 +138,13 @@ export class MontageanleitungenComponent implements OnInit {
 					//this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl( 'http://lpce480webapps:3001/pdf?file=' + result.encryptedfilename + '#view=Fit' );
 					//this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(  BASE_URL + '/pdf?file=' + result.encryptedfilename + '#view=Fit' );
 					//this.pdfSrc = 'ftp://USPHC%5CCOR089FTPMatrixOne:N3oOr%40cle@172.18.104.39/STORE/be/c8/bec8bkkzonbxhyonjx2vojpau0fl_4w5wgobuwclxha.ri8';
-					this.pdfSrc   = BASE_URL + '/pdf?file=' + result.encryptedfilename + '#view=Fit';
-					this.view	  = 'pdfViewer';
+					let pdfSrc 	= BASE_URL + '/pdf?file=' + result.encryptedfilename + '#view=Fit';
+					this.dataService.setPdfSrc( pdfSrc );
+					
+					this.pdfSrc = pdfSrc
+					this.view	= 'pdfViewer';
 				} ),
 			)		
 	}
+*/
 }

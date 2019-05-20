@@ -22,7 +22,7 @@ import { HeimarbeitRoutingModule } 		from './heimarbeit-routing.module';
 
 @NgModule({ 
 	imports: [
-	  CommonModule,
+		CommonModule,
 		HeimarbeitRoutingModule,
 		FormsModule,
 		HttpClientModule,
@@ -36,10 +36,12 @@ import { HeimarbeitRoutingModule } 		from './heimarbeit-routing.module';
 	declarations: [
 		HeimarbeitComponent,
 		HeimarbeitDashboardComponent,
-		
+	],
+	entryComponents: [
 
 	],
-		entryComponents: [  ],
-	providers: [  ]
+	providers: [ 
+		
+	]
   })
   export class HeimarbeitModule {} 

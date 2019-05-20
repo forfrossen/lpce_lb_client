@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule 							} from '@angular/core';
+import { RouterModule, Routes 				} from '@angular/router';
 
-import { AuthGuard } from '../../@core/auth/auth-guard.service';
-import { OpenOrdersComponent } from './openorders.component';
+import { AuthGuard 							} from '../../@core/auth/auth-guard.service';
+import { OpenOrdersComponent 				} from './openorders.component';
 
 const routes: Routes = [{
 	path: '',
@@ -10,8 +10,12 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  	imports: [
+		RouterModule.forChild(routes),
+	],
+  	exports: [
+		RouterModule,
+	],
 })
 
 export class OpenOrdersRoutingModule {

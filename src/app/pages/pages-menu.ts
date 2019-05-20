@@ -2,11 +2,50 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
 	{
-		title: 'Dashboard',
-		icon: 'eva eva-grid-outline',
+		title: 'Home',
+		icon: 'eva eva-home-outline',
 		link: '/pages/dashboard',
 		home: true,
 	},
+	{
+		title: 'Teileinfo',
+		icon: 'eva eva-info-outline',
+		link: '/pages/teileinfo/list',
+	},
+	{
+		title: 'Heimarbeit',
+		icon: 'eva eva-car-outline',
+		link: '/pages/heimarbeit/dashboard',
+	},
+	{
+		title: 'Open Orders',
+		icon: 'eva eva-archive-outline',
+		link: '/pages/openorders',
+	},
+	{
+		title: 'Montageanleitungen',
+		icon: 'eva eva-book-open-outline',
+		children: [
+			{
+				title: 'Montageanleitungen',
+				link: '/pages/enovia/montageanleitungen',
+			},
+			{
+				title: 'Anweisungen - Liste',
+				link: '/pages/enovia/montageanweisungen-liste',
+			},
+		],
+	},
+];
+
+
+/*
+			{
+				title: 'Document Search',
+				link: '/pages/enovia/documentsearch',
+			},
+
+			
 	{
 		title: 'Teileinfo',
 		icon: 'eva eva-info-outline',
@@ -33,8 +72,17 @@ export const MENU_ITEMS: NbMenuItem[] = [
 		],
 	},
 	{
-		title: 'Open Orders',
-		icon: 'eva eva-archive-outline',
-		link: '/pages/openorders',
+		title: 'Enovia',
+		icon: 'eva eva-book-open-outline',
+		children: [
+			{
+				title: 'Document Search',
+				link: '/pages/enovia/documentsearch',
+			},
+			{
+				title: 'Montageanleitungen',
+				link: '/pages/enovia/montageanleitungen',
+			},
+		],
 	},
-];
+*/

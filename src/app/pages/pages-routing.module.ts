@@ -1,12 +1,13 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { PagesComponent } from './pages.component';
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { TeileinfoComponent } from './teileinfo/teileinfo.component';
-import { HeimarbeitComponent } from './heimarbeit/heimarbeit.component';
-import { AuthGuard } from '../@core/auth/auth-guard.service';
+import { PagesComponent 					} from './pages.component';
+import { UnauthorizedComponent 				} from './unauthorized/unauthorized.component';
+import { DashboardComponent 				} from './dashboard/dashboard.component';
+import { TeileinfoComponent 				} from './teileinfo/teileinfo.component';
+import { HeimarbeitComponent 				} from './heimarbeit/heimarbeit.component';
+import { MontageanleitungenModule  			} from './montageanleitungen/montageanleitungen.module';
+import { AuthGuard 							} from '../@core/auth/auth-guard.service';
 
 const routes: Routes = [ {
 	path: '',
@@ -30,6 +31,11 @@ const routes: Routes = [ {
 			path: 'openorders',
 			canActivate: [ AuthGuard ],
 			loadChildren: './openorders/openorders.module#OpenOrdersModule',
+		},
+		{
+			path: 'enovia',
+			canActivate: [ AuthGuard ],
+			loadChildren: './montageanleitungen/montageanleitungen.module#MontageanleitungenModule',
 		},
 		{
 			path: 'unauthorized',

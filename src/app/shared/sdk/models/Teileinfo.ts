@@ -1,7 +1,7 @@
 /* tslint:disable */
 
 declare var Object: any;
-export interface TeileinfoNeuInterface {
+export interface TeileinfoInterface {
   "id"?: number;
   "zeichnungsnummer"?: string;
   "teileinfoAllg"?: string;
@@ -14,7 +14,7 @@ export interface TeileinfoNeuInterface {
   "created by"?: string;
 }
 
-export class TeileinfoNeu implements TeileinfoNeuInterface {
+export class Teileinfo implements TeileinfoInterface {
   "id": number;
   "zeichnungsnummer": string;
   "teileinfoAllg": string;
@@ -25,24 +25,24 @@ export class TeileinfoNeu implements TeileinfoNeuInterface {
   "modified": Date;
   "created": Date;
   "created by": string;
-  constructor(data?: TeileinfoNeuInterface) {
+  constructor(data?: TeileinfoInterface) {
     Object.assign(this, data);
   }
   /**
    * The name of the model represented by this $resource,
-   * i.e. `TeileinfoNeu`.
+   * i.e. `Teileinfo`.
    */
   public static getModelName() {
-    return "TeileinfoNeu";
+    return "Teileinfo";
   }
   /**
   * @method factory
   * @author Jonathan Casarrubias
   * @license MIT
-  * This method creates an instance of TeileinfoNeu for dynamic purposes.
+  * This method creates an instance of Teileinfo for dynamic purposes.
   **/
-  public static factory(data: TeileinfoNeuInterface): TeileinfoNeu{
-    return new TeileinfoNeu(data);
+  public static factory(data: TeileinfoInterface): Teileinfo{
+    return new Teileinfo(data);
   }
   /**
   * @method getModelDefinition
@@ -53,9 +53,9 @@ export class TeileinfoNeu implements TeileinfoNeuInterface {
   **/
   public static getModelDefinition() {
     return {
-      name: 'TeileinfoNeu',
-      plural: 'TeileinfoNeus',
-      path: 'TeileinfoNeus',
+      name: 'Teileinfo',
+      plural: 'Teileinfos',
+      path: 'Teileinfos',
       idName: 'id',
       properties: {
         "id": {

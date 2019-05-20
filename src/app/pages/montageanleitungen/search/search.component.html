@@ -1,53 +1,60 @@
-<nb-card class="dialog-card"  [@fadeInOut]>	
+<div class="row justify-content-md-center" >
+	<div class="col-md-auto">
+		<nb-card class="dialog-card"  [@fadeInOut]>	
 
-	<nb-card-header>
-		Montageanleitungen
-	</nb-card-header>
-
-	<nb-card-body>
-		<div class="row">
-
-			<div class="col mx-3 my-2">
-				<input [(ngModel)]="searchValue" placeholder="14107063" autofocus #searchValueField nbInput fullWidth name="searchValue" (keyup.enter)="onSearchClick()" (click)="resetForm()" />
-			</div>
-
-			<div class="w-100"></div>
-
-			<div class="col mx-3 my-2">
-
-				<div [(ngModel)]="searchType" ngbRadioGroup class="btn-group btn-group-toggle btn-outline-toggle-group btn-group-full-width btn-toggle-radio-group">
+			<nb-card-header>
+				Montageanleitungen
+			</nb-card-header>
+		
+			<nb-card-body>
+				<div class="row">
+		
+					<div class="col mx-3 my-2">
+						<input [(ngModel)]="searchValue" placeholder="14107063" autofocus #searchValueField nbInput fullWidth name="searchValue" (keyup.enter)="onSearchClick()" (click)="resetForm()" />
+					</div>
+		
+					<div class="w-100"></div>
+		
+					<div class="col mx-3 my-2">
+		
+						<div [(ngModel)]="searchType" ngbRadioGroup class="btn-group btn-group-toggle btn-outline-toggle-group btn-group-full-width btn-toggle-radio-group">
+							
+							<label ngbButtonLabel class="btn btn-outline-primary">
+								<input ngbButton type="radio" value="workorder" selected> workorder
+							</label>
+							
+							<label ngbButtonLabel class="btn btn-outline-primary">
+								<input ngbButton type="radio" value="artikel"> Artikel
+							</label>
+							
+							<label ngbButtonLabel class="btn btn-outline-primary">
+								<input ngbButton type="radio" value="anleitung"> Anleitung
+							</label>
+						
+						</div>
 					
-					<label ngbButtonLabel class="btn btn-outline-primary">
-						<input ngbButton type="radio" value="workorder" selected> workorder
-					</label>
-					
-					<label ngbButtonLabel class="btn btn-outline-primary">
-						<input ngbButton type="radio" value="artikel"> Artikel
-					</label>
-					
-					<label ngbButtonLabel class="btn btn-outline-primary">
-						<input ngbButton type="radio" value="anleitung"> Anleitung
-					</label>
-				
-				</div>
-			
-			</div>
-
-		</div>			
-	</nb-card-body>
-
-
-	<nb-card-footer>
-		<div class="row">
-
-			<div class="col mx-3">
-				<button nbButton fullWidth (click)="onSearchClick()">
-					<i class="eva eva-search-outline"></i>
-					Suchen
-				</button>
-			</div>
-
-		</div>		
-	</nb-card-footer>
-
-</nb-card>
+					</div>
+		
+				</div>			
+			</nb-card-body>
+		
+		
+			<nb-card-footer>
+				<div class="row">
+		
+					<div class="col mx-3">
+		
+						<div class="btn-group btn-group-full-width" role="group">
+							<button type="button" class="btn btn-primary btn-group-icon btn-group-divider btn-fixed">
+									<i class="eva eva-search-outline"></i>
+							</button>
+							<button type="button" class="btn btn-primary" (click)="onSearchClick()">Suchen</button>
+						</div>
+					</div>
+		
+				</div>		
+			</nb-card-footer>
+		
+		</nb-card>		
+	</div>
+</div>

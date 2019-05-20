@@ -1,6 +1,6 @@
-<ng-container [ngSwitch]="view">
+<!--<ng-container [ngSwitch]="view">
 	<!--<div style="position: absolute"><h5>{{view}}</h5></div>-->
-
+<!--
 		<ng-container *ngSwitchCase="'search'" [@fadeInOut]>
 			<div class="row justify-content-md-center" >
 				<div class="col-md-auto">
@@ -11,7 +11,7 @@
 
 		<ng-container *ngSwitchCase="'pdfViewer'" [@fadeInOut]>
 			<pdf-viewer-component
-				[pdfSrc]='pdfSrc'
+
 				(next)="next()">
 			</pdf-viewer-component>
 		</ng-container>
@@ -30,3 +30,6 @@
 		</ng-container>
 
 </ng-container>
+-->
+
+<router-outlet></router-outlet>

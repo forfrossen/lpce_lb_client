@@ -158,7 +158,7 @@ export class LoopBackAuth {
       );
     }
     catch (err) {
-      console.error('Cannot access local/session storage: ', err);
+      console.error('Cannot access local/session storage:', err);
     }
   }
 }

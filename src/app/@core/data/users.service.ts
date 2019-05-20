@@ -1,9 +1,9 @@
 
 import { of as observableOf, Observable, Subject, BehaviorSubject } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NbAuthService, NbAuthResult, NbAuthSimpleToken } from '@nebular/auth';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, tap, mergeAll } from 'rxjs/operators';
 
 
 import { BASE_URL, API_VERSION } from 'app/shared/base.url.config';
@@ -11,6 +11,8 @@ import { LoopBackConfig } from 'app/shared/sdk';
 import { LoggerServiceExtended } from 'app/shared/extended/logger.service.extended'
 import { User, UserInterface, Message, SDKToken } from 'app/shared/sdk/models';
 import { UserApi, LoopBackAuth } from 'app/shared/sdk/services';
+import { templateSourceUrl } from '@angular/compiler';
+import { timingSafeEqual } from 'crypto';
 
 interface MyUserInterface {
 	name: string;
@@ -62,13 +64,46 @@ export class UserService {
 	}
 
 	getUser(): Observable<MyUserInterface> {
-		return observableOf( this.user );
+		if ( this.user === this.guest ) {
+
+			return this.userAPI.getIdentities( this.LBAuth.getCurrentUserId() ).pipe(
+				catchError(	() => observableOf( [] )),
+				tap( userIdentities => this.log.inform( this.sName, 'LB User Profile: ', userIdentities[ 0 ] ) ),
+				map( userIdentities => {
+					let tmpUser: MyUserInterface = this.guest;
+
+					if ( userIdentities.length ) {
+						tmpUser = {
+							name: userIdentities[ 0 ].profile.displayName,
+							picture: '',
+							ADProfile: userIdentities[ 0 ].profile,
+							groups: userIdentities[ 0 ].profile._groups,
+						}
+						this.user = tmpUser;
+					} 
+					return tmpUser;
+				} ) )
+			}
+			else {
+				return observableOf( this.user );
+			}
+		
 	}
 
 	getGroups(): Observable<string[]> {
-		return observableOf( this.groups );
+		return this.getUser().pipe( map( ( user: MyUserInterface ) => user.groups ));			
 	}
 
+
+
+	/*
+	
+	getUser(): Observable<MyUserInterface> {
+		return observableOf( this.user );
+	}
+	getGroups(): Observable<string[]> {
+		return observableOf( this.groups );
+	}
 	async setUser() {
 		try {
 			return await this.userAPI.getIdentities( this.LBAuth.getCurrentUserId() ).toPromise()
@@ -83,8 +118,9 @@ export class UserService {
 						groups: userIdentities[ 0 ].profile._groups,
 					}
 					
-					this.user =  tmpUser;
-					this.groups = tmpUser.ADProfile._groups;
+					this.user = tmpUser;
+					this.log.inform( this.sName, 'TMP USER Groups: ', tmpUser.ADProfile._groups  );
+					this.groups = this.groups.concat( tmpUser.ADProfile._groups );
 
 					this.log.inform( this.sName, 'This User: ', this.user );
 					return Promise.resolve;
@@ -132,6 +168,7 @@ export class UserService {
 				} ),
 			);
 	}
+	*/
 
 	private handleError( data?: any ) {
 		return ( error: any ) => {

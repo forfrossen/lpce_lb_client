@@ -44,3 +44,13 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: 'Roboto', sans-serif; }
 
+pdf-viewer-component nb-action {
+	border-color: rgb(205, 213, 220) !important;
+}
+pdf-viewer-component nb-action i {
+	color: #5dcfe3 !important;
+}
+
+.text-danger a i {
+	color: #ff8196 !important;
+}

@@ -2,10 +2,13 @@
 	margin: 15px 8px 10px 0px;
 }
 
+.mat-dialog-content .report{
+	height: 750px !important;
+}
 .mat-dialog-content{
 	padding-top: 25px !important;
 	padding-bottom: 25px !important;
-	height: 750px !important;
+
 }
 
 .ssrs-reportviewer, iframe{

@@ -1,7 +1,7 @@
 /* tslint:disable */
 
 declare var Object: any;
-export interface ItemsInterface {
+export interface ItemInterface {
   "iblitm"?: string;
   "imaitm"?: string;
   "imdsc1"?: string;
@@ -130,7 +130,7 @@ export interface ItemsInterface {
   "ibeao"?: string;
 }
 
-export class Items implements ItemsInterface {
+export class Item implements ItemInterface {
   "iblitm": string;
   "imaitm": string;
   "imdsc1": string;
@@ -257,24 +257,24 @@ export class Items implements ItemsInterface {
   "umconv": number;
   "ibvendl": number;
   "ibeao": string;
-  constructor(data?: ItemsInterface) {
+  constructor(data?: ItemInterface) {
     Object.assign(this, data);
   }
   /**
    * The name of the model represented by this $resource,
-   * i.e. `Items`.
+   * i.e. `Item`.
    */
   public static getModelName() {
-    return "Items";
+    return "Item";
   }
   /**
   * @method factory
   * @author Jonathan Casarrubias
   * @license MIT
-  * This method creates an instance of Items for dynamic purposes.
+  * This method creates an instance of Item for dynamic purposes.
   **/
-  public static factory(data: ItemsInterface): Items{
-    return new Items(data);
+  public static factory(data: ItemInterface): Item{
+    return new Item(data);
   }
   /**
   * @method getModelDefinition
@@ -285,7 +285,7 @@ export class Items implements ItemsInterface {
   **/
   public static getModelDefinition() {
     return {
-      name: 'Items',
+      name: 'Item',
       plural: 'Items',
       path: 'Items',
       idName: '',

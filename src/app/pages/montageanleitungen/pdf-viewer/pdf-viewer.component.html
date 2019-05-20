@@ -6,32 +6,71 @@
 
 
 	<nb-card-footer>
+		<!--
 		<div class="row">
 
-			<div class="col my-1">
-				<button nbButton size="large" fullWidth (click)="nextClick()">
-					<i class="eva eva-repeat-outline"></i>
-					Nächster Scan
-				</button>
+			<div class="col my-1">					
+				<div class="btn-group btn-group-full-width" role="group">
+					<button size="large" type="button" class="btn btn-primary btn-group-icon btn-group-divider btn-fixed">
+						<i class="eva eva-repeat-outline"></i>
+					</button>
+					<button size="large" type="button" class="btn btn-primary" (click)="nextClick()">Nächster Scan</button>
+				</div>
 			</div>
 
 			<div class="col my-1">
 				<a [href]="pdfSrc" target="_blank">
-					<button nbButton size="large" fullWidth>
-						<i class="eva eva-external-link-outline"></i>
-						Nur Anleitung
-					</button>
+					<div class="btn-group btn-group-full-width" role="group">
+						<button size="large" type="button" class="btn btn-primary btn-group-icon btn-group-divider btn-fixed">
+							<i class="eva eva-external-link-outline"></i>
+						</button>
+						<button size="large" type="button" class="btn btn-primary">Nur Anleitung</button>
+					</div>
 				</a>
 			</div>
 
 			<div class="col my-1">
-				<button nbButton size="large" fullWidth (click)="view = 'label'">
-					<i class="eva eva-printer-outline"></i>
-					Label drucken
-				</button>
+				<div class="btn-group btn-group-full-width" role="group">
+					<button size="large" type="button" class="btn btn-primary btn-group-icon btn-group-divider btn-fixed">
+							<i class="eva eva-printer-outline"></i>
+					</button>
+					<button size="large" type="button" class="btn btn-primary" (click)="view = 'label'">Label drucken</button>
+				</div>
 			</div>
-
 		</div>
+		-->
+		<!--
+
+			<nb-actions size="large" fullWidth>
+				<nb-action (click)="nextClick()">
+					<i class="eva eva-repeat-outline"></i>
+					<span>Nächster Scan</span>
+				</nb-action>
+				<nb-action>
+					<a [href]="pdfSrc" target="_blank">
+						<i class="eva eva-external-link-outline"></i>
+						<span>Nur Anleitung</span>
+					</a>
+				</nb-action>
+				<nb-action>
+					<i class="eva eva-alert-triangle-outline"></i>
+					<span>Anweisungen Anzeigen</span>
+				</nb-action>
+				<nb-action (click)="view = 'label'">
+					<i class="eva eva-printer-outline"></i>
+					<span>Label drucken</span>
+				</nb-action>
+			</nb-actions>
+
+		-->
+		<nb-actions size="large" fullWidth *ngIf="showPdf">
+			<!--<nb-action icon="nb-menu"></nb-action>-->
+			<nb-action icon="eva eva-repeat-outline" 		 (click)="nextClick()"></nb-action>
+			<nb-action icon="eva eva-external-link-outline"  (click)="fullscreenViewer()"></nb-action>
+			<nb-action icon="eva eva-alert-triangle-outline" (click)="showInstructions()" *ngIf="isAnweisungFound"  class="text-danger"></nb-action>
+			<nb-action icon="eva eva-printer-outline" 		 (click)="view = 'label'"></nb-action>
+		</nb-actions>
+
 	</nb-card-footer>
 
 </nb-card>

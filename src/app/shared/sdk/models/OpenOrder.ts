@@ -1,7 +1,7 @@
 /* tslint:disable */
 
 declare var Object: any;
-export interface OpenOrdersInterface {
+export interface OpenOrderInterface {
   "pddoco": number;
   "pddcto"?: string;
   "pdlnid"?: number;
@@ -13,6 +13,7 @@ export interface OpenOrdersInterface {
   "pdpddj"?: Date;
   "pdaddj"?: Date;
   "pdlitm"?: string;
+  "imdraw"?: string;
   "pdlocn"?: string;
   "pdlnty"?: string;
   "pdnxtr"?: string;
@@ -22,9 +23,11 @@ export interface OpenOrdersInterface {
   "version"?: number;
   "created"?: Date;
   "createdby"?: string;
+  "planerusername"?: string;
+  "ibanpl"?: number;
 }
 
-export class OpenOrders implements OpenOrdersInterface {
+export class OpenOrder implements OpenOrderInterface {
   "pddoco": number;
   "pddcto": string;
   "pdlnid": number;
@@ -36,6 +39,7 @@ export class OpenOrders implements OpenOrdersInterface {
   "pdpddj": Date;
   "pdaddj": Date;
   "pdlitm": string;
+  "imdraw": string;
   "pdlocn": string;
   "pdlnty": string;
   "pdnxtr": string;
@@ -45,24 +49,26 @@ export class OpenOrders implements OpenOrdersInterface {
   "version": number;
   "created": Date;
   "createdby": string;
-  constructor(data?: OpenOrdersInterface) {
+  "planerusername": string;
+  "ibanpl": number;
+  constructor(data?: OpenOrderInterface) {
     Object.assign(this, data);
   }
   /**
    * The name of the model represented by this $resource,
-   * i.e. `OpenOrders`.
+   * i.e. `OpenOrder`.
    */
   public static getModelName() {
-    return "OpenOrders";
+    return "OpenOrder";
   }
   /**
   * @method factory
   * @author Jonathan Casarrubias
   * @license MIT
-  * This method creates an instance of OpenOrders for dynamic purposes.
+  * This method creates an instance of OpenOrder for dynamic purposes.
   **/
-  public static factory(data: OpenOrdersInterface): OpenOrders{
-    return new OpenOrders(data);
+  public static factory(data: OpenOrderInterface): OpenOrder{
+    return new OpenOrder(data);
   }
   /**
   * @method getModelDefinition
@@ -73,7 +79,7 @@ export class OpenOrders implements OpenOrdersInterface {
   **/
   public static getModelDefinition() {
     return {
-      name: 'OpenOrders',
+      name: 'OpenOrder',
       plural: 'OpenOrders',
       path: 'OpenOrders',
       idName: 'pddoco',
@@ -122,6 +128,10 @@ export class OpenOrders implements OpenOrdersInterface {
           name: 'pdlitm',
           type: 'string'
         },
+        "imdraw": {
+          name: 'imdraw',
+          type: 'string'
+        },
         "pdlocn": {
           name: 'pdlocn',
           type: 'string'
@@ -157,6 +167,14 @@ export class OpenOrders implements OpenOrdersInterface {
         "createdby": {
           name: 'createdby',
           type: 'string'
+        },
+        "planerusername": {
+          name: 'planerusername',
+          type: 'string'
+        },
+        "ibanpl": {
+          name: 'ibanpl',
+          type: 'number'
         },
       },
       relations: {

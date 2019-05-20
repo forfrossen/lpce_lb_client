@@ -1,42 +1,40 @@
 /* tslint:disable */
 
 declare var Object: any;
-export interface OpenOrdersCommentInterface {
+export interface OpenOrderCommentInterface {
   "pddoco"?: number;
   "pdlnid"?: number;
   "comment"?: string;
   "version"?: number;
   "created"?: Date;
   "createdby"?: string;
-  "id"?: number;
 }
 
-export class OpenOrdersComment implements OpenOrdersCommentInterface {
+export class OpenOrderComment implements OpenOrderCommentInterface {
   "pddoco": number;
   "pdlnid": number;
   "comment": string;
   "version": number;
   "created": Date;
   "createdby": string;
-  "id": number;
-  constructor(data?: OpenOrdersCommentInterface) {
+  constructor(data?: OpenOrderCommentInterface) {
     Object.assign(this, data);
   }
   /**
    * The name of the model represented by this $resource,
-   * i.e. `OpenOrdersComment`.
+   * i.e. `OpenOrderComment`.
    */
   public static getModelName() {
-    return "OpenOrdersComment";
+    return "OpenOrderComment";
   }
   /**
   * @method factory
   * @author Jonathan Casarrubias
   * @license MIT
-  * This method creates an instance of OpenOrdersComment for dynamic purposes.
+  * This method creates an instance of OpenOrderComment for dynamic purposes.
   **/
-  public static factory(data: OpenOrdersCommentInterface): OpenOrdersComment{
-    return new OpenOrdersComment(data);
+  public static factory(data: OpenOrderCommentInterface): OpenOrderComment{
+    return new OpenOrderComment(data);
   }
   /**
   * @method getModelDefinition
@@ -47,10 +45,10 @@ export class OpenOrdersComment implements OpenOrdersCommentInterface {
   **/
   public static getModelDefinition() {
     return {
-      name: 'OpenOrdersComment',
-      plural: 'OpenOrdersComments',
-      path: 'OpenOrdersComments',
-      idName: 'id',
+      name: 'OpenOrderComment',
+      plural: 'OpenOrderComments',
+      path: 'OpenOrderComments',
+      idName: '',
       properties: {
         "pddoco": {
           name: 'pddoco',
@@ -75,10 +73,6 @@ export class OpenOrdersComment implements OpenOrdersCommentInterface {
         "createdby": {
           name: 'createdby',
           type: 'string'
-        },
-        "id": {
-          name: 'id',
-          type: 'number'
         },
       },
       relations: {

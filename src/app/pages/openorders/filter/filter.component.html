@@ -57,7 +57,21 @@
 						</ng-template>
 					</ng-select>
 				</div>
-				<div class="col-2"></div>
+				<div class="col-2">
+					<ng-select
+						[(ngModel)]="selectedIdentNrs" id="identNrsInput"
+						[items]="identNrs$ | async" [multiple]="true" [virtualScroll]="true" 
+						(change)="onNgSelectChange()"
+						bindLabel="imdraw" bindValue="imdraw"
+						[typeahead]="identNrsInput$"
+						placeholder="Identnummer auswählen" appendTo="body"
+						loadingText="Identnummern laden, ...">
+						<ng-template ng-footer-tmp>
+							Selected count: {{selectedIdentNrs.length}}
+						</ng-template>
+					</ng-select>
+					
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-4">

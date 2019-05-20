@@ -31,6 +31,7 @@ export class FilterComponent implements OnInit {
 
 	selectedOrderTypes	: any[] 		= [];
 	selectedItems     	: any[] 		= [];
+	selectedIdentNrs   	: any[] 		= [];
 	selectedSuppliers 	: any[] 		= [];
 	selectedOrders    	: any[] 		= [];
 	selectedPlanners  	: any[] 		= [];	
@@ -41,6 +42,7 @@ export class FilterComponent implements OnInit {
 	
 	orders            	: OpenOrderInterface[ ];
 	items$            	: Observable<{}[]>;
+	identNrs$          	: Observable<{}[]>;
 	suppliers$        	: Observable<{}[]>;
 	orders$           	: Observable<any>;
 	planners$		  	: Observable<{}[]>;
@@ -48,6 +50,7 @@ export class FilterComponent implements OnInit {
 	
 
 	itemsInput$         = new Subject<string>();
+	identNrsInput$      = new Subject<string>();
 	suppliersInput$     = new Subject<string>();
 	ordersInput$        = new Subject<string>();
 	
@@ -71,6 +74,14 @@ export class FilterComponent implements OnInit {
 			distinctUntilChanged(),
 			switchMap( term =>
 				this.openOrderApi.find( this.filterService.filtersFor( 'pdlitm', term )).pipe(
+					catchError(() => of( [] )),
+					concatAll(),distinct(),toArray())))
+
+		this.identNrs$ = this.identNrsInput$.pipe(
+			debounceTime( 500 ),
+			distinctUntilChanged(),
+			switchMap( term =>
+				this.openOrderApi.find( this.filterService.filtersFor( 'imdraw', term )).pipe(
 					catchError(() => of( [] )),
 					concatAll(),distinct(),toArray())))
 		
@@ -117,6 +128,7 @@ export class FilterComponent implements OnInit {
 		this.filterService.selectLate 			= this.selectLate;
 		this.filterService.selectedOrderTypes 	= this.selectedOrderTypes;
 		this.filterService.selectedItems     	= this.selectedItems;
+		this.filterService.selectedIdentNrs    	= this.selectedIdentNrs;
 		this.filterService.selectedSuppliers 	= this.selectedSuppliers;
 		this.filterService.selectedOrders    	= this.selectedOrders;
 		this.filterService.selectedPlanners  	= this.selectedPlanners;
@@ -136,7 +148,7 @@ export class FilterComponent implements OnInit {
 			.subscribe( result => {
 				this.ordersFound = result.count;
 				this.loading = false;
-				this.log.inform( this.sName, 'Orders found: ', result.count.toString());
+				//this.log.inform( this.sName, 'Orders found: ', result.count.toString());
 			} )
 	}
 

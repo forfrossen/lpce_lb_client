@@ -57,15 +57,17 @@ export class AuthGuard implements CanActivate {
 			let isGranted = await this.accessChecker.isGranted( 'access', page ).toPromise();
 			this.log.inform( this.sName, 'Access granted for', page, ' ================>', isGranted );
 
-			if ( !isGranted ) this.router.navigate( [ '/pages/unauthorized' ] );
+			if ( !isGranted ) this.router.navigate( [ 'http://www.google.de' ] );
 				
 			return isGranted;
 
 
 		} catch ( err ) {
-			
+			alert( 'ERROR!' + err );
 			this.log.error( this.sName, 'Error ================>', err );
-			this.router.navigate( [ '/pages/unauthorized' ] );
+			
+			this.router.navigate( [ 'http://www.google.de' ] );
+
 			return Promise.reject(err);
 		
 		}
@@ -77,7 +79,7 @@ export class AuthGuard implements CanActivate {
 			return await this.mySSO.loginProcedure();
 		} catch (err) {
 			this.log.error( this.sName, 'ERROR: ', err );
-			this.router.navigate( [ '/pages/unauthorized' ] );
+			this.router.navigate( [ 'http://www.google.de' ] );
 			return false;
 		}
 	}

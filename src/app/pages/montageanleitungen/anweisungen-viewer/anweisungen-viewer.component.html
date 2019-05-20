@@ -1,0 +1,103 @@
+<ng-container *ngIf="isLoaded">
+	<nb-card class="w-100 dis">
+		<nb-card-header>
+			<h1>Anweisung für: {{ anweisung.artikel }}</h1>
+		</nb-card-header>
+		<nb-card-body>
+
+			<div class="row w-100">
+				<div class="col">
+					<nb-card class="w-100">
+						<nb-card-header><img src="assets/images/loctite.png" /></nb-card-header>
+						<nb-card-body>{{ anweisung.loctite }}</nb-card-body>
+					</nb-card>
+				</div>
+				<div class="col">
+					<nb-card class="w-100">
+						<nb-card-header><img src="assets/images/fett.png" /></nb-card-header>
+						<nb-card-body>{{ anweisung.fett }}</nb-card-body>
+					</nb-card>
+				</div>
+			</div>
+
+
+			<div class="row w-100">
+				<div class="col">
+					<nb-card class="w-100">
+						<nb-card-header><img src="assets/images/drehmoment.png" />Schrauber</nb-card-header>
+						<nb-card-body>{{ anweisung.schrauber }}</nb-card-body>
+					</nb-card>
+				</div>
+				<div class="col">
+					<nb-card class="w-100">
+						<nb-card-header><img src="assets/images/pruefprogramm.png" />Prüfprogramm</nb-card-header>
+						<nb-card-body>{{ anweisung.pruefprogramm }}</nb-card-body>
+					</nb-card>
+				</div>	
+				<div class="col">
+					<nb-card class="w-100">
+						<nb-card-header><img src="assets/images/pruefadapter.png" />Prüfadapter</nb-card-header>
+						<nb-card-body>{{ anweisung.pruefadapter }}</nb-card-body>
+					</nb-card>
+				</div>
+			</div>
+
+
+			<div class="row w-100">
+				<div class="col">
+					<nb-card class="w-100">
+						<nb-card-header>Bemerkung</nb-card-header>
+						<nb-card-body>{{ anweisung.bemerkung }}</nb-card-body>
+					</nb-card>
+				</div>
+			</div>
+
+			<div class="row w-100" *ngIf="anweisung.anhang1">
+				<div class="col">
+					<nb-card class="w-100">
+						<nb-card-header>Anhang 1</nb-card-header>
+						<nb-card-body>{{ anweisung.anhang1 }}</nb-card-body>
+					</nb-card>
+				</div>
+			</div>
+
+			<div class="row w-100" *ngIf="anweisung.anhang2">
+				<div class="col">
+					<nb-card class="w-100">
+						<nb-card-header>Anhang 2</nb-card-header>
+						<nb-card-body>{{ anweisung.anhang2 }}</nb-card-body>
+					</nb-card>
+				</div>
+			</div>
+
+			<div class="row w-100" *ngIf="anweisung.anhang3">
+				<div class="col">
+					<nb-card class="w-100">
+						<nb-card-header>Anhang 3</nb-card-header>
+						<nb-card-body>{{ anweisung.anhang3 }}</nb-card-body>
+					</nb-card>
+				</div>
+			</div>
+			<div class="row w-100 py-2">
+				<div class="col-2">Erstellt: </div>
+				<div class="col-3">{{ anweisung.created | date: 'dd.MM.yyyy' }}</div>
+				<div class="col-1"></div>
+				<div class="col-3">Geändert:</div>
+				<div class="col-3">{{ anweisung.changed }}</div>
+			</div>
+			<div class="row w-100  py-2">
+				<div class="col-2">Erstellt von:</div>
+				<div class="col-3">{{ anweisung.createdby }}</div>
+				<div class="col-1"></div>
+				<div class="col-3">Geändert von:</div>
+				<div class="col-3">{{ anweisung.changedby }}</div>
+			</div>
+		</nb-card-body>
+
+					
+		
+		<nb-card-footer>
+			<button nbButton status="primary" (click)="dismiss()">Schließen</button>
+		</nb-card-footer>
+	</nb-card>
+</ng-container>

@@ -11,10 +11,10 @@ import { NgSelectModule, NgOption } 						from '@ng-select/ng-select';
 
 import { BASE_URL, API_VERSION }							from 'app/shared/base.url.config';
 import { LoopBackConfig } 									from 'app/shared/sdk';
-import { TeileinfoNeu, TeileinfoNeuInterface, Message } 	from 'app/shared/sdk/models';
-import { Items, ItemsInterface }						 	from 'app/shared/sdk/models';
-import { TeileinfoNeuApi } 									from 'app/shared/sdk/services';
-import { ItemsApi } 										from 'app/shared/sdk/services';
+import { Teileinfo, TeileinfoInterface, Message } 	from 'app/shared/sdk/models';
+import { Item, ItemInterface }						 	    from 'app/shared/sdk/models';
+import { TeileinfoApi } 									from 'app/shared/sdk/services';
+import { ItemApi } 											from 'app/shared/sdk/services';
 import { LoggerServiceExtended } 							from 'app/shared/extended/logger.service.extended'
 
 import { MatUiService } 									from 'app/_ui-components/dialog.component'
@@ -40,9 +40,9 @@ interface CardSettings {
 
 export class TeileinfoListComponent implements OnInit, OnDestroy {
 
-	teileinfoNeu: TeileinfoNeuInterface;
-	item: ItemsInterface;
-	items: ItemsInterface[];
+	Teileinfo: TeileinfoInterface;
+	item: ItemInterface;
+	items: ItemInterface[];
 	itemsLoading: boolean = true;
 	itemsfetched: boolean = false;
 	sName: string = 'Teileinfo-List.Component';
@@ -54,11 +54,11 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private log: LoggerServiceExtended,
-		private teileinfoNeuApi: TeileinfoNeuApi,
+		private TeileinfoApi: TeileinfoApi,
 		private toastrService: NbToastrService,
 		private matUiService: MatUiService,
 		private themeService: NbThemeService,
-		private itemsApi: ItemsApi,
+		private itemApi: ItemApi,
 	) {
 
 		LoopBackConfig.setBaseURL( BASE_URL );
@@ -70,9 +70,9 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-		this.teileinfoNeuApi.find( { limit: 50, order: 'created desc' } )
-		.subscribe( ( teileinfoNeus: TeileinfoNeuInterface[] ) => {
-			this.TiSource.load( teileinfoNeus );
+		this.TeileinfoApi.find( { limit: 50, order: 'created desc' } )
+		.subscribe( ( Teileinfos: TeileinfoInterface[] ) => {
+			this.TiSource.load( Teileinfos );
 		},
 		error => {
 			this.log.error( error );
@@ -82,8 +82,8 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 	}
 
 	private loadItems(): void {
-		this.itemsApi.find( { limit: 50, order: 'IBLITM asc' } )
-			.subscribe( ( items: ItemsInterface[] ) => {
+		this.itemApi.find( { limit: 50, order: 'IBLITM asc' } )
+			.subscribe( ( items: ItemInterface[] ) => {
 				this.items = items;
 				this.itemsLoading = false;
 			},
@@ -98,10 +98,10 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 
 
 	getInfobyID( id: number ) {
-		this.teileinfoNeuApi.findById( id )
-			.subscribe( ( teileinfo: TeileinfoNeu ) => {
-				this.teileinfoNeu = teileinfo;
-				this.log.inform( this.sName, this.teileinfoNeu );
+		this.TeileinfoApi.findById( id )
+			.subscribe( ( teileinfo: Teileinfo ) => {
+				this.Teileinfo = teileinfo;
+				this.log.inform( this.sName, this.Teileinfo );
 			} );
 	}
 
@@ -120,7 +120,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		if ( action === 'create' ) {
 			tableActionConfig = {
 				create: {
-					APIaction: this.teileinfoNeuApi.create( event.newData ),
+					APIaction: this.TeileinfoApi.create( event.newData ),
 					messageTitle: 'Confirm Item Creation',
 					messageBody: 'Are you sure you want to add a new item?',
 				},
@@ -130,7 +130,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		if ( action === 'edit' ) {
 			tableActionConfig = {
 				edit: {
-					APIaction: this.teileinfoNeuApi.updateAttributes( event.data[ 'id' ], event.newData ),
+					APIaction: this.TeileinfoApi.updateAttributes( event.data[ 'id' ], event.newData ),
 					messageTitle: 'Please Confirm Update',
 					messageBody: 'Are you sure you want to update?',
 				},
@@ -141,7 +141,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		if ( action === 'delete' ) {
 			tableActionConfig = {
 				delete: {
-					APIaction: this.teileinfoNeuApi.deleteById( event.data[ 'id' ] ),
+					APIaction: this.TeileinfoApi.deleteById( event.data[ 'id' ] ),
 					messageTitle: 'Please confirm Deletion',
 					messageBody: 'Are you sure you want to delete this item?',
 				},
@@ -282,7 +282,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 			.subscribe( confirmTrue => {
 				if ( confirmTrue ) {
 					this.log.inform( this.sName, 'Confirmed' );
-					this.teileinfoNeuApi.updateAttributes( event.data[ 'id' ], event.newData ).subscribe( data => {
+					this.TeileinfoApi.updateAttributes( event.data[ 'id' ], event.newData ).subscribe( data => {
 						this.log.inform( this.sName, data );
 						this.toastrService.success( "", "Saved" );
 						event.confirm.resolve( event.newData );
@@ -303,7 +303,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 			.subscribe( confirmTrue => {
 				if ( confirmTrue ) {
 					this.log.inform( this.sName, 'Confirmed' );
-					this.teileinfoNeuApi.create( event.newData ).subscribe( data => {
+					this.TeileinfoApi.create( event.newData ).subscribe( data => {
 						this.log.inform( this.sName, data );
 						this.toastrService.success( "", "Saved" );
 						event.confirm.resolve( event.newData );
@@ -325,7 +325,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 			.subscribe( confirmTrue => {
 				if ( confirmTrue ) {
 					this.log.inform( this.sName, 'Confirmed' );
-					this.teileinfoNeuApi.deleteById( event.data[ 'id' ] ).subscribe( data => {
+					this.TeileinfoApi.deleteById( event.data[ 'id' ] ).subscribe( data => {
 						this.log.inform( this.sName, data );
 						this.toastrService.success( "", "Deleted" );
 						event.confirm.resolve( event.newData );
@@ -353,7 +353,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		this.confirmService.confirm( { title: 'Please Confirm Update', message: 'Are you sure you want to update?' } )
 			.then( () => {
 				this.log.inform( this.sName, 'Confirmed' );
-				this.teileinfoNeuApi.updateAttributes( event.data[ 'id' ], event.newData ).subscribe( data => {
+				this.TeileinfoApi.updateAttributes( event.data[ 'id' ], event.newData ).subscribe( data => {
 					this.log.inform( this.sName, data );
 					this.toastrService.success( "", "Saved" );
 					event.confirm.resolve( event.newData );
@@ -374,7 +374,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		this.confirmService.confirm( { title: 'Confirm Item Creation', message: 'Are you sure you want to add a new item?' } )
 			.then( () => { 
 				this.log.inform( this.sName, 'Confirmed' )
-				this.teileinfoNeuApi.create( event.newData ).subscribe( data => {
+				this.TeileinfoApi.create( event.newData ).subscribe( data => {
 					this.log.inform( this.sName, data )
 					this.toastrService.success( "", "Saved" );
 					event.confirm.resolve( event.newData );
@@ -395,7 +395,7 @@ export class TeileinfoListComponent implements OnInit, OnDestroy {
 		this.confirmService.confirm( { title: 'Please confirm Deletion', message: 'Are you sure you want to delete this item?' } )
 			.then( () => { 
 				this.log.inform( this.sName, 'Confirmed' );
-				this.teileinfoNeuApi.deleteById( event.data[ 'id' ] ).subscribe( data => {
+				this.TeileinfoApi.deleteById( event.data[ 'id' ] ).subscribe( data => {
 					this.log.inform( this.sName, data )
 					this.toastrService.success( "", "Deleted" );
 					event.confirm.resolve( event.newData );

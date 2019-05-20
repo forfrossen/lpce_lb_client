@@ -14,12 +14,9 @@ import { NbAccessChecker } from '@nebular/security';
 import { BASE_URL, API_VERSION }							from 'app/shared/base.url.config';
 import { LoopBackConfig }				 					from 'app/shared/sdk';
 import { User, UserInterface, Message, SDKToken } 			from 'app/shared/sdk/models';
-import { LoopBackAuth } 									from 'app/shared/sdk/services';
-import { UserApiExtended } 									from 'app/shared/extended/user.extended';
 import { LoggerServiceExtended } 							from 'app/shared/extended/logger.service.extended'
-import { jsonpCallbackContext } 							from '@angular/common/http/src/module';
 
-import * as XML2js from 'xml2js';
+import * as eva from 'eva-icons';
 
 
 @Component( {
@@ -51,7 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		LoopBackConfig.setBaseURL( BASE_URL );
 		LoopBackConfig.setApiVersion( API_VERSION );
 
-
+/*
 		const enoviaAPI: string = 'http://qcd480a01.uk.parker.corp/documentSearch/DocumentSearchResultsXML.jsp';
 		
 		const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
@@ -98,11 +95,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			console.log( 'enovia api query done...%O', this.enoviaJSONdata );
 		}
 
+		*/
 	}
-
+	
+	
 	ngOnInit() {
 
 		this.alive = true;
+
+		eva.replace( );
 
 	}
 

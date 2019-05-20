@@ -9,14 +9,14 @@ import { LoopBackFilter,  } from '../../models/BaseModels';
 import { ErrorHandler } from '../core/error.service';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { OpenOrdersComment } from '../../models/OpenOrdersComment';
+import { HttpForwarding } from '../../models/HttpForwarding';
 
 
 /**
- * Api services for the `OpenOrdersComment` model.
+ * Api services for the `HttpForwarding` model.
  */
 @Injectable()
-export class OpenOrdersCommentApi extends BaseLoopBackApi {
+export class HttpForwardingApi extends BaseLoopBackApi {
 
   constructor(
     @Inject(HttpClient) protected http: HttpClient,
@@ -40,13 +40,13 @@ export class OpenOrdersCommentApi extends BaseLoopBackApi {
    *
    * <em>
    * (The remote method definition does not provide any description.
-   * This usually means the response is a `OpenOrdersComment` object.)
+   * This usually means the response is a `HttpForwarding` object.)
    * </em>
    */
   public patchOrCreate(data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PATCH";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/OpenOrdersComments";
+    "/HttpForwardings";
     let _routeParams: any = {};
     let _postBody: any = {
       data: data
@@ -59,7 +59,7 @@ export class OpenOrdersCommentApi extends BaseLoopBackApi {
   /**
    * Patch attributes for a model instance and persist it into the data source.
    *
-   * @param {any} id OpenOrdersComment id
+   * @param {any} id HttpForwarding id
    *
    * @param {object} data Request data.
    *
@@ -71,13 +71,13 @@ export class OpenOrdersCommentApi extends BaseLoopBackApi {
    *
    * <em>
    * (The remote method definition does not provide any description.
-   * This usually means the response is a `OpenOrdersComment` object.)
+   * This usually means the response is a `HttpForwarding` object.)
    * </em>
    */
   public patchAttributes(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PATCH";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/OpenOrdersComments/:id";
+    "/HttpForwardings/:id";
     let _routeParams: any = {
       id: id
     };
@@ -91,9 +91,9 @@ export class OpenOrdersCommentApi extends BaseLoopBackApi {
 
   /**
    * The name of the model represented by this $resource,
-   * i.e. `OpenOrdersComment`.
+   * i.e. `HttpForwarding`.
    */
   public getModelName() {
-    return "OpenOrdersComment";
+    return "HttpForwarding";
   }
 }

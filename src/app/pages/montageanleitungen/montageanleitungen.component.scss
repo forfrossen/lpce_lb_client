@@ -2,3 +2,16 @@
 	height:100%;
 	width: 100%;
 }
+
+button .eva{
+	position	: 			relative;
+	top			: 			2px;
+}
+
+button, nb-action {
+	font-size: 1.5rem !important;
+}
+
+nb-action i {
+	padding: 0 0.75rem;
+}

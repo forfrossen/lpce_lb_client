@@ -1,0 +1,33 @@
+<div id="layoutAnweisungenContent">
+
+	<div class="row mb-3">
+		<div class="col w-100">
+			<nb-card class="w-100">
+				<nb-card-body>
+					<nb-actions size="small">
+						<nb-action icon="eva eva-plus-circle-outline" 	(click)="addItem()">	</nb-action>
+						<nb-action icon="eva eva-search-outline" 		(click)="openSearch()">	</nb-action>
+						<nb-action icon="eva eva-refresh-outline" 		(click)="refreshData()"></nb-action>
+					</nb-actions>
+				</nb-card-body>
+			</nb-card>
+		</div>
+	</div>
+
+	<div class="row" id="anweisungenContent">
+		<div class="col w-100">
+			<nb-card [nbSpinner]="isAnweisungenLoading" nbSpinnerSize="xxlarge" nbSpinnerMessage="Daten werden geladen..." class="w-100">	
+				<nb-card-body id="gridContainer">
+					<div class="hotWrapper">
+						<hot-table
+							[hotId]="instance"
+							[settings]="settingsObj"
+							[afterChange]="onAfterChange">
+						</hot-table>
+					</div>
+				</nb-card-body>			
+			</nb-card>
+		</div>
+	</div>
+
+</div>

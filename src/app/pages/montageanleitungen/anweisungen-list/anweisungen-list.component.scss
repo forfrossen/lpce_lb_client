@@ -1,0 +1,51 @@
+:host{
+	height: 100%;
+	width:100%;
+}
+
+#ordersTable, nb-card {
+	height: auto !important;
+	max-height: 100% !important;
+}
+
+#layoutAnweisungenContent{
+	height: 100% !important;
+	display: flex;
+	flex-flow: column;
+}
+
+#anweisungenContent{
+	flex: 1 1 auto;
+}
+
+.handsometable {
+	color: black !important;
+	flex: 1 1 auto;
+}
+
+.hotWrapper{
+	/*display: flex;
+	flex-flow: column;*/
+	top: 	1.25rem;
+	bottom: 1.25rem;
+	left: 	1.25rem;
+	right: 	1.25rem;
+	overflow: hidden;
+	position: absolute;
+}
+
+.col {
+	display: flex;
+	> nb-card {
+		margin-bottom: 0px !important;
+		overflow: hidden;
+	}
+}
+
+
+:host ::ng-deep .htNoWrap {
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap  !important;
+}
+

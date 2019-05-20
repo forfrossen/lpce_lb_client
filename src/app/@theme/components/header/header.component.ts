@@ -44,6 +44,13 @@ export class HeaderComponent implements OnInit {
 		this.environment = ( environment.production ) ? '' : '!!! DEVELOPMENT !!!';
 
 		this.getUserInfo();
+
+		setTimeout( () => {
+			this.sidebarService.expand( 'menu-sidebar' );
+			setTimeout( () => {
+				this.toggleSidebar( );
+			}, 300 ); 
+		}, 300 ); 
 	}
 
 	async getUserInfo() {

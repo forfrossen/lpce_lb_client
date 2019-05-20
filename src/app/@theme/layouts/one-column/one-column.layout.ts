@@ -7,7 +7,7 @@ import { takeWhile } from 'rxjs/operators';
   selector: 'ngx-one-column-layout',
   styleUrls: ['./one-column.layout.scss'],
   template: `
-    <nb-layout>
+    <nb-layout windowMode>
       <nb-layout-header fixed>
         <ngx-header></ngx-header>
       </nb-layout-header>
@@ -24,7 +24,6 @@ import { takeWhile } from 'rxjs/operators';
       <nb-layout-column>
         <ng-content select="router-outlet"></ng-content>
       </nb-layout-column>
-
       <nb-layout-footer fixed>
         <ngx-footer></ngx-footer>
       </nb-layout-footer>

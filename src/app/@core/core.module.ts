@@ -56,6 +56,14 @@ export const NB_CORE_PROVIDERS = [
 				parent: 'QCD480GGUsers',
 				access: [ 'openorders' ],
 			},
+			QCD480GG_WEB_Montageanleitungen: {
+				parent: 'guest',
+				access: [ 'enovia' , 'enovia/documentsearch' , 'enovia/montageanleitungen' ],
+			},
+			QCD480GG_WEB_MONTAGEANLEITUNGEN: {
+				parent: 'guest',
+				access: [ 'enovia' , 'enovia/documentsearch' , 'enovia/montageanleitungen' ],
+			},
 			QCD480GGOUAdministrators: {
 				parent: 'QCD480GGUsers',
 				access: '*',

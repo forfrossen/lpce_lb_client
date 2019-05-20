@@ -9,14 +9,14 @@ import { LoopBackFilter,  } from '../../models/BaseModels';
 import { ErrorHandler } from '../core/error.service';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { OpenOrders } from '../../models/OpenOrders';
+import { TBWEDATEN } from '../../models/TBWEDATEN';
 
 
 /**
- * Api services for the `OpenOrders` model.
+ * Api services for the `TBWEDATEN` model.
  */
 @Injectable()
-export class OpenOrdersApi extends BaseLoopBackApi {
+export class TBWEDATENApi extends BaseLoopBackApi {
 
   constructor(
     @Inject(HttpClient) protected http: HttpClient,
@@ -40,13 +40,13 @@ export class OpenOrdersApi extends BaseLoopBackApi {
    *
    * <em>
    * (The remote method definition does not provide any description.
-   * This usually means the response is a `OpenOrders` object.)
+   * This usually means the response is a `TBWEDATEN` object.)
    * </em>
    */
   public patchOrCreate(data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PATCH";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/OpenOrders";
+    "/TBWEDATENs";
     let _routeParams: any = {};
     let _postBody: any = {
       data: data
@@ -59,7 +59,7 @@ export class OpenOrdersApi extends BaseLoopBackApi {
   /**
    * Patch attributes for a model instance and persist it into the data source.
    *
-   * @param {any} id OpenOrders id
+   * @param {any} id TBWEDATEN id
    *
    * @param {object} data Request data.
    *
@@ -71,13 +71,13 @@ export class OpenOrdersApi extends BaseLoopBackApi {
    *
    * <em>
    * (The remote method definition does not provide any description.
-   * This usually means the response is a `OpenOrders` object.)
+   * This usually means the response is a `TBWEDATEN` object.)
    * </em>
    */
   public patchAttributes(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "PATCH";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/OpenOrders/:id";
+    "/TBWEDATENs/:id";
     let _routeParams: any = {
       id: id
     };
@@ -91,9 +91,9 @@ export class OpenOrdersApi extends BaseLoopBackApi {
 
   /**
    * The name of the model represented by this $resource,
-   * i.e. `OpenOrders`.
+   * i.e. `TBWEDATEN`.
    */
   public getModelName() {
-    return "OpenOrders";
+    return "TBWEDATEN";
   }
 }
