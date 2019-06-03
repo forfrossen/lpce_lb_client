@@ -60,6 +60,7 @@ import { MontageanweisungApi } from './services/custom/Montageanweisung';
 import { TBWEDATENApi } from './services/custom/TBWEDATEN';
 import { PlanerNrToADIDApi } from './services/custom/PlanerNrToADID';
 import { HttpForwardingApi } from './services/custom/HttpForwarding';
+import { ArtikelstammanlageApi } from './services/custom/Artikelstammanlage';
 import { UserIdentityApi } from './services/custom/UserIdentity';
 /**
 * @module SDKBrowserModule
@@ -105,6 +106,7 @@ export class SDKBrowserModule {
         TBWEDATENApi,
         PlanerNrToADIDApi,
         HttpForwardingApi,
+        ArtikelstammanlageApi,
         UserIdentityApi,
         internalStorageProvider,
         { provide: SDKStorage, useClass: StorageBrowser }

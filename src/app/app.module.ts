@@ -8,7 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './@core/core.module';
 
@@ -23,6 +23,10 @@ import { RoleProvider } from './@core/auth/role.provider';
 
 import { of as observableOf } from 'rxjs/observable/of';
 
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+
+registerLocaleData(localeDe);
 
 @NgModule( {
 	declarations: [
@@ -42,7 +46,12 @@ import { of as observableOf } from 'rxjs/observable/of';
 		CoreModule.forRoot(),
 	],
 	providers: [
-		{ provide: APP_BASE_HREF, useValue: '/' },
+		{
+			provide: APP_BASE_HREF, useValue: '/'
+		},
+		{
+			provide: LOCALE_ID, useValue: "de",
+		},
 	],
 	bootstrap: [ AppComponent ],
 } )

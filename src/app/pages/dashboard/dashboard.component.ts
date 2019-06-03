@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	private UserIf: UserInterface;
 	public TiSettings: any;
 	sName: string =  'Dashboard.Component - ';
-
+	queryResult: Object = {};
 	enoviaJSONdata: any = {};
 
 
@@ -110,4 +110,59 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.alive = false;
 	}
+/*
+	timensionQuery(): void{
+		this.log.inform( this.sName, 'Querying Timension', new Date() );
+
+		const headers = new HttpHeaders ({
+			Encoding			: 'gzip, deflate',
+			Language			: 'de-DE,de;q=0.9,en-DE;q=0.8,en;q=0.7,en-US;q=0.6',
+			Connection			: 'keep-alive',
+			Cookie				: 'callingframe=; PHPSESSID=657d9j3vbdsr3o3jmida51o5v2',
+			DNT					: '1',
+			Host				: 'idc091a145',
+			Referer				: 'http://idc091a145/timension/timension_php/index.php',
+			Agent				: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36'
+		})
+
+		const queryParams = {
+			comboinput0: 'Abrechnungskreis',
+			comboinput999: 'keine Auswahl',
+			feld999: '',
+			feld999_wert: '',
+			feld888: '',
+			feld888_wert: '',
+			comboinput1: 'Mehrfachauswahl',
+			feld_vor: 'Profil 5',
+			comboinput3: 'Di, 21.05.2019',
+			feld05: '',
+			comboinput4: 'Anwesend',
+			parm_table: 'PzmAnAbwesend53_5',
+			do: 'erstelleliste',
+			action: 'erstelleListe',
+			gruppe: '',
+			datumvon: 'Di, 21.05.2019',
+			uhrzeit: '',
+			dspstatus: '',
+			werte: '008;004;005;010;001;009;007;006;003;002;',
+			dspgrund: '',
+			sortierung: '',
+			BCHKEY: 'new#anw#006#044#053#36#AD#021#14#144#146#145#148#147#35#35h#16#020#unf#unh#19#20#10#052#004#7#71#77#13#131#810#831#33#34#37#005#008#009#44#80#028#gs#014#5#hs#HS0#HS6#hsh#21#kmh#2#2a#2o#42#3#3R#222#122#22H#22#L#029#4#NDA#nst#p#042#003#054#046#017#PR#045#019#rp#12#043#27#24#25#28#32#013#15#8#6a#6#61#016#30#027#1#1h#9#015#26#18',
+			HEADCHANGED: 'false',
+			filterauswahl: '',
+			filterwert: '',
+			sortauswahl: '',
+			sortart: 'asc',
+			ausgabe: 'HTML',
+		}
+
+		this.httpClient.get( 'http://idc091a145/timension/timension_php/index.php', { headers: headers, params: queryParams } ).subscribe( response => {
+			this.queryResult = response;
+		})
+	
+		
+
+	}
+
+	*/
 }

@@ -28,7 +28,9 @@ export class FilterService {
 	public selectedOrders    	: any[] 		= [];
 	public selectedPlanners  	: any[] 		= [];
 	public selectedCommentOnly 	: boolean 		= false;
-	
+	public commentHitoryPDDOCO  : string        = '';
+	public commentHitoryPDLNID  : string        = '';
+
 	sName             			: string		= 'Openorders.Component - ';
 	instance        		  	: string 		= 'ordersTable';
 	selectLate        			: string		= 'all';

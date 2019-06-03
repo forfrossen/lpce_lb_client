@@ -11,15 +11,15 @@ import { MatUiService                                                   } from '
 import { Observable, of, Subject                       					} from 'rxjs'                                        ;
 import { catchError, concatAll, debounceTime, distinct, map				} from 'rxjs/operators'                              ;
 import { distinctUntilChanged, switchMap, tap, toArray           		} from 'rxjs/operators'                              ;
+import { AnweisungenEditorComponent 									} from '../anweisungen-editor/anweisungen-editor.component';
+import { registerLocaleData 											} from '@angular/common';
+import { ARIA_DESCRIBER_PROVIDER_FACTORY 								} from '@angular/cdk/a11y';
+
+import localeDe 														  from '@angular/common/locales/de';
+import localeDeExtra													  from '@angular/common/locales/extra/de';
 import * as eva          												  from 'eva-icons'    ;
 import * as Handsontable 												  from 'handsontable' ;
-import { AnweisungenEditorComponent 									} from '../anweisungen-editor/anweisungen-editor.component';
-import { registerLocaleData } from '@angular/common';
-import localeDe from '@angular/common/locales/de';
-import localeDeExtra from '@angular/common/locales/extra/de';
-
 import * as moment from 'moment';
-import { ARIA_DESCRIBER_PROVIDER_FACTORY } from '@angular/cdk/a11y';
 
 @Component( {
 	selector: 'anweisungen-list',
@@ -59,7 +59,13 @@ export class AnweisungenListComponent implements OnInit {
 		manualColumnResize	: true,
 		colHeaders   		: true, 
 		observeChanges		: true,
-		dropdownMenu		: true,
+		dropdownMenu		: [
+            'filter_by_condition',
+            'filter_operators',
+            'filter_by_condition2',
+            'filter_by_value',
+            'filter_action_bar'
+        ],
 		filters				: true,
 		className			: 'htMiddle',
 		minSpareRows		: 1,

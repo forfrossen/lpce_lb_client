@@ -8,6 +8,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
 		home: true,
 	},
 	{
+		title: 'Artikelstamm',
+		icon: 'eva eva-file-add-outline',
+		link: '/pages/artikelstammanlage',
+	},
+	{
 		title: 'Teileinfo',
 		icon: 'eva eva-info-outline',
 		link: '/pages/teileinfo/list',
@@ -31,7 +36,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
 				link: '/pages/enovia/montageanleitungen',
 			},
 			{
-				title: 'Anweisungen - Liste',
+				title: 'Anweisungen',
 				link: '/pages/enovia/montageanweisungen-liste',
 			},
 		],

@@ -18,24 +18,29 @@ const routes: Routes = [ {
 			component: DashboardComponent,
 		},
 		{
+			path: 'artikelstammanlage',
+			canActivate: [ AuthGuard ],
+			loadChildren: () => import('./artikelstammanlage/artikelstammanlage.module').then(m => m.ArtikelstammanlageModule),
+		},
+		{
 			path: 'teileinfo',
 			canActivate: [ AuthGuard ],
-			loadChildren: './teileinfo/teileinfo.module#TeileinfoModule',
+			loadChildren: () => import('./teileinfo/teileinfo.module').then(m => m.TeileinfoModule),
 		},
 		{
 			path: 'heimarbeit',
 			canActivate: [ AuthGuard ],
-			loadChildren: './heimarbeit/heimarbeit.module#HeimarbeitModule',
+			loadChildren: () => import('./heimarbeit/heimarbeit.module').then(m => m.HeimarbeitModule),
 		},
 		{
 			path: 'openorders',
 			canActivate: [ AuthGuard ],
-			loadChildren: './openorders/openorders.module#OpenOrdersModule',
+			loadChildren: () => import('./openorders/openorders.module').then(m => m.OpenOrdersModule),
 		},
 		{
 			path: 'enovia',
 			canActivate: [ AuthGuard ],
-			loadChildren: './montageanleitungen/montageanleitungen.module#MontageanleitungenModule',
+			loadChildren: () => import('./montageanleitungen/montageanleitungen.module').then(m => m.MontageanleitungenModule),
 		},
 		{
 			path: 'unauthorized',

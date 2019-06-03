@@ -29,7 +29,7 @@ export class LoggerServiceExtended extends LoggerService {
 		'user.service':  this.loginAndUserSections,
 		'Loopback-auth-strategy':  false,
 		'header.component': false,
-		'Dashboard.Component': false,
+		'Dashboard.Component': true,
 		'Openorders.Component': true,
 		'Teileinfo-List.Component': false,
 	}

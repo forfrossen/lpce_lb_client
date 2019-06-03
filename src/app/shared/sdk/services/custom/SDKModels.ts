@@ -16,6 +16,7 @@ import { Montageanweisung } from '../../models/Montageanweisung';
 import { TBWEDATEN } from '../../models/TBWEDATEN';
 import { PlanerNrToADID } from '../../models/PlanerNrToADID';
 import { HttpForwarding } from '../../models/HttpForwarding';
+import { Artikelstammanlage } from '../../models/Artikelstammanlage';
 import { UserIdentity } from '../../models/UserIdentity';
 
 export interface Models { [name: string]: any }
@@ -40,6 +41,7 @@ export class SDKModels {
     TBWEDATEN: TBWEDATEN,
     PlanerNrToADID: PlanerNrToADID,
     HttpForwarding: HttpForwarding,
+    Artikelstammanlage: Artikelstammanlage,
     UserIdentity: UserIdentity,
     
   };

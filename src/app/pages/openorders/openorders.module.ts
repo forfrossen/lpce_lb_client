@@ -11,6 +11,7 @@ import { ThemeModule  							} from '../../@theme/theme.module';
 import { OpenOrdersRoutingModule  				} from './openorders-routing.module';
 import { OpenOrdersComponent  					} from './openorders.component';
 
+
 import {
 	NbButtonModule, 
 	NbInputModule,
@@ -22,6 +23,7 @@ import {
 	NbSpinnerModule
 												} from '@nebular/theme';
 import { FilterComponent } from './filter/filter.component';
+import { CommenthistoryComponent } from './commenthistory/commenthistory.component';
 
 @NgModule({ 
 	imports: [
@@ -44,9 +46,10 @@ import { FilterComponent } from './filter/filter.component';
 	declarations: [
 		OpenOrdersComponent,
 		FilterComponent,
+		CommenthistoryComponent,
 	],
 	entryComponents: [
-
+        CommenthistoryComponent
 	],
 	providers: [
 

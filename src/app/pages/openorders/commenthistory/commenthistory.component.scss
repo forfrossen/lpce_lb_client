@@ -1,0 +1,34 @@
+:host{
+	height: 100%;
+	width:100%;
+}
+
+nb-card{
+	min-width: 30rem;
+	max-width: 50rem;
+}
+nb-card-body{
+	padding: 2rem !important;
+}
+
+.commentbox{
+	position: relative;
+	background: #00aabb;
+	border-radius: .4em;
+	margin-top: 20px !important;
+	margin-left: 20px !important;
+}
+.commentbox:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 20%;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-bottom-color: #00aabb;
+	border-top: 0;
+	border-left: 0;
+	margin-left: -10px;
+	margin-top: -20px;
+}

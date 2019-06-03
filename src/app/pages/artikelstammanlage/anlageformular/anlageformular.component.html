@@ -1,0 +1,217 @@
+<ng-container>
+
+	<div class="row row-eq-height">
+	
+		<div class="col-6">
+
+			<div class="row"> 										<!-- Artikelstamm Daten -->
+				<div class="col-12">
+					<nb-card>
+						<nb-card-header>
+							Artikelstamm Daten {{ artikelstammanlage$.id }}
+						</nb-card-header>
+						<nb-card-body>
+							<input type="hidden"  class="form-control" nbInput id="id" [(ngModel)]="artikelstammanlage$.id">
+							<div class="form-group row">
+								<label for="inpArtikel" class="col-sm-4 col-form-label">Artikelnummer</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="large" fullWidth class="form-control" nbInput id="inpArtikel" placeholder="Artikelnummer" [(ngModel)]="artikelstammanlage$.artikelnummer">
+								</div>
+							</div>
+				
+							<div class="form-group row">
+								<label for="inpIdentnummer" class="col-sm-4 col-form-label">Ident-Nr.</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="small" class="form-control" nbInput id="inpIdentnummer" placeholder="Ident-Nr."  [(ngModel)]="artikelstammanlage$.identnummer">
+								</div>
+							</div>
+				
+							<div class="form-group row">
+								<label for="inpSText" class="col-sm-4 col-form-label">S-Text</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="medium" class="form-control" nbInput id="inpSText" placeholder="S-Text" [(ngModel)]="artikelstammanlage$.stext">
+								</div>
+							</div>
+				
+							<div class="form-group row">
+								<label for="inpErstbestellungQty" class="col-sm-4 col-form-label">Menge Erstbestellung</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="medium" class="form-control" nbInput id="inpErstbestellungQty" placeholder="Menge Erstbestellung" [(ngModel)]="artikelstammanlage$.erstbestellungqty">
+								</div>
+							</div>
+				
+							<div class="form-group row">
+								<label for="inpRfqNr" class="col-sm-4 col-form-label">RFQ-NR</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="medium" class="form-control" nbInput id="inpRfqNr" placeholder="RFQ-NR"  [(ngModel)]="artikelstammanlage$.rfqnr">
+								</div>
+							</div>
+				
+							<div class="form-group row">
+								<label for="inpKunde" class="col-sm-4 col-form-label">Kunde</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="medium" class="form-control" nbInput id="inpKunde" placeholder="Kunde"  [(ngModel)]="artikelstammanlage$.kunde">
+								</div>
+							</div>
+							
+						</nb-card-body>
+					</nb-card>
+				</div>
+			</div>
+
+			<div class="row">										<!-- Etiketten Daten -->
+				<div class="col-12">
+					<nb-card>
+						<nb-card-header>
+							Kunden-/ Artikelspezifische Zusatzdaten
+						</nb-card-header>
+						<nb-card-body>
+				
+							<div class="form-group row">
+								<label for="inpEtikettNr" class="col-sm-4 col-form-label">Etiketten-Nr.</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="medium" class="form-control" nbInput id="inpEtikettNr" placeholder="Etikettennummer" [(ngModel)]="artikelstammanlage$.etikennennummer">
+								</div>
+							</div>
+				
+							<div class="form-group row">
+								<label for="inpKDAtikelNr" class="col-sm-4 col-form-label">Kunden Artikel-Nr.</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="medium" class="form-control" nbInput id="inpKDAtikelNr" placeholder="KDAtikelNr"  [(ngModel)]="artikelstammanlage$.kundenartikelnummer">
+								</div>
+							</div>
+				
+							<div class="form-group row">
+								<label for="inpVerpackungseinheit" class="col-sm-4 col-form-label">Verpackungseinheit</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="medium" class="form-control" nbInput id="inpVerpackungseinheit" placeholder="Verpackungseinheit" [(ngModel)]="artikelstammanlage$.verpackungseinheit">
+								</div>
+							</div>
+				
+							<div class="form-group row">
+								<label for="inpUmverpackung" class="col-sm-4 col-form-label">Umverpackung</label>
+								<div class="col-sm-8">
+									<input type="text" fieldSize="medium" class="form-control" nbInput id="inpUmverpackung" placeholder="Umverpackung" [(ngModel)]="artikelstammanlage$.umverpackung">
+								</div>
+							</div>
+
+						</nb-card-body>
+					</nb-card>
+
+				</div>
+			</div>			
+		</div>
+	
+		<div class="col-6 col-right">											<!-- Bearbeitungs Daten -->
+
+			<div class="row row-hinweise">										<!-- Hinweise -->
+				<div class="col-12 col-hinweise">
+					<nb-card class="w-100">
+						<nb-card-body class="w-100">
+							<textarea type="text" class="form-control w-100 h-100" id="inpBemerkung"  fullWidth  nbInput placeholder="Hinweise"  [(ngModel)]="artikelstammanlage$.hinweise"></textarea>
+						</nb-card-body>
+					</nb-card>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<div class="row">										<!-- Starter Daten -->
+						<div class="col-12">								
+							<nb-card>
+								<nb-card-body>
+									<nb-actions size="medium" fullWidth>
+										<nb-action>
+											<h5>Starter: </h5>
+										</nb-action>
+										<nb-action>
+											<nb-user size="medium" name="{{artikelstammanlage$.startername}}" title="{{artikelstammanlage$.starterdatum | date:'mediumDate' }}"></nb-user>
+										</nb-action>
+										<nb-action icon="eva eva-save"  (click)="save('starter')"></nb-action>
+									</nb-actions>
+								</nb-card-body>
+							</nb-card>
+						</div>
+					</div>
+		
+					<div class="row">										<!-- Manufacturing Daten -->
+						<div class="col-12">								
+							<nb-card>
+								<nb-card-body>
+									<nb-actions size="medium" fullWidth>
+										<nb-action>
+											<h5>Manufacturing: </h5>
+										</nb-action>
+										<nb-action>
+											<nb-user size="medium" name="{{artikelstammanlage$.manufacturingname}}" title="{{artikelstammanlage$.manufacturingdatum | date:'mediumDate' }}"></nb-user>
+										</nb-action>
+										<nb-action icon="eva eva-save" (click)="save('manufacturing')"></nb-action>
+									</nb-actions>
+								</nb-card-body>
+							</nb-card>
+						</div>
+					</div>
+		
+					<div class="row">										<!-- Konstruktion Daten -->
+						<div class="col-12">								
+							<nb-card>
+								<nb-card-body>
+									<nb-actions size="medium" fullWidth>
+										<nb-action>
+											<h5>Konstruktion: </h5>
+										</nb-action>
+										<nb-action>
+											<nb-user size="medium" name="{{artikelstammanlage$.konstruktionname}}" title="{{artikelstammanlage$.konstruktiondatum | date:'mediumDate' }}"></nb-user>
+										</nb-action>
+										<nb-action icon="eva eva-save"  (click)="save('konstruktion')"></nb-action>
+									</nb-actions>
+								</nb-card-body>
+							</nb-card>
+						</div>
+					</div>
+		
+					<div class="row">										<!-- Service-Team Daten -->
+						<div class="col-12">								
+							<nb-card>
+								<nb-card-body>
+									<nb-actions size="medium" fullWidth>
+										<nb-action>
+											<h5>Service-Team: </h5>
+										</nb-action>
+										<nb-action>
+											<nb-user size="medium" name="{{artikelstammanlage$.serviceteamname}}" title="{{artikelstammanlage$.serviceteamdatum | date:'mediumDate' }}"></nb-user>
+										</nb-action>
+										<nb-action icon="eva eva-save" [nbContextMenu]="items" nbContextMenuTag="serviceteam-action-menu"></nb-action>
+									</nb-actions>
+								</nb-card-body>
+							</nb-card>
+						</div>
+					</div>
+		
+					<div class="row">										<!-- Pricing Daten -->
+						<div class="col-12">								
+							<nb-card>
+								<nb-card-body>
+									<nb-actions size="medium" fullWidth>
+										<nb-action>
+											<h5>Pricing: </h5>
+										</nb-action>
+										<nb-action>
+											<nb-user size="medium" name="{{artikelstammanlage$.pricingname}}" title="{{artikelstammanlage$.pricingdatum | date:'mediumDate' }}"></nb-user>
+										</nb-action>
+										<nb-action icon="eva eva-save" (click)="save('pricing')"></nb-action>
+									</nb-actions>
+								</nb-card-body>
+							</nb-card>
+						</div>
+					</div>
+		
+				</div>
+			</div>
+
+
+		</div>
+	
+	</div>
+</ng-container>
+

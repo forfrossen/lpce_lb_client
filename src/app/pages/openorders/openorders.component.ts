@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit                 					} from '@angular/core'                               ;
-import { NbToastrService                                                } from '@nebular/theme'                              ;
+import { NbToastrService, NbDialogService                                                } from '@nebular/theme'                              ;
 
 import { Observable, of, Subject                       					} from 'rxjs'                                        ;
 import { catchError, concatAll, debounceTime, distinct 					} from 'rxjs/operators'                              ;
@@ -20,7 +20,7 @@ import { FilterService							            			} from './filter/filter.service'				
 import * as eva          												  from 'eva-icons'    ;
 import * as Handsontable 												  from 'handsontable' ;
 import { HotTableRegisterer 											} from '@handsontable/angular';
-
+import { CommenthistoryComponent                                        }  from './commenthistory/commenthistory.component'
 
 @Component( {
 	selector   : 'ngx-openorders',
@@ -79,11 +79,23 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 			{ colWidths: 90,   readOnly: true,  editor: false, data: 'created',   title: 'Komment Date',	className: 'htRight htMiddle'	},
 			{ colWidths: 90,   readOnly: true,  editor: false, data: 'createdby', title: 'User' 			},
 		],
+        filters				: true,
+        dropdownMenu: [
+            'filter_by_condition',
+            'filter_operators',
+            'filter_by_condition2',
+            'filter_by_value',
+            'filter_action_bar'
+        ],
 		contextMenu: {
-			items: {
+			items: {/*
 				"custom1": {
 					name    : 'Zeige Teileverfügbarkeit',
 					callback: (key, selection, clickEvent) => this.showItemAvaibility(key, selection, clickEvent),
+				},*/
+				"custom2": {
+					name    : 'Zeige Kommentarverlauf',
+					callback: (key, selection, clickEvent) => this.showCommentHistory(key, selection, clickEvent),
 				}
 			}
 		}
@@ -99,12 +111,32 @@ export class OpenOrdersComponent implements OnInit, OnDestroy {
 		private toastrService       : NbToastrService,
 		private hotRegisterer		: HotTableRegisterer,
 		private matUiService        : MatUiService,
+        private nbDialogService     : NbDialogService,
 	) {
 		/*
 		LoopBackConfig.setBaseURL( BASE_URL );
 		LoopBackConfig.setApiVersion( API_VERSION );
 		*/
 	}
+
+    public showCommentHistory( key, selection, clickEvent ) {
+        if ( ( selection[ 0 ].start.row !== selection[ 0 ].end.row ) || ( selection[ 0 ].start.col !== selection[ 0 ].end.col ) ) {
+			this.matUiService.dialog( 'Warnung', 'Teileverfügbarkeit nicht bei Mehrfachauswahl möglich!' )
+		}
+		else {
+			let item                = this.hotInstance.getDataAtCell( selection[ 0 ].start.row, selection[ 0 ].start.col );
+            const pddoco            = this.hotInstance.getDataAtCell( selection[ 0 ].start.row, 'pddoco' );
+            const pdlnid            = this.hotInstance.getDataAtCell( selection[ 0 ].start.row, 'pdlnid' );
+
+			this.log.inform( this.sName, 'PDDOCO: ' + pddoco, '');
+			this.log.inform( this.sName, 'pdlnid: ' + pdlnid, '');
+			
+            this.filterService.commentHitoryPDDOCO = pddoco;
+            this.filterService.commentHitoryPDLNID = pdlnid;
+
+            let ref = this.nbDialogService.open( CommenthistoryComponent )
+		}
+    } 
 	
 	public showItemAvaibility( key, selection, clickEvent ) {
 		/*console.log(clickEvent);

@@ -1,0 +1,39 @@
+:host{
+	height: 100%;
+	width:100%;
+}
+
+nb-actions nb-action:first-child {
+	justify-content: left !important;
+	min-width:160px !important;
+}
+
+nb-actions h5{
+    margin-bottom:0px !important;
+}
+
+nb-user{
+    min-width:160px;
+}
+
+.col-right{
+	display: flex;
+	flex-direction: column;
+}
+
+.row-hinweise{
+	flex-grow: 1;
+}
+
+.col-hinweise {
+	display: flex;
+	margin-bottom: 1.5rem;
+	> nb-card {
+		margin-bottom: 0px !important;
+		margin-right: 0px !important;
+		overflow: hidden;
+	}
+}
+
+
+

@@ -1,0 +1,18 @@
+<ng-container>
+	<nb-card size="large">
+
+		<nb-card-header>
+			Kommentar Historie für {{ comments[0].pddoco }}
+		</nb-card-header>
+
+		<nb-card-body  [nbSpinner]="isCommentHistoryLoading" nbSpinnerSize="xxlarge" nbSpinnerMessage="Daten werden geladen..." >
+			<div *ngFor="let comment of comments" class="mb-5">
+				<nb-user name="{{ comment.createdby }}" title="{{ comment.created | date:'longDate'  }}">
+				</nb-user>
+				<div class="text-white p-3 m-2 commentbox">
+					{{ comment.comment }}
+				</div>
+			</div>
+		</nb-card-body>
+	</nb-card>
+</ng-container>

@@ -15,6 +15,7 @@ export * from './Montageanweisung';
 export * from './TBWEDATEN';
 export * from './PlanerNrToADID';
 export * from './HttpForwarding';
+export * from './Artikelstammanlage';
 export * from './UserIdentity';
 export * from './BaseModels';
 
